@@ -2,5 +2,3 @@ platform :ios, 7.0
 
 # Include optional Testing and Search components
 pod 'ASIHTTPRequest', '~> 1.8.1'
-
-#link_with ['NuxeoSDK', 'NuxeoSDKTests']

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0330425B4DD5438799AE0594 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; };
+		0330425B4DD5438799AE0594 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		5178D529183407B600638548 /* NUXSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 5178D528183407B600638548 /* NUXSession.m */; };
 		51E55C88182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
 		51E55C96182D415F009AC87C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C95182D415F009AC87C /* XCTest.framework */; };
@@ -16,7 +16,6 @@
 		51E55C9C182D415F009AC87C /* libNuxeoSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C84182D415F009AC87C /* libNuxeoSDK.a */; };
 		51E55CA2182D415F009AC87C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 51E55CA0182D415F009AC87C /* InfoPlist.strings */; };
 		51E55CA4182D415F009AC87C /* NUXSessionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51E55CA3182D415F009AC87C /* NUXSessionTests.m */; };
-		C2105332D7D6474290F465FE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,13 +29,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		51E55C82182D415F009AC87C /* CopyFiles */ = {
+		51E55C82182D415F009AC87C /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -75,7 +75,6 @@
 				51E55C96182D415F009AC87C /* XCTest.framework in Frameworks */,
 				51E55C99182D415F009AC87C /* UIKit.framework in Frameworks */,
 				51E55C97182D415F009AC87C /* Foundation.framework in Frameworks */,
-				C2105332D7D6474290F465FE /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,7 +158,7 @@
 				5582B38ECB54454CB227E946 /* Check Pods Manifest.lock */,
 				51E55C80182D415F009AC87C /* Sources */,
 				51E55C81182D415F009AC87C /* Frameworks */,
-				51E55C82182D415F009AC87C /* CopyFiles */,
+				51E55C82182D415F009AC87C /* Copy Files */,
 				BB3DA22411FD452A872C5269 /* Copy Pods Resources */,
 			);
 			buildRules = (
