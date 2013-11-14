@@ -7,15 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0330425B4DD5438799AE0594 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; };
+		5178D529183407B600638548 /* NUXSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 5178D528183407B600638548 /* NUXSession.m */; };
 		51E55C88182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
-		51E55C8D182D415F009AC87C /* NuxeoSDK.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 51E55C8C182D415F009AC87C /* NuxeoSDK.h */; };
-		51E55C8F182D415F009AC87C /* NuxeoSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 51E55C8E182D415F009AC87C /* NuxeoSDK.m */; };
 		51E55C96182D415F009AC87C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C95182D415F009AC87C /* XCTest.framework */; };
 		51E55C97182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
 		51E55C99182D415F009AC87C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C98182D415F009AC87C /* UIKit.framework */; };
 		51E55C9C182D415F009AC87C /* libNuxeoSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C84182D415F009AC87C /* libNuxeoSDK.a */; };
 		51E55CA2182D415F009AC87C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 51E55CA0182D415F009AC87C /* InfoPlist.strings */; };
-		51E55CA4182D415F009AC87C /* NuxeoSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51E55CA3182D415F009AC87C /* NuxeoSDKTests.m */; };
+		51E55CA4182D415F009AC87C /* NUXSessionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51E55CA3182D415F009AC87C /* NUXSessionTests.m */; };
+		C2105332D7D6474290F465FE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,24 +36,25 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				51E55C8D182D415F009AC87C /* NuxeoSDK.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5178D527183407B600638548 /* NUXSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXSession.h; sourceTree = "<group>"; };
+		5178D528183407B600638548 /* NUXSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXSession.m; sourceTree = "<group>"; };
 		51E55C84182D415F009AC87C /* libNuxeoSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNuxeoSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E55C87182D415F009AC87C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		51E55C8B182D415F009AC87C /* NuxeoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NuxeoSDK-Prefix.pch"; sourceTree = "<group>"; };
-		51E55C8C182D415F009AC87C /* NuxeoSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuxeoSDK.h; sourceTree = "<group>"; };
-		51E55C8E182D415F009AC87C /* NuxeoSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NuxeoSDK.m; sourceTree = "<group>"; };
 		51E55C94182D415F009AC87C /* NuxeoSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NuxeoSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E55C95182D415F009AC87C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		51E55C98182D415F009AC87C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		51E55C9F182D415F009AC87C /* NuxeoSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NuxeoSDKTests-Info.plist"; sourceTree = "<group>"; };
 		51E55CA1182D415F009AC87C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		51E55CA3182D415F009AC87C /* NuxeoSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NuxeoSDKTests.m; sourceTree = "<group>"; };
+		51E55CA3182D415F009AC87C /* NUXSessionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NUXSessionTests.m; sourceTree = "<group>"; };
+		5280D3516EB8463E996F4F5A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				51E55C88182D415F009AC87C /* Foundation.framework in Frameworks */,
+				0330425B4DD5438799AE0594 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +75,7 @@
 				51E55C96182D415F009AC87C /* XCTest.framework in Frameworks */,
 				51E55C99182D415F009AC87C /* UIKit.framework in Frameworks */,
 				51E55C97182D415F009AC87C /* Foundation.framework in Frameworks */,
+				C2105332D7D6474290F465FE /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +89,7 @@
 				51E55C9D182D415F009AC87C /* NuxeoSDKTests */,
 				51E55C86182D415F009AC87C /* Frameworks */,
 				51E55C85182D415F009AC87C /* Products */,
+				FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -103,6 +108,7 @@
 				51E55C87182D415F009AC87C /* Foundation.framework */,
 				51E55C95182D415F009AC87C /* XCTest.framework */,
 				51E55C98182D415F009AC87C /* UIKit.framework */,
+				5280D3516EB8463E996F4F5A /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -110,9 +116,9 @@
 		51E55C89182D415F009AC87C /* NuxeoSDK */ = {
 			isa = PBXGroup;
 			children = (
-				51E55C8C182D415F009AC87C /* NuxeoSDK.h */,
-				51E55C8E182D415F009AC87C /* NuxeoSDK.m */,
 				51E55C8A182D415F009AC87C /* Supporting Files */,
+				5178D527183407B600638548 /* NUXSession.h */,
+				5178D528183407B600638548 /* NUXSession.m */,
 			);
 			path = NuxeoSDK;
 			sourceTree = "<group>";
@@ -128,7 +134,7 @@
 		51E55C9D182D415F009AC87C /* NuxeoSDKTests */ = {
 			isa = PBXGroup;
 			children = (
-				51E55CA3182D415F009AC87C /* NuxeoSDKTests.m */,
+				51E55CA3182D415F009AC87C /* NUXSessionTests.m */,
 				51E55C9E182D415F009AC87C /* Supporting Files */,
 			);
 			path = NuxeoSDKTests;
@@ -150,9 +156,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 51E55CA7182D415F009AC87C /* Build configuration list for PBXNativeTarget "NuxeoSDK" */;
 			buildPhases = (
+				5582B38ECB54454CB227E946 /* Check Pods Manifest.lock */,
 				51E55C80182D415F009AC87C /* Sources */,
 				51E55C81182D415F009AC87C /* Frameworks */,
 				51E55C82182D415F009AC87C /* CopyFiles */,
+				BB3DA22411FD452A872C5269 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -167,9 +175,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 51E55CAA182D415F009AC87C /* Build configuration list for PBXNativeTarget "NuxeoSDKTests" */;
 			buildPhases = (
+				DA5F22E47ED54DA1A681C9AE /* Check Pods Manifest.lock */,
 				51E55C90182D415F009AC87C /* Sources */,
 				51E55C91182D415F009AC87C /* Frameworks */,
 				51E55C92182D415F009AC87C /* Resources */,
+				80429631ED704542950B78A4 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -219,12 +229,75 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5582B38ECB54454CB227E946 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		80429631ED704542950B78A4 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BB3DA22411FD452A872C5269 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA5F22E47ED54DA1A681C9AE /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		51E55C80182D415F009AC87C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				51E55C8F182D415F009AC87C /* NuxeoSDK.m in Sources */,
+				5178D529183407B600638548 /* NUXSession.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,7 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				51E55CA4182D415F009AC87C /* NuxeoSDKTests.m in Sources */,
+				51E55CA4182D415F009AC87C /* NUXSessionTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,7 +363,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -322,7 +395,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -330,6 +403,7 @@
 		};
 		51E55CA8182D415F009AC87C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */;
 			buildSettings = {
 				DSTROOT = /tmp/NuxeoSDK.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -342,6 +416,7 @@
 		};
 		51E55CA9182D415F009AC87C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */;
 			buildSettings = {
 				DSTROOT = /tmp/NuxeoSDK.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -354,6 +429,7 @@
 		};
 		51E55CAB182D415F009AC87C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -375,6 +451,7 @@
 		};
 		51E55CAC182D415F009AC87C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -409,6 +486,7 @@
 				51E55CA9182D415F009AC87C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		51E55CAA182D415F009AC87C /* Build configuration list for PBXNativeTarget "NuxeoSDKTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +495,7 @@
 				51E55CAC182D415F009AC87C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
