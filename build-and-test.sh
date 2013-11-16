@@ -2,10 +2,10 @@
 
 HERE=$(cd $(dirname $0); pwd -P)
 NX_INT=$HERE/download/nuxeo-integration
-XCODEBUILD=${XCODEBUILD:-xcodebuild}
+XCBUILD=${XCBUILD:-xcodebuild}
 
 # Cleaning
-rm -rf download nuxeo tomcat || exit 1
+rm -rf download nuxeo tomcat junit-result.txt || exit 1
 
 # Cloning integration-release
 git clone https://github.com/nuxeo/integration-scripts $NX_INT
@@ -25,8 +25,8 @@ start_server $HERE/tomcat 127.0.0.1
 # Prepare CocoaPod workspace
 ./prepare-pod.sh
 
-echo "Build: `type $XCODEBUILD`"
-$XCODEBUILD -configuration Debug -sdk iphonesimulator -workspace NuxeoSDK/NuxeoSDK.xcworkspace -scheme NuxeoSDK clean test
+echo "Build: `type $XCBUILD`"
+$XCBUILD -configuration Debug -sdk iphonesimulator -workspace NuxeoSDK/NuxeoSDK.xcworkspace -scheme NuxeoSDK clean test
 EXIT_CODE=$?
 
 stop_server
