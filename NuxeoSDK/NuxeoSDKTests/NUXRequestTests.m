@@ -60,4 +60,64 @@ NUXRequest *request;
     XCTAssertEqualObjects(@"myValue", [request.headers valueForKey:@"X-MyHeader"]);
 }
 
+-(void)testResponseData
+{
+    [[request addURLSegment:@"path"] addURLSegment:@"default-domain"];
+    XCTAssertNil(request.responseData);
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertNotNil(request.responseData);
+        NSDictionary *json = [request responseJSONWithError:nil];
+        XCTAssertEqualObjects(@"document", [json valueForKey:@"entity-type"]);
+    } failureBlock:^{
+        XCTFail(@"Request should not fail: %@", request.responseMessage);
+    }];
+}
+
+-(void)testResponseForChild
+{
+    [[request addURLSegment:@"path/default-domain"] addAdaptor:@"children"];
+    XCTAssertNil(request.responseData);
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        NSDictionary *json = [request responseJSONWithError:nil];
+        XCTAssertEqualObjects(@"documents", [json valueForKey:@"entity-type"]);
+    } failureBlock:^{
+        XCTFail(@"Request should not fail: %@", request.responseMessage);
+    }];
+}
+
+-(void)testMultipleRequest
+{
+    NUXRequest *req = [[NUXRequest alloc] initWithSession:session];
+    [req addURLSegment:@"path/default-domain"];
+    [req addSchema:@"dublincore"];
+    [request addURLSegment:@"path/default-domain/workspaces"];
+    [request addSchema:@"file"];
+    
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        NSDictionary *json = [request responseJSONWithError:nil];
+        XCTAssertEqualObjects(@"/default-domain/workspaces", [json valueForKey:@"path"]);
+    } failureBlock:^{
+        XCTFail(@"Request should not fail: %@", request.responseMessage);
+    }];
+    
+    [session startRequestSynchronous:req withCompletionBlock:^{
+        NSDictionary *json = [req responseJSONWithError:nil];
+        XCTAssertEqualObjects(@"/default-domain", [json valueForKey:@"path"]);
+    } failureBlock:^{
+        XCTFail(@"Request should not fail: %@", req.responseMessage);
+    }];
+}
+
+-(void)testSchemaHeader
+{
+    [[[request addURLSegment:@"path"] addURLSegment:@"default-domain"] addSchema:@"dublincore"];
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        NSDictionary *properties = [[request responseJSONWithError:nil] objectForKey:@"properties"];
+        XCTAssertNotNil([properties valueForKey:@"dc:title"]);
+        XCTAssertNil([properties valueForKey:@"ms:metadata"]);
+    } failureBlock:^{
+        XCTFail(@"Request should not fail: %@", request.responseMessage);
+    }];
+}
+
 @end
