@@ -16,11 +16,18 @@
 
 @implementation NUXRequest
 
+NUXBasicBlock completion;
+NUXBasicBlock failure;
+
+NSData *_responseData;
+NSStringEncoding _responseEncoding;
+
 -(id)initWithSession:(NUXSession *)session {
     self = [NUXRequest new];
     if (self) {
         self.session = session;
         self.method = @"GET";
+        self.contentType = @"application/json";
         self.url = [session.url copy];
         
         _adaptors = [NSArray new];
@@ -83,12 +90,54 @@
     return self;
 }
 
--(NSString *)absoluteURLString {
-    return [self.url absoluteString];
+-(NSURL *)URL {
+    return self.url;
 }
 
 -(NSDictionary *)headers {
     return [NSDictionary dictionaryWithDictionary:self.mutableHeaders];
+}
+
+-(void)setCompletionBlock:(NUXBasicBlock)aCompletionBlock {
+    completion = aCompletionBlock;
+}
+
+-(void)setFailureBlock:(NUXBasicBlock)aFailureBlock {
+    failure = aFailureBlock;
+}
+
+-(void)start {
+    [self.session startRequest:self withCompletionBlock:completion failureBlock:failure];
+}
+
+-(void)startSynchronous {
+    [self.session startRequestSynchronous:self withCompletionBlock:completion failureBlock:failure];
+}
+
+-(void)startWithCompletionBlock:(NUXBasicBlock)completionBlock FailureBlock:(NUXBasicBlock)failureBlock {
+    [self.session startRequest:self withCompletionBlock:completionBlock failureBlock:failureBlock];
+}
+
+
+-(void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message {
+    _responseData = data;
+    _responseStatusCode = statusCode;
+    _responseEncoding = encoding;
+    _responseMessage = message;
+}
+
+-(NSData *)responseData {
+    return _responseData;
+}
+
+-(NSString *)responseString {
+    return [[NSString alloc] initWithData:[self responseData] encoding:NSUTF8StringEncoding];
+}
+
+-(id)responseJSONWithError:(NSError **)error {
+    id res = [NSJSONSerialization JSONObjectWithData:[self responseData] options:NSJSONReadingMutableContainers error:error];
+    
+    return res;
 }
 
 @end

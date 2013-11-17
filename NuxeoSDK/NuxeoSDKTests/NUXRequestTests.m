@@ -29,16 +29,16 @@ NUXRequest *request;
 
 - (void)testRequestURLBuilder
 {
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo", request.absoluteURLString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1", request.URL.absoluteString);
     
-    [[[[request addURLSegment:@"api"] addURLSegment:@"/v1"] addURLSegment:@"path/"] addURLSegment:@"default-domain"];
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain", request.absoluteURLString);
+    [[request addURLSegment:@"path/"] addURLSegment:@"default-domain"];
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain", request.URL.absoluteString);
     
     [request addAdaptor:@"child"];
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@child", request.absoluteURLString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@child", request.URL.absoluteString);
     
     [request addAdaptor:@"blob" withValue:@"file:content"];
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@child/@blob/file:content", request.absoluteURLString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@child/@blob/file:content", request.URL.absoluteString);
 }
 
 -(void)testRequestPropertiesRegistration

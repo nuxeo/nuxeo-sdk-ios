@@ -7,6 +7,7 @@
 //
 
 #import "NUXSession.h"
+#import <ASIHTTPRequest.h>
 
 @interface NUXSession () {
     
@@ -44,6 +45,9 @@
 -(id)initWithServerURL:(NSURL *)url username:(NSString *)username password:(NSString *)password {
     self = [[NUXSession alloc] init];
     if (self) {
+        if ([url.absoluteString rangeOfString:@"api"].location == NSNotFound) {
+            url = [url URLByAppendingPathComponent:@"api/v1"];
+        }
         [self setUrl:url];
         [self setUsername:username];
         [self setPassword:password];
@@ -59,33 +63,54 @@
     [self.categories addObjectsFromArray:categories];
 }
 
--(void)startRequest: (ASIHTTPRequest *)request withCompletionBlock:(ASIBasicBlock)completion failureBlock:(ASIBasicBlock)failure {
-    [self fillRequest:request];
-    [request setCompletionBlock:completion];
-    [request setFailedBlock:failure];
-    [self.queue addOperation:request];
+-(void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
+    ASIHTTPRequest *httpReq = [self httpRequestWithRequest:request withCompletionBlock:completion failureBlock:failure];
+    [self.queue addOperation:httpReq];
 }
 
--(void)startRequestSynchronous: (ASIHTTPRequest *)request withCompletionBlock:(ASIBasicBlock)completion failureBlock:(ASIBasicBlock)failure {
-    [self fillRequest:request];
-    [request setCompletionBlock:completion];
-    [request setFailedBlock:failure];
-    [request startSynchronous];
+-(void)startRequestSynchronous:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
+    ASIHTTPRequest *httpReq = [self httpRequestWithRequest:request withCompletionBlock:completion failureBlock:failure];
+    [httpReq startSynchronous];
 }
 
--(void)fillRequest:(ASIHTTPRequest *)request {
-    if (self.schemas.count > 0) {
-        [request addRequestHeader:@"X-NXDocumentProperties" value:[self.schemas componentsJoinedByString:@","]];
-    }
+-(ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
+    ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:nRequest.URL];
+    [request setRequestMethod:nRequest.method];
+    
+    [request setCompletionBlock:^{
+        [nRequest setResponseData:request.responseData WithEncoding:request.responseEncoding StatusCode:request.responseStatusCode message:request.responseStatusMessage];
+        completion();
+    }];
+    [request setFailedBlock:^{
+        [nRequest setResponseData:request.responseData WithEncoding:request.responseEncoding StatusCode:request.responseStatusCode message:request.responseStatusMessage];
+        failure();
+    }];
 
-    if (self.categories.count > 0) {
-        [request addRequestHeader:@"X-NXContext-Category" value:[self.categories componentsJoinedByString:@","]];
+    NSArray *schemas = [nRequest.schemas arrayByAddingObjectsFromArray:self.schemas];
+    if (schemas.count > 0) {
+        NSString *hs = [schemas indexOfObject:@"*"] > 0 ? @"*" : [schemas componentsJoinedByString:@","];
+        [request addRequestHeader:@"X-NXDocumentProperties" value:hs];
     }
-
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    
+    NSArray *categories = [nRequest.categories arrayByAddingObjectsFromArray:self.categories];
+    if (categories.count > 0) {
+        [request addRequestHeader:@"X-NXContext-Category" value:[categories componentsJoinedByString:@","]];
+    }
+    
+    for (NSString *header in nRequest.headers.allKeys) {
+        NSString *value = [nRequest.headers valueForKey:header];
+        [request addRequestHeader:header value:value];
+    }
+    [request addRequestHeader:@"Content-Type" value:nRequest.contentType];
     
     request.username = self.username;
     request.password = self.password;
+    
+    return request;
+}
+
+-(void)fillRequest:(ASIHTTPRequest *)request {
+
 }
 
 @end

@@ -7,7 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <ASIHTTPRequest.h>
 #import "NUXSession.h"
+#import "NUXRequest.h"
 
 @interface NUXSessionTests : XCTestCase
 
@@ -32,19 +34,21 @@ NUXSession *session;
 - (void)testSessionInit
 {
     NUXSession *session = [NUXSession new];
-    XCTAssertEqual(@"default", session.repository);
+    XCTAssertEqualObjects(@"default", session.repository);
     
     NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
     session = [[NUXSession alloc] initWithServerURL:url username:@"Administrator" password:@"Administrator"];
-    XCTAssertEqual(@"default", session.repository);
-    XCTAssertEqual(@"Administrator", session.username);
-    XCTAssertEqual(@"Administrator", session.password);
-    XCTAssertEqual(@"http://localhost:8080/nuxeo", session.url.absoluteString);
+    XCTAssertEqualObjects(@"default", session.repository);
+    XCTAssertEqualObjects(@"Administrator", session.username);
+    XCTAssertEqualObjects(@"Administrator", session.password);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1", session.url.absoluteString);
 }
 
 - (void)testBasicRequestExecution
 {
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://localhost:8080/nuxeo/api/v1/path/default-domain"]];
+    NUXRequest *request = [[NUXRequest alloc] initWithSession:session];
+    [request addURLSegment:@"doc"];
+    
     XCTAssertFalse(request.responseString.length > 0);
     [session startRequestSynchronous:request withCompletionBlock:^{
         XCTAssertEqual(request.responseStatusCode, 200);
@@ -56,7 +60,7 @@ NUXSession *session;
 
 -(void)testBasicRequestUnauthorized
 {
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://localhost:8080/nuxeo/api/v1/path/default-domain"]];
+    NUXRequest *request = [[NUXRequest alloc] initWithSession:session];
     session.username = @"Dummy";
     [session startRequestSynchronous:request withCompletionBlock:^{
         XCTFail(@"Failure with status: %d", request.responseStatusCode);

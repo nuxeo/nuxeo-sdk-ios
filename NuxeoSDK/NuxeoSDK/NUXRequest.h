@@ -9,9 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "NUXSession.h"
 
+@class NUXSession;
+
 @interface NUXRequest : NSObject
 
 @property NSString *method;
+@property NSString *contentType;
 @property NSString *repository;
 @property (readonly) NSArray *schemas;
 @property (readonly) NSArray *categories;
@@ -30,7 +33,21 @@
 
 -(NUXRequest *)addHeaderWithKey:(NSString *)key value:(NSString *)value;
 
--(NSString *)absoluteURLString;
+-(NSURL *)URL;
 -(NSDictionary *)headers;
+
+-(void)setCompletionBlock:(NUXBasicBlock)aCompletionBlock;
+-(void)setFailureBlock:(NUXBasicBlock)aFailureBlock;
+
+-(void)start;
+-(void)startSynchronous;
+-(void)startWithCompletionBlock:(NUXBasicBlock)completionBlock FailureBlock:(NUXBasicBlock)failureBlock;
+
+-(void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message;
+@property (readonly) int responseStatusCode;
+@property (readonly) NSString *responseMessage;
+-(NSString *)responseString;
+-(NSData *)responseData;
+-(id)responseJSONWithError:(NSError **)error;
 
 @end

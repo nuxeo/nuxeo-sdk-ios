@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <ASIHTTPRequest/ASIHTTPRequest.h>
-#import <ASIHTTPRequest/ASINetworkQueue.h>
+#import "NUXRequest.h"
+
+@class NUXRequest;
 
 @interface NUXSession : NSObject
 
@@ -24,7 +25,7 @@
 -(void)addDefaultSchemas: (NSArray *)schemas;
 -(void)addDefaultCategories: (NSArray *)categories;
 
--(void)startRequest: (ASIHTTPRequest *)request withCompletionBlock: (ASIBasicBlock)completion failureBlock: (ASIBasicBlock)failure;
--(void)startRequestSynchronous: (ASIHTTPRequest *)request withCompletionBlock: (ASIBasicBlock)completion failureBlock: (ASIBasicBlock)failure;
+-(void)startRequest: (NUXRequest *)request withCompletionBlock: (NUXBasicBlock)completion failureBlock: (NUXBasicBlock)failure;
+-(void)startRequestSynchronous: (NUXRequest *)request withCompletionBlock: (NUXBasicBlock)completion failureBlock: (NUXBasicBlock)failure;
 
 @end

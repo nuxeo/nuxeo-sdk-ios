@@ -7,3 +7,7 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
 #endif
+
+#if NS_BLOCKS_AVAILABLE
+typedef void (^NUXBasicBlock)(void);
+#endif
