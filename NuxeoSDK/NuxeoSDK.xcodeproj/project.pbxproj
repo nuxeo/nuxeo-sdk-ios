@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0330425B4DD5438799AE0594 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		5104E99E183A6E2100F1EB5D /* NUXSession+requests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5104E99D183A6E2100F1EB5D /* NUXSession+requests.m */; };
 		5178D529183407B600638548 /* NUXSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 5178D528183407B600638548 /* NUXSession.m */; };
 		51B849301835215600FD118C /* NUXRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B8492F1835215600FD118C /* NUXRequest.m */; };
 		51B8493218352CE900FD118C /* NUXRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B8493118352CE900FD118C /* NUXRequestTests.m */; };
@@ -44,6 +45,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5104E99C183A6E2100F1EB5D /* NUXSession+requests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NUXSession+requests.h"; sourceTree = "<group>"; };
+		5104E99D183A6E2100F1EB5D /* NUXSession+requests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NUXSession+requests.m"; sourceTree = "<group>"; };
 		5178D527183407B600638548 /* NUXSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXSession.h; sourceTree = "<group>"; };
 		5178D528183407B600638548 /* NUXSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXSession.m; sourceTree = "<group>"; };
 		51B8492E1835215600FD118C /* NUXRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXRequest.h; sourceTree = "<group>"; };
@@ -123,6 +126,8 @@
 				51E55C8A182D415F009AC87C /* Supporting Files */,
 				5178D527183407B600638548 /* NUXSession.h */,
 				5178D528183407B600638548 /* NUXSession.m */,
+				5104E99C183A6E2100F1EB5D /* NUXSession+requests.h */,
+				5104E99D183A6E2100F1EB5D /* NUXSession+requests.m */,
 				51B8492E1835215600FD118C /* NUXRequest.h */,
 				51B8492F1835215600FD118C /* NUXRequest.m */,
 			);
@@ -304,6 +309,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5104E99E183A6E2100F1EB5D /* NUXSession+requests.m in Sources */,
 				5178D529183407B600638548 /* NUXSession.m in Sources */,
 				51B849301835215600FD118C /* NUXRequest.m in Sources */,
 			);

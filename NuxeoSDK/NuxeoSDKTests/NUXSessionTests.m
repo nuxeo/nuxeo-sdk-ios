@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import <ASIHTTPRequest.h>
 #import "NUXSession.h"
+#import "NUXSession+requests.h"
 #import "NUXRequest.h"
 
 @interface NUXSessionTests : XCTestCase
