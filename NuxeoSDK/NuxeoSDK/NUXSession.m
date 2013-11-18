@@ -92,7 +92,7 @@
 
     NSArray *schemas = [nRequest.schemas arrayByAddingObjectsFromArray:self.schemas];
     if (schemas.count > 0) {
-        NSString *hs = [schemas indexOfObject:@"*"] > 0 ? @"*" : [schemas componentsJoinedByString:@","];
+        NSString *hs = [schemas indexOfObject:@"*"] == NSNotFound ? [schemas componentsJoinedByString:@","] : @"*";
         [request addRequestHeader:@"X-NXDocumentProperties" value:hs];
     }
     
@@ -123,6 +123,15 @@
 
 -(NUXRequest *)requestDocument:(NSString *)documentRef {
     return [[[[NUXRequest alloc] initWithSession:self] addURLSegment:[self segmentForDocumentRef:documentRef]] addURLSegment:documentRef];
+}
+
+-(NUXRequest *)requestUpdateDocument:(id)document {
+    NUXRequest *request = [self request];
+    request.method = @"put";
+    [request.postData appendData:[NSJSONSerialization dataWithJSONObject:document options:0 error:nil]];
+    [[request addURLSegment:@"id"] addURLSegment:[document valueForKey:@"uid"]];
+    
+    return request;
 }
 
 -(NUXRequest *)requestChildren:(NSString *)documentRef {

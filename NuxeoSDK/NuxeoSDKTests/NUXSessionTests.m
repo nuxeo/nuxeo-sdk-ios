@@ -106,4 +106,39 @@ NUXSession *session;
     XCTAssertTrue(request.responseData.length > 0);
 }
 
+-(void)testUpdateDocumentRequestMethod
+{
+    [session addDefaultSchemas:@[@"dublincore"]];
+    
+    // Fetch workspaces document
+    NUXRequest *request = [session requestDocument:@"/default-domain/workspaces"];
+    NSDictionary *__block workspaces;
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(200, request.responseStatusCode);
+        workspaces = [request responseJSONWithError:nil];
+    } failureBlock:^{
+        XCTFail(@"Request shouldn't fail!");
+    }];
+    
+    // Update his title
+    [[workspaces valueForKey:@"properties"] setValue:@"blablabla" forKey:@"dc:title"];
+    request = [session requestUpdateDocument:workspaces];
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(200, request.responseStatusCode);
+    } failureBlock:^{
+        XCTFail(@"Request shouldn't fail!");
+    }];
+    
+    // Re-fetch workspaces to check new title
+    NSString *docId = [workspaces valueForKey:@"uid"];
+    request = [session requestDocument:docId];
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(200, request.responseStatusCode);
+        NSDictionary *json = [request responseJSONWithError:nil];
+        XCTAssertEqualObjects(@"blablabla", [json valueForKey:@"title"]);
+    } failureBlock:^{
+        XCTFail(@"Request shouldn't fail!");
+    }];
+}
+
 @end

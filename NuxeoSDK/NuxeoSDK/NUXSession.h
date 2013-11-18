@@ -37,6 +37,8 @@
 -(NUXRequest *)request;
 // Convenience method to create a request to fetch a document associated with this session, documentRef could be an id or a path.
 -(NUXRequest *)requestDocument:(NSString *)documentRef;
+// Convenience method to create a request that update a document
+-(NUXRequest *)requestUpdateDocument:(id)document;
 // Convenience method to create a request to fetch document's childen associated with this session, documentRef could be an id or a path.
 -(NUXRequest *)requestChildren:(NSString *)documentRef;
 // Convenience method get a request prepared to execute a Nuxeo Operation
