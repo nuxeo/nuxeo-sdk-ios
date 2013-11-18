@@ -69,4 +69,25 @@ NUXSession *session;
     }];
 }
 
+-(void)testHelperMethods
+{
+    NUXRequest *req = [session requestDocument:@"76c69a54-0230-457a-b42c-e819d5ace862"];
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/id/76c69a54-0230-457a-b42c-e819d5ace862", req.URL.absoluteString);
+    XCTAssertEqualObjects(@"GET", req.method);
+    
+    req = [session requestChildren:@"/default-domain"];
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@children", req.URL.absoluteString);
+    XCTAssertEqualObjects(@"GET", req.method);
+    
+    [req setCompletionBlock:^{
+        NSDictionary *json = [req responseJSONWithError:Nil];
+        XCTAssertEqualObjects(@"documents", [json valueForKey:@"entity-type"]);
+    }];
+    [req setFailureBlock:^{
+        XCTFail(@"Request shouldn't fail!");
+    }];
+    [req startSynchronous];
+    XCTAssertNotNil(req.responseData);
+}
+
 @end

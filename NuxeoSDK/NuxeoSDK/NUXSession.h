@@ -28,4 +28,7 @@
 -(void)startRequest: (NUXRequest *)request withCompletionBlock: (NUXBasicBlock)completion failureBlock: (NUXBasicBlock)failure;
 -(void)startRequestSynchronous: (NUXRequest *)request withCompletionBlock: (NUXBasicBlock)completion failureBlock: (NUXBasicBlock)failure;
 
+-(NUXRequest *)requestDocument:(NSString *)documentRef;
+-(NUXRequest *)requestChildren:(NSString *)documentRef;
+
 @end

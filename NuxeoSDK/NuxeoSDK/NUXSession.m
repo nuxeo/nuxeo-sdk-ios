@@ -109,8 +109,16 @@
     return request;
 }
 
--(void)fillRequest:(ASIHTTPRequest *)request {
+-(NSString *)segmentForDocumentRef:(NSString *)docRef {
+    return [docRef characterAtIndex:0] == '/' ? @"path" : @"id";
+}
 
+-(NUXRequest *)requestDocument:(NSString *)documentRef {
+    return [[[[NUXRequest alloc] initWithSession:self] addURLSegment:[self segmentForDocumentRef:documentRef]] addURLSegment:documentRef];
+}
+
+-(NUXRequest *)requestChildren:(NSString *)documentRef {
+    return [[self requestDocument:documentRef] addAdaptor:@"children"];
 }
 
 @end
