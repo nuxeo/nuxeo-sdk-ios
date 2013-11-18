@@ -26,7 +26,7 @@ start_server $HERE/tomcat 127.0.0.1
 ./prepare-pod.sh
 
 echo "Build: `type $XCBUILD`"
-$XCBUILD -configuration Debug -sdk iphonesimulator -workspace NuxeoSDK/NuxeoSDK.xcworkspace -scheme NuxeoSDK clean test
+$XCBUILD -reporter junit:junit-result.xml -configuration Debug -sdk iphonesimulator -workspace NuxeoSDK/NuxeoSDK.xcworkspace -scheme NuxeoSDK clean test
 EXIT_CODE=$?
 
 stop_server
