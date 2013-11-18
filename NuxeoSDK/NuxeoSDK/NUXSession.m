@@ -116,6 +116,10 @@
     return [docRef characterAtIndex:0] == '/' ? @"path" : @"id";
 }
 
+-(NUXRequest *)request {
+    return [[NUXRequest alloc] initWithSession:self];
+}
+
 -(NUXRequest *)requestDocument:(NSString *)documentRef {
     return [[[[NUXRequest alloc] initWithSession:self] addURLSegment:[self segmentForDocumentRef:documentRef]] addURLSegment:documentRef];
 }
