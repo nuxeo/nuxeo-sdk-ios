@@ -5,7 +5,7 @@ NX_INT=$HERE/download/nuxeo-integration
 XCBUILD=${XCBUILD:-xcodebuild}
 
 # Cleaning
-rm -rf download nuxeo tomcat junit-result.txt || exit 1
+rm -rf download nuxeo tomcat junit-result.xml || exit 1
 
 # Cloning integration-release
 git clone https://github.com/nuxeo/integration-scripts $NX_INT
