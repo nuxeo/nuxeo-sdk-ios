@@ -80,10 +80,9 @@ NUXSession *session;
     XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@children", req.URL.absoluteString);
     XCTAssertEqualObjects(@"GET", req.method);
     
-    __weak NUXRequest *weakReq = req;
+    NUXRequest *__weak wReq = req;
     [req setCompletionBlock:^{
-        __strong NUXRequest *strongReq = weakReq;
-        NSDictionary *json = [strongReq responseJSONWithError:Nil];
+        NSDictionary *json = [wReq responseJSONWithError:Nil];
         XCTAssertEqualObjects(@"documents", [json valueForKey:@"entity-type"]);
     }];
     [req setFailureBlock:^{

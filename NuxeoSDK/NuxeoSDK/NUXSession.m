@@ -80,15 +80,13 @@
         [request appendPostData:nRequest.postData];
     }
     
-    __weak ASIHTTPRequest *weakRequest = request;
+    ASIHTTPRequest *__weak wRequest = request;
     [request setCompletionBlock:^{
-        __strong ASIHTTPRequest *strongRequest = weakRequest;
-        [nRequest setResponseData:strongRequest.responseData WithEncoding:strongRequest.responseEncoding StatusCode:strongRequest.responseStatusCode message:strongRequest.responseStatusMessage];
+        [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage];
         completion();
     }];
     [request setFailedBlock:^{
-        __strong ASIHTTPRequest *strongRequest = weakRequest;
-        [nRequest setResponseData:strongRequest.responseData WithEncoding:strongRequest.responseEncoding StatusCode:strongRequest.responseStatusCode message:strongRequest.responseStatusMessage];
+        [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage];
         failure();
     }];
 
