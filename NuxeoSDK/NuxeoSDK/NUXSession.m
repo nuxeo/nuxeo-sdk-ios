@@ -76,6 +76,9 @@
 -(ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:nRequest.URL];
     [request setRequestMethod:nRequest.method];
+    if (nRequest.postData.length > 0) {
+        [request appendPostData:nRequest.postData];
+    }
     
     __weak ASIHTTPRequest *weakRequest = request;
     [request setCompletionBlock:^{
@@ -126,6 +129,24 @@
 
 -(NUXRequest *)requestChildren:(NSString *)documentRef {
     return [[self requestDocument:documentRef] addAdaptor:@"children"];
+}
+
+-(NUXRequest *)requestOperation:(NSString *)operationId {
+    NUXRequest *request = [self request];
+    request.contentType = @"application/json+nxrequest";
+    request.method = @"POST";
+    [[request addURLSegment:@"automation"] addURLSegment:operationId];
+    
+    return request;
+}
+
+-(NUXRequest *)requestQuery:(NSString *)query {
+    NUXRequest *request = [self requestOperation:@"Document.Query"];
+    
+    NSDictionary *params = @{@"params" : @{@"query" : query}};
+    [request.postData appendData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil]];
+    
+    return  request;
 }
 
 @end

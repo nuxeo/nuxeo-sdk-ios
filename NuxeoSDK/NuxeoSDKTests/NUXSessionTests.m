@@ -93,4 +93,18 @@ NUXSession *session;
     XCTAssertNotNil(req.responseData);
 }
 
+-(void)testQueryRequestMethod
+{
+    NUXRequest *request = [session requestQuery:@"Select * from Document"];
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(200, request.responseStatusCode);
+        NSDictionary *response = [request responseJSONWithError:nil];
+        XCTAssertEqualObjects(@"documents", [response valueForKey:@"entity-type"]);
+        XCTAssertTrue([[response valueForKey:@"entries"] count] > 3);
+    } failureBlock:^{
+        XCTFail(@"Request shouldn't fail!");
+    }];
+    XCTAssertTrue(request.responseData.length > 0);
+}
+
 @end

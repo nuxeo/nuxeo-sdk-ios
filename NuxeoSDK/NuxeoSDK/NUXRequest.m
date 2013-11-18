@@ -33,7 +33,8 @@ NSStringEncoding _responseEncoding;
         _adaptors = [NSArray new];
         _categories = [NSArray new];
         _schemas = [NSArray new];
-        self.mutableHeaders = [NSMutableDictionary new];
+        _postData = [NSMutableData new];
+        _mutableHeaders = [NSMutableDictionary new];
     }
     return self;
 }
@@ -48,6 +49,7 @@ NSStringEncoding _responseEncoding;
     self.url = Nil;
     self.method = Nil;
     self.repository = Nil;
+    self.postData = Nil;
 }
 
 -(NUXRequest *)addURLSegment:(NSString *)aSegment {

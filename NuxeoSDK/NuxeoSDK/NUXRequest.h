@@ -16,6 +16,7 @@
 @property NSString *method;
 @property NSString *contentType;
 @property NSString *repository;
+@property NSMutableData *postData;
 @property (readonly) NSArray *schemas;
 @property (readonly) NSArray *categories;
 @property (readonly) NSArray *adaptors;
