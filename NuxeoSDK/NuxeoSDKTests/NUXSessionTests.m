@@ -142,4 +142,29 @@ NUXSession *session;
     }];
 }
 
+-(void)testCreateDocumentRequestMethod
+{
+    [session addDefaultSchemas:@[@"dublincore"]];
+    
+    NSString *title = @"My WonderFul Doc";
+    NSString *parentPath = @"/default-domain/workspaces";
+    NSDictionary *__block newDoc = @{@"entity-type" : @"document",
+                             @"name" : @"myNewDoc",
+                             @"type" : @"File",
+                             @"properties" : @{@"dc:title" : title,
+                                               @"dc:description" : @"Description is cool"}};
+    XCTAssertNil([newDoc valueForKey:@"uid"]);
+    NUXRequest *request = [session requestCreateDocument:newDoc withParent:parentPath];
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(201, request.responseStatusCode);
+        newDoc = [request responseJSONWithError:nil];
+    } failureBlock:^{
+        XCTFail(@"Request shouldn't fail!");
+    }];
+    
+    XCTAssertNotNil([newDoc valueForKey:@"uid"]);
+    XCTAssertEqualObjects(title, [newDoc valueForKey:@"title"]);
+    XCTAssertTrue([[newDoc valueForKey:@"path"] rangeOfString:parentPath].location != NSNotFound);
+}
+
 @end

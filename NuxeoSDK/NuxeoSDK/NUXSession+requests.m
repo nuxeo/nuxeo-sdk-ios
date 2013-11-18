@@ -27,6 +27,13 @@
     return request;
 }
 
+-(NUXRequest *)requestCreateDocument:(id)document withParent:(NSString *)documentRef {
+    NUXRequest *request = [self requestDocument:documentRef];
+    request.method = @"post";
+    [request.postData appendData:[NSJSONSerialization dataWithJSONObject:document options:0 error:nil]];
+    return request;
+}
+
 -(NUXRequest *)requestChildren:(NSString *)documentRef {
     return [[self requestDocument:documentRef] addAdaptor:@"children"];
 }
