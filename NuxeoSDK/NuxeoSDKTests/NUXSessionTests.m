@@ -29,6 +29,7 @@ NUXSession *session;
 - (void)tearDown
 {
     [super tearDown];
+    session = Nil;
 }
 
 - (void)testSessionInit
@@ -79,8 +80,10 @@ NUXSession *session;
     XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@children", req.URL.absoluteString);
     XCTAssertEqualObjects(@"GET", req.method);
     
+    __weak NUXRequest *weakReq = req;
     [req setCompletionBlock:^{
-        NSDictionary *json = [req responseJSONWithError:Nil];
+        __strong NUXRequest *strongReq = weakReq;
+        NSDictionary *json = [strongReq responseJSONWithError:Nil];
         XCTAssertEqualObjects(@"documents", [json valueForKey:@"entity-type"]);
     }];
     [req setFailureBlock:^{

@@ -77,12 +77,15 @@
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:nRequest.URL];
     [request setRequestMethod:nRequest.method];
     
+    __weak ASIHTTPRequest *weakRequest = request;
     [request setCompletionBlock:^{
-        [nRequest setResponseData:request.responseData WithEncoding:request.responseEncoding StatusCode:request.responseStatusCode message:request.responseStatusMessage];
+        __strong ASIHTTPRequest *strongRequest = weakRequest;
+        [nRequest setResponseData:strongRequest.responseData WithEncoding:strongRequest.responseEncoding StatusCode:strongRequest.responseStatusCode message:strongRequest.responseStatusMessage];
         completion();
     }];
     [request setFailedBlock:^{
-        [nRequest setResponseData:request.responseData WithEncoding:request.responseEncoding StatusCode:request.responseStatusCode message:request.responseStatusMessage];
+        __strong ASIHTTPRequest *strongRequest = weakRequest;
+        [nRequest setResponseData:strongRequest.responseData WithEncoding:strongRequest.responseEncoding StatusCode:strongRequest.responseStatusCode message:strongRequest.responseStatusMessage];
         failure();
     }];
 
