@@ -20,7 +20,6 @@ NUXResponseBlock completion;
 NUXResponseBlock failure;
 
 NSData *_responseData;
-NSStringEncoding _responseEncoding;
 
 - (id)initWithSession:(NUXSession *)session {
     self = [NUXRequest new];
@@ -112,22 +111,33 @@ NSStringEncoding _responseEncoding;
 }
 
 - (void)start {
-    [self.session startRequest:self withCompletionBlock:completion failureBlock:failure];
+    [self.session startRequest:self withCompletionBlock:^{
+        completion(self);
+    } failureBlock:^{
+        failure(self);
+    }];
 }
 
 - (void)startSynchronous {
-    [self.session startRequestSynchronous:self withCompletionBlock:completion failureBlock:failure];
+    [self.session startRequestSynchronous:self withCompletionBlock:^{
+        completion(self);
+    } failureBlock:^{
+        failure(self);
+    }];
 }
 
-- (void)startWithCompletionBlock:(NUXResponseBlock)completionBlock FailureBlock:(NUXResponseBlock)failureBlock {
-    [self.session startRequest:self withCompletionBlock:completionBlock failureBlock:failureBlock];
+- (void)startWithCompletionBlock:(NUXResponseBlock)completion FailureBlock:(NUXResponseBlock)failure{
+    [self.session startRequest:self withCompletionBlock:^{
+        completion(self);
+    } failureBlock:^{
+        failure(self);
+    }];
 }
 
 
 - (void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message {
     _responseData = data;
     _responseStatusCode = statusCode;
-    _responseEncoding = encoding;
     _responseMessage = message;
 }
 

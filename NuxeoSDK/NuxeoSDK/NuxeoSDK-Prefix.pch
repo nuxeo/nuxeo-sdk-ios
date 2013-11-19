@@ -11,6 +11,7 @@
 @class NUXRequest;
 
 #if NS_BLOCKS_AVAILABLE
+typedef void (^NUXBasicBlock)(void);
 typedef void (^NUXResponseBlock)(NUXRequest *);
 #endif
 

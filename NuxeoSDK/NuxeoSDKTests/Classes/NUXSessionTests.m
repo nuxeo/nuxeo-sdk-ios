@@ -46,10 +46,10 @@ NUXSession *session;
     [request addURLSegment:@"doc"];
 
     XCTAssertFalse(request.responseString.length > 0);
-    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest) {
-        XCTAssertEqual(rRequest.responseStatusCode, 200);
-    }                   failureBlock:^(NUXRequest *rRequest) {
-        XCTFail(@"Failure with status: %d", rRequest.responseStatusCode);
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(request.responseStatusCode, 200);
+    }                   failureBlock:^{
+        XCTFail(@"Failure with status: %d", request.responseStatusCode);
     }];
     XCTAssertTrue(request.responseString.length > 0);
 }
@@ -57,10 +57,10 @@ NUXSession *session;
 - (void)testBasicRequestUnauthorized {
     NUXRequest *request = [[NUXRequest alloc] initWithSession:session];
     session.username = @"Dummy";
-    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest) {
-        XCTFail(@"Failure with status: %d", rRequest.responseStatusCode);
-    }                   failureBlock:^(NUXRequest *rRequest) {
-        XCTAssertEqual(rRequest.responseStatusCode, 401);
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTFail(@"Failure with status: %d", request.responseStatusCode);
+    }                   failureBlock:^{
+        XCTAssertEqual(request.responseStatusCode, 401);
     }];
 }
 
@@ -86,12 +86,12 @@ NUXSession *session;
 
 - (void)testQueryRequestMethod {
     NUXRequest *request = [session requestQuery:@"Select * from Document"];
-    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest) {
-        XCTAssertEqual(200, rRequest.responseStatusCode);
-        NSDictionary *response = [rRequest responseJSONWithError:nil];
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(200, request.responseStatusCode);
+        NSDictionary *response = [request responseJSONWithError:nil];
         XCTAssertEqualObjects(@"documents", [response valueForKey:@"entity-type"]);
         XCTAssertTrue([[response valueForKey:@"entries"] count] > 3);
-    }                   failureBlock:^(NUXRequest *r) {
+    }                   failureBlock:^{
         XCTFail(@"Request shouldn't fail!");
     }];
     XCTAssertTrue(request.responseData.length > 0);
@@ -103,30 +103,30 @@ NUXSession *session;
     // Fetch workspaces document
     NUXRequest *request = [session requestDocument:@"/default-domain/workspaces"];
     NSDictionary *__block workspaces;
-    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest) {
-        XCTAssertEqual(200, rRequest.responseStatusCode);
-        workspaces = [rRequest responseJSONWithError:nil];
-    }                   failureBlock:^(NUXRequest *r) {
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(200, request.responseStatusCode);
+        workspaces = [request responseJSONWithError:nil];
+    }                   failureBlock:^{
         XCTFail(@"Request shouldn't fail!");
     }];
 
     // Update his title
     [[workspaces valueForKey:@"properties"] setValue:@"blablabla" forKey:@"dc:title"];
     request = [session requestUpdateDocument:workspaces];
-    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest) {
-        XCTAssertEqual(200, rRequest.responseStatusCode);
-    }                   failureBlock:^(NUXRequest *r) {
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(200, request.responseStatusCode);
+    }                   failureBlock:^{
         XCTFail(@"Request shouldn't fail!");
     }];
 
     // Re-fetch workspaces to check new title
     NSString *docId = [workspaces valueForKey:@"uid"];
     request = [session requestDocument:docId];
-    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest) {
-        XCTAssertEqual(200, rRequest.responseStatusCode);
-        NSDictionary *json = [rRequest responseJSONWithError:nil];
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(200, request.responseStatusCode);
+        NSDictionary *json = [request responseJSONWithError:nil];
         XCTAssertEqualObjects(@"blablabla", [json valueForKey:@"title"]);
-    }                   failureBlock:^(NUXRequest *rRequest) {
+    }                   failureBlock:^{
         XCTFail(@"Request shouldn't fail!");
     }];
 }
@@ -143,10 +143,10 @@ NUXSession *session;
                     @"dc:description" : @"Description is cool"}};
     XCTAssertNil([newDoc valueForKey:@"uid"]);
     NUXRequest *request = [session requestCreateDocument:newDoc withParent:parentPath];
-    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest) {
-        XCTAssertEqual(201, rRequest.responseStatusCode);
-        newDoc = [rRequest responseJSONWithError:nil];
-    }                   failureBlock:^(NUXRequest *rRequest) {
+    [session startRequestSynchronous:request withCompletionBlock:^{
+        XCTAssertEqual(201, request.responseStatusCode);
+        newDoc = [request responseJSONWithError:nil];
+    }                   failureBlock:^{
         XCTFail(@"Request shouldn't fail!");
     }];
 

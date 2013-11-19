@@ -69,17 +69,17 @@ NSString *const kRepositoryKey = @"Repository";
     [self.categories addObjectsFromArray:categories];
 }
 
-- (void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure {
+- (void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
     ASIHTTPRequest *httpReq = [self httpRequestWithRequest:request withCompletionBlock:completion failureBlock:failure];
     [self.queue addOperation:httpReq];
 }
 
-- (void)startRequestSynchronous:(NUXRequest *)request withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure {
+- (void)startRequestSynchronous:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
     ASIHTTPRequest *httpReq = [self httpRequestWithRequest:request withCompletionBlock:completion failureBlock:failure];
     [httpReq startSynchronous];
 }
 
-- (ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure {
+- (ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:nRequest.URL];
     [request setRequestMethod:nRequest.method];
     if (nRequest.postData.length > 0) {
@@ -89,11 +89,11 @@ NSString *const kRepositoryKey = @"Repository";
     ASIHTTPRequest *__weak wRequest = request;
     [request setCompletionBlock:^{
         [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage];
-        completion(nRequest);
+        completion();
     }];
     [request setFailedBlock:^{
         [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage];
-        failure(nRequest);
+        failure();
     }];
 
     NSArray *schemas = [nRequest.schemas arrayByAddingObjectsFromArray:self.schemas];
