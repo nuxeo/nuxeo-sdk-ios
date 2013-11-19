@@ -45,6 +45,18 @@
 // Add multiple schemas to the request headers
 - (NUXRequest *)addSchemas:(NSArray *)schemas;
 
+// Add post parameter.
+- (void)addPostParamValue:(id)value forKey:(NSString *)key;
+
+// Get post parameters
+- (NSDictionary *)postParams;
+
+// Add post file
+- (void)addPostFile:(NSString *)filePath forKey:(NSString *)key;
+
+// Get post files
+- (NSDictionary *)postFiles;
+
 // Add custom header to the request
 - (NUXRequest *)addHeaderWithKey:(NSString *)key value:(NSString *)value;
 

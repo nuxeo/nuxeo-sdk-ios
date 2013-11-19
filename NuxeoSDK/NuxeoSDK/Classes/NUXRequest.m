@@ -20,6 +20,8 @@ NUXResponseBlock _completion;
 NUXResponseBlock _failure;
 
 NSData *_responseData;
+NSMutableDictionary *_postParams;
+NSMutableDictionary *_postFiles;
 
 - (id)initWithSession:(NUXSession *)session {
     self = [NUXRequest new];
@@ -34,11 +36,16 @@ NSData *_responseData;
         _schemas = [NSArray new];
         _postData = [NSMutableData new];
         _mutableHeaders = [NSMutableDictionary new];
+        _postParams = [NSMutableDictionary new];
+        _postFiles = [NSMutableDictionary new];
+
     }
     return self;
 }
 
 - (void)dealloc {
+    _postParams = Nil;
+    _postFiles = Nil;
     _adaptors = Nil;
     _categories = Nil;
     _schemas = Nil;
@@ -102,6 +109,22 @@ NSData *_responseData;
     return [NSDictionary dictionaryWithDictionary:self.mutableHeaders];
 }
 
+- (void)addPostParamValue:(id)value forKey:(NSString *)key {
+    [_postParams setObject:value forKey:key];
+}
+
+-(void)addPostFile:(NSString *)filePath forKey:(NSString *)key {
+    [_postFiles setObject:filePath forKey:key];
+}
+
+- (NSDictionary *)postParams {
+    return [NSDictionary dictionaryWithDictionary:_postParams];
+}
+
+-(NSDictionary *)postFiles {
+    return [NSDictionary dictionaryWithDictionary:_postFiles];
+}
+
 - (void)setCompletionBlock:(NUXResponseBlock)aCompletionBlock {
     _completion = aCompletionBlock;
 }
@@ -115,7 +138,7 @@ NSData *_responseData;
         if (_completion != nil) {
             _completion(self);
         }
-    } failureBlock:^{
+    }             failureBlock:^{
         if (_failure != nil) {
             _failure(self);
         }
@@ -127,17 +150,17 @@ NSData *_responseData;
         if (_completion != nil) {
             _completion(self);
         }
-    } failureBlock:^{
+    }                        failureBlock:^{
         if (_failure != nil) {
             _failure(self);
         }
     }];
 }
 
-- (void)startWithCompletionBlock:(NUXResponseBlock)completion FailureBlock:(NUXResponseBlock)failure{
+- (void)startWithCompletionBlock:(NUXResponseBlock)completion FailureBlock:(NUXResponseBlock)failure {
     [self.session startRequest:self withCompletionBlock:^{
         completion(self);
-    } failureBlock:^{
+    }             failureBlock:^{
         failure(self);
     }];
 }

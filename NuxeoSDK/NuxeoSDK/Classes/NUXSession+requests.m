@@ -66,4 +66,14 @@
     return [docRef characterAtIndex:0] == '/' ? @"path" : @"id";
 }
 
+-(NUXRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef {
+    NUXRequest *request = [self requestOperation:@"FileManager.Import"];
+    
+    id json = [NSJSONSerialization dataWithJSONObject:@{@"context" : @{@"currentDocument" : documentRef}} options:0 error:nil];
+    [request addPostParamValue:json forKey:@"params"];
+    [request addPostFile:file forKey:@"input"];
+    
+    return request;
+}
+
 @end

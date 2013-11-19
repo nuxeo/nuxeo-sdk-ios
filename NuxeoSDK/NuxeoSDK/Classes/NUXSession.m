@@ -8,6 +8,7 @@
 
 #import "NUXSession.h"
 #import <ASIHTTPRequest.h>
+#import <ASIFormDataRequest.h>
 
 @interface NUXSession () {
 
@@ -80,11 +81,22 @@ NSString *const kRepositoryKey = @"Repository";
 }
 
 - (ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
-    ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:nRequest.URL];
-    [request setRequestMethod:nRequest.method];
-    if (nRequest.postData.length > 0) {
+    ASIHTTPRequest *request;
+    if (nRequest.postParams.count == 0) {
+        request = [[ASIHTTPRequest alloc] initWithURL:nRequest.URL];
         [request appendPostData:nRequest.postData];
+    } else {
+        ASIFormDataRequest *fRequest = [[ASIFormDataRequest alloc] initWithURL:nRequest.URL];
+        [nRequest.postParams enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [fRequest addData:obj forKey:key];
+        }];
+        
+        [nRequest.postFiles enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [fRequest addFile:obj forKey:key];
+        }];
+        request = fRequest;
     }
+    [request setRequestMethod:nRequest.method];
 
     ASIHTTPRequest *__weak wRequest = request;
     [request setCompletionBlock:^{

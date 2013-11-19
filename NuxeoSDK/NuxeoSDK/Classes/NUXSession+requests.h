@@ -34,4 +34,7 @@
 // Convenience method to query documents in NXQL
 - (NUXRequest *)requestQuery:(NSString *)query;
 
+// Convenience method de import a file
+- (NUXRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef;
+
 @end

@@ -201,4 +201,23 @@ NUXSession *session;
     [request startSynchronous];
 }
 
+-(void)testUploadBlobWithAutomation {
+    NSString *file = [[NSBundle bundleForClass:[NUXSession class]] pathForResource:@"NUXSession-info" ofType:@"plist"];
+    NUXRequest *request = [session requestImportFile:file withParent:@"/management"];
+    [request addSchema:@"file"];
+    
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(200, request.responseStatusCode);
+        NSDictionary *doc = [request responseJSONWithError:nil];
+        XCTAssertNotNil([doc valueForKey:@"uid"]);
+        XCTAssertNotNil([[doc valueForKey:@"properties"] valueForKey:@"file:content"]);
+    }];
+
+    [request setFailureBlock:^(NUXRequest *request) {
+        XCTFail(@"upload fail.");
+    }];
+
+    [request startSynchronous];
+}
+
 @end
