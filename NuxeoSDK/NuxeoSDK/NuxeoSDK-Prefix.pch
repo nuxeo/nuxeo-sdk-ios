@@ -5,9 +5,14 @@
 //
 
 #ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-#endif
+
+#import <Foundation/Foundation.h>
+
+@class NUXRequest;
 
 #if NS_BLOCKS_AVAILABLE
-typedef void (^NUXBasicBlock)(void);
+typedef void (^NUXResponseBlock)(NUXRequest *);
 #endif
+
+#endif
+

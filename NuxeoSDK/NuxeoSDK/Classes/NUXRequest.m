@@ -7,7 +7,6 @@
 //
 
 #import "NUXRequest.h"
-#import "NUXSession.h"
 
 @interface NUXRequest ()
 @property NSURL *url;
@@ -17,8 +16,8 @@
 
 @implementation NUXRequest
 
-NUXBasicBlock completion;
-NUXBasicBlock failure;
+NUXResponseBlock completion;
+NUXResponseBlock failure;
 
 NSData *_responseData;
 NSStringEncoding _responseEncoding;
@@ -104,11 +103,11 @@ NSStringEncoding _responseEncoding;
     return [NSDictionary dictionaryWithDictionary:self.mutableHeaders];
 }
 
--(void)setCompletionBlock:(NUXBasicBlock)aCompletionBlock {
+-(void)setCompletionBlock:(NUXResponseBlock)aCompletionBlock {
     completion = aCompletionBlock;
 }
 
--(void)setFailureBlock:(NUXBasicBlock)aFailureBlock {
+-(void)setFailureBlock:(NUXResponseBlock)aFailureBlock {
     failure = aFailureBlock;
 }
 
@@ -120,7 +119,7 @@ NSStringEncoding _responseEncoding;
     [self.session startRequestSynchronous:self withCompletionBlock:completion failureBlock:failure];
 }
 
--(void)startWithCompletionBlock:(NUXBasicBlock)completionBlock FailureBlock:(NUXBasicBlock)failureBlock {
+-(void)startWithCompletionBlock:(NUXResponseBlock)completionBlock FailureBlock:(NUXResponseBlock)failureBlock {
     [self.session startRequest:self withCompletionBlock:completionBlock failureBlock:failureBlock];
 }
 

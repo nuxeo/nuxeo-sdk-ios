@@ -63,12 +63,12 @@ NUXRequest *request;
 {
     [[request addURLSegment:@"path"] addURLSegment:@"default-domain"];
     XCTAssertNil(request.responseData);
-    [session startRequestSynchronous:request withCompletionBlock:^{
-        XCTAssertNotNil(request.responseData);
-        NSDictionary *json = [request responseJSONWithError:nil];
+    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest){
+        XCTAssertNotNil(rRequest.responseData);
+        NSDictionary *json = [rRequest responseJSONWithError:nil];
         XCTAssertEqualObjects(@"document", [json valueForKey:@"entity-type"]);
-    } failureBlock:^{
-        XCTFail(@"Request should not fail: %@", request.responseMessage);
+    } failureBlock:^(NUXRequest *rRequest){
+        XCTFail(@"Request should not fail: %@", rRequest.responseMessage);
     }];
 }
 
@@ -76,11 +76,11 @@ NUXRequest *request;
 {
     [[request addURLSegment:@"path/default-domain"] addAdaptor:@"children"];
     XCTAssertNil(request.responseData);
-    [session startRequestSynchronous:request withCompletionBlock:^{
-        NSDictionary *json = [request responseJSONWithError:nil];
+    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest){
+        NSDictionary *json = [rRequest responseJSONWithError:nil];
         XCTAssertEqualObjects(@"documents", [json valueForKey:@"entity-type"]);
-    } failureBlock:^{
-        XCTFail(@"Request should not fail: %@", request.responseMessage);
+    } failureBlock:^(NUXRequest *rRequest){
+        XCTFail(@"Request should not fail: %@", rRequest.responseMessage);
     }];
 }
 
@@ -92,30 +92,30 @@ NUXRequest *request;
     [request addURLSegment:@"path/default-domain/workspaces"];
     [request addSchema:@"file"];
     
-    [session startRequestSynchronous:request withCompletionBlock:^{
-        NSDictionary *json = [request responseJSONWithError:nil];
+    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest){
+        NSDictionary *json = [rRequest responseJSONWithError:nil];
         XCTAssertEqualObjects(@"/default-domain/workspaces", [json valueForKey:@"path"]);
-    } failureBlock:^{
-        XCTFail(@"Request should not fail: %@", request.responseMessage);
+    } failureBlock:^(NUXRequest *rRequest){
+        XCTFail(@"Request should not fail: %@", rRequest.responseMessage);
     }];
     
-    [session startRequestSynchronous:req withCompletionBlock:^{
-        NSDictionary *json = [req responseJSONWithError:nil];
+    [session startRequestSynchronous:req withCompletionBlock:^(NUXRequest *rRequest){
+        NSDictionary *json = [rRequest responseJSONWithError:nil];
         XCTAssertEqualObjects(@"/default-domain", [json valueForKey:@"path"]);
-    } failureBlock:^{
-        XCTFail(@"Request should not fail: %@", req.responseMessage);
+    } failureBlock:^(NUXRequest *rRequest){
+        XCTFail(@"Request should not fail: %@", rRequest.responseMessage);
     }];
 }
 
 -(void)testSchemaHeader
 {
     [[[request addURLSegment:@"path"] addURLSegment:@"default-domain"] addSchema:@"dublincore"];
-    [session startRequestSynchronous:request withCompletionBlock:^{
-        NSDictionary *properties = [[request responseJSONWithError:nil] objectForKey:@"properties"];
+    [session startRequestSynchronous:request withCompletionBlock:^(NUXRequest *rRequest){
+        NSDictionary *properties = [[rRequest responseJSONWithError:nil] objectForKey:@"properties"];
         XCTAssertNotNil([properties valueForKey:@"dc:title"]);
         XCTAssertNil([properties valueForKey:@"ms:metadata"]);
-    } failureBlock:^{
-        XCTFail(@"Request should not fail: %@", request.responseMessage);
+    } failureBlock:^(NUXRequest *rRequest){
+        XCTFail(@"Request should not fail: %@", rRequest.responseMessage);
     }];
 }
 

@@ -29,9 +29,9 @@
 -(void)addDefaultCategories: (NSArray *)categories;
 
 // Execute a NUXRequest asynchronously using this session and authentication challenge.
--(void)startRequest: (NUXRequest *)request withCompletionBlock: (NUXBasicBlock)completion failureBlock: (NUXBasicBlock)failure;
+-(void)startRequest: (NUXRequest *)request withCompletionBlock: (NUXResponseBlock)completion failureBlock: (NUXResponseBlock)failure;
 // Execute a NUXRequest synchronously using this session and authentication challenge.
--(void)startRequestSynchronous: (NUXRequest *)request withCompletionBlock: (NUXBasicBlock)completion failureBlock: (NUXBasicBlock)failure;
+-(void)startRequestSynchronous: (NUXRequest *)request withCompletionBlock: (NUXResponseBlock)completion failureBlock: (NUXResponseBlock)failure;
 
 +(NUXSession *)sharedSession;
 

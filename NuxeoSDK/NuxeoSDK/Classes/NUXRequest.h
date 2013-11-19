@@ -48,12 +48,12 @@
 // Read access to registered headers
 -(NSDictionary *)headers;
 
--(void)setCompletionBlock:(NUXBasicBlock)aCompletionBlock;
--(void)setFailureBlock:(NUXBasicBlock)aFailureBlock;
+-(void)setCompletionBlock:(NUXResponseBlock)aCompletionBlock;
+-(void)setFailureBlock:(NUXResponseBlock)aFailureBlock;
 
 -(void)start;
 -(void)startSynchronous;
--(void)startWithCompletionBlock:(NUXBasicBlock)completionBlock FailureBlock:(NUXBasicBlock)failureBlock;
+-(void)startWithCompletionBlock:(NUXResponseBlock)completionBlock FailureBlock:(NUXResponseBlock)failureBlock;
 
 -(void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message;
 @property (readonly) int responseStatusCode;
