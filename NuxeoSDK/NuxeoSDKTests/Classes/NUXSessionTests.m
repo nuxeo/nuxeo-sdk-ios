@@ -171,8 +171,12 @@ NUXSession *session;
     NUXSession *session = [NUXSession sharedSession];
     XCTAssertEqualObjects(@"http://localhost:8080/test", session.url.absoluteString);
     XCTAssertEqualObjects(@"adminShared", session.username);
-    XCTAssertEqualObjects(@"adminPassword", session.password);
+    XCTAssertEqualObjects(@"adminSharedPass", session.password);
     XCTAssertEqualObjects(@"test", session.repository);
+
+    session.username = @"another";
+    NUXSession *sessionNd = [NUXSession sharedSession];
+    XCTAssertEqualObjects(@"another", sessionNd.username);
 }
 
 @end

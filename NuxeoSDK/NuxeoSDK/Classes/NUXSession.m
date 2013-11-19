@@ -22,13 +22,11 @@
 
 @implementation NUXSession
 
-NSString * const PropertyFileName = @"NUXSession-info";
-NSString * const URLKey = @"URL";
-NSString * const UsernameKey = @"Username";
-NSString * const PasswordKey = @"Password";
-NSString * const RepositoryKey = @"Repository";
-
-NUXSession *shared;
+NSString * const kPropertyFileName = @"NUXSession-info";
+NSString * const kURLKey = @"URL";
+NSString * const kUsernameKey = @"Username";
+NSString * const kPasswordKey = @"Password";
+NSString * const kRepositoryKey = @"Repository";
 
 -(id)init {
     self = [super init];
@@ -43,7 +41,6 @@ NUXSession *shared;
 }
 
 -(void)dealloc {
-    shared = Nil;
     [self setQueue:Nil];
     [self setSchemas:Nil];
     [self setUsername:Nil];
@@ -123,34 +120,40 @@ NUXSession *shared;
     return request;
 }
 
-+(NUXSession *)sharedSession {
-    if (shared == nil) {
-        shared = [NUXSession new];
-        NSString *properties = [[NSBundle mainBundle] pathForResource:PropertyFileName ofType:@"plist"];
-        if (properties == nil) {
-            [NSException raise:properties format:@"Unable to locate file %@.plist", PropertyFileName];
-        }
-        
-        NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:properties];
-        NSString *value = [plist valueForKey:UsernameKey];
-        if (value != nil) {
-            shared.username = value;
-        }
-        value = [plist valueForKey:PasswordKey];
-        if (value != nil) {
-            shared.password = value;
-        }
-        value = [plist valueForKey:RepositoryKey];
-        if (value != nil) {
-            shared.repository = value;
-        }
-        value = [plist valueForKey:URLKey];
-        if (value != nil) {
-            shared.url = [NSURL URLWithString:value];
-        }
+-(void)setupWithFile:(NSString *)filePath {
+    NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:filePath];
+    NSString *value = [plist valueForKey:kUsernameKey];
+    if (value != nil) {
+        self.username = value;
     }
+    value = [plist valueForKey:kPasswordKey];
+    if (value != nil) {
+        self.password = value;
+    }
+    value = [plist valueForKey:kRepositoryKey];
+    if (value != nil) {
+        self.repository = value;
+    }
+    value = [plist valueForKey:kURLKey];
+    if (value != nil) {
+        self.url = [NSURL URLWithString:value];
+    }
+}
+
++(NUXSession *)sharedSession {
+    static dispatch_once_t pred = 0;
+    static NUXSession *__strong  _shared = nil;
+
+    dispatch_once(&pred, ^{
+        _shared = [NUXSession new];
+        NSString *properties = [[NSBundle bundleForClass:[_shared class]] pathForResource:kPropertyFileName ofType:@"plist"];
+        if (properties == nil) {
+            [NSException raise:properties format:@"Unable to locate file %@.plist", kPropertyFileName];
+        }
+        [_shared setupWithFile:properties];
+    });
     
-    return shared;
+    return _shared;
 }
 
 @end
