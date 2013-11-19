@@ -16,4 +16,3 @@ typedef void (^NUXResponseBlock)(NUXRequest *);
 #endif
 
 #endif
-

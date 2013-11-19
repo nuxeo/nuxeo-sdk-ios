@@ -34,6 +34,12 @@
     return request;
 }
 
+- (NUXRequest *)requestDeleteDocument:(NSString *)documentRef {
+    NUXRequest *request = [self requestDocument:documentRef];
+    request.method = @"delete";
+    return request;
+}
+
 - (NUXRequest *)requestChildren:(NSString *)documentRef {
     return [[self requestDocument:documentRef] addAdaptor:@"children"];
 }

@@ -16,8 +16,8 @@
 
 @implementation NUXRequest
 
-NUXResponseBlock completion;
-NUXResponseBlock failure;
+NUXResponseBlock _completion;
+NUXResponseBlock _failure;
 
 NSData *_responseData;
 
@@ -103,26 +103,34 @@ NSData *_responseData;
 }
 
 - (void)setCompletionBlock:(NUXResponseBlock)aCompletionBlock {
-    completion = aCompletionBlock;
+    _completion = aCompletionBlock;
 }
 
 - (void)setFailureBlock:(NUXResponseBlock)aFailureBlock {
-    failure = aFailureBlock;
+    _failure = aFailureBlock;
 }
 
 - (void)start {
     [self.session startRequest:self withCompletionBlock:^{
-        completion(self);
+        if (_completion != nil) {
+            _completion(self);
+        }
     } failureBlock:^{
-        failure(self);
+        if (_failure != nil) {
+            _failure(self);
+        }
     }];
 }
 
 - (void)startSynchronous {
     [self.session startRequestSynchronous:self withCompletionBlock:^{
-        completion(self);
+        if (_completion != nil) {
+            _completion(self);
+        }
     } failureBlock:^{
-        failure(self);
+        if (_failure != nil) {
+            _failure(self);
+        }
     }];
 }
 

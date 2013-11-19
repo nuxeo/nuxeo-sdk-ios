@@ -167,4 +167,38 @@ NUXSession *session;
     XCTAssertEqualObjects(@"another", sessionNd.username);
 }
 
+-(void)testDeleteDocumentRequest {
+    NSDictionary *__block newDoc = @{@"entity-type" : @"document",
+            @"name" : @"myNewDoc",
+            @"type" : @"File",
+            @"properties" : @{@"dc:title" : @"title",
+                    @"dc:description" : @"Description is cool"}};
+    NUXRequest *request = [session requestCreateDocument:newDoc withParent:@"/default-domain"];
+    [request setCompletionBlock:^(NUXRequest *request) {
+        newDoc = [request responseJSONWithError:nil];
+    }];
+    [request startSynchronous];
+
+    NSString *docId = [newDoc valueForKey:@"uid"];
+    XCTAssertNotNil(docId);
+
+    request = [session requestDocument:docId];
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(200, request.responseStatusCode);
+    }];
+    [request startSynchronous];
+
+    request = [session requestDeleteDocument:docId];
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(204, request.responseStatusCode);
+    }];
+    [request startSynchronous];
+
+    request = [session requestDocument:docId];
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(404, request.responseStatusCode);
+    }];
+    [request startSynchronous];
+}
+
 @end
