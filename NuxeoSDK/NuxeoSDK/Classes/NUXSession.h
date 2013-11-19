@@ -33,4 +33,6 @@
 // Execute a NUXRequest synchronously using this session and authentication challenge.
 -(void)startRequestSynchronous: (NUXRequest *)request withCompletionBlock: (NUXBasicBlock)completion failureBlock: (NUXBasicBlock)failure;
 
++(NUXSession *)sharedSession;
+
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "NUXSession+requests.h"
+#import "NUXRequest.h"
 
 @implementation NUXSession (requests)
 

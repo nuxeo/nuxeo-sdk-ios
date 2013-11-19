@@ -7,6 +7,7 @@
 //
 
 #import "NUXSession.h"
+#import "NUXRequest.h"
 #import <ASIHTTPRequest.h>
 
 @interface NUXSession () {
@@ -21,6 +22,14 @@
 
 @implementation NUXSession
 
+NSString * const PropertyFileName = @"NUXSession-info";
+NSString * const URLKey = @"URL";
+NSString * const UsernameKey = @"Username";
+NSString * const PasswordKey = @"Password";
+NSString * const RepositoryKey = @"Repository";
+
+NUXSession *shared;
+
 -(id)init {
     self = [super init];
     if (self) {
@@ -34,6 +43,7 @@
 }
 
 -(void)dealloc {
+    shared = Nil;
     [self setQueue:Nil];
     [self setSchemas:Nil];
     [self setUsername:Nil];
@@ -111,6 +121,36 @@
     request.password = self.password;
     
     return request;
+}
+
++(NUXSession *)sharedSession {
+    if (shared == nil) {
+        shared = [NUXSession new];
+        NSString *properties = [[NSBundle mainBundle] pathForResource:PropertyFileName ofType:@"plist"];
+        if (properties == nil) {
+            [NSException raise:properties format:@"Unable to locate file %@.plist", PropertyFileName];
+        }
+        
+        NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:properties];
+        NSString *value = [plist valueForKey:UsernameKey];
+        if (value != nil) {
+            shared.username = value;
+        }
+        value = [plist valueForKey:PasswordKey];
+        if (value != nil) {
+            shared.password = value;
+        }
+        value = [plist valueForKey:RepositoryKey];
+        if (value != nil) {
+            shared.repository = value;
+        }
+        value = [plist valueForKey:URLKey];
+        if (value != nil) {
+            shared.url = [NSURL URLWithString:value];
+        }
+    }
+    
+    return shared;
 }
 
 @end

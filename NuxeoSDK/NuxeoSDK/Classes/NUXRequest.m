@@ -7,6 +7,7 @@
 //
 
 #import "NUXRequest.h"
+#import "NUXSession.h"
 
 @interface NUXRequest ()
 @property NSURL *url;

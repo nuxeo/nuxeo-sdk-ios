@@ -7,7 +7,6 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "NUXRequest.h"
 #import "NUXSession.h"
 
 @interface NUXRequestTests : XCTestCase

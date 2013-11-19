@@ -10,7 +10,6 @@
 #import <ASIHTTPRequest.h>
 #import "NUXSession.h"
 #import "NUXSession+requests.h"
-#import "NUXRequest.h"
 
 @interface NUXSessionTests : XCTestCase
 
@@ -165,6 +164,15 @@ NUXSession *session;
     XCTAssertNotNil([newDoc valueForKey:@"uid"]);
     XCTAssertEqualObjects(title, [newDoc valueForKey:@"title"]);
     XCTAssertTrue([[newDoc valueForKey:@"path"] rangeOfString:parentPath].location != NSNotFound);
+}
+
+-(void)testSharedSession
+{
+    NUXSession *session = [NUXSession sharedSession];
+    XCTAssertEqualObjects(@"http://localhost:8080/test", session.url.absoluteString);
+    XCTAssertEqualObjects(@"adminShared", session.username);
+    XCTAssertEqualObjects(@"adminPassword", session.password);
+    XCTAssertEqualObjects(@"test", session.repository);
 }
 
 @end
