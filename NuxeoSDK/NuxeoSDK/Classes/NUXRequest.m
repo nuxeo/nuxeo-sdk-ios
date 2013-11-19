@@ -22,14 +22,14 @@ NUXResponseBlock failure;
 NSData *_responseData;
 NSStringEncoding _responseEncoding;
 
--(id)initWithSession:(NUXSession *)session {
+- (id)initWithSession:(NUXSession *)session {
     self = [NUXRequest new];
     if (self) {
         self.session = session;
         self.method = @"GET";
         self.contentType = @"application/json";
         self.url = [session.url copy];
-        
+
         _adaptors = [NSArray new];
         _categories = [NSArray new];
         _schemas = [NSArray new];
@@ -39,7 +39,7 @@ NSStringEncoding _responseEncoding;
     return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
     _adaptors = Nil;
     _categories = Nil;
     _schemas = Nil;
@@ -52,96 +52,96 @@ NSStringEncoding _responseEncoding;
     self.postData = Nil;
 }
 
--(NUXRequest *)addURLSegment:(NSString *)aSegment {
+- (NUXRequest *)addURLSegment:(NSString *)aSegment {
     self.url = [self.url URLByAppendingPathComponent:aSegment];
     return self;
 }
 
--(NUXRequest *)addAdaptor:(NSString *)adaptor {
+- (NUXRequest *)addAdaptor:(NSString *)adaptor {
     [self addURLSegment:[NSString stringWithFormat:@"@%@", adaptor]];
     _adaptors = [_adaptors arrayByAddingObject:adaptor];
     return self;
 }
 
--(NUXRequest *)addAdaptor:(NSString *)adaptor withValue:(NSString *)value {
+- (NUXRequest *)addAdaptor:(NSString *)adaptor withValue:(NSString *)value {
     [self addAdaptor:adaptor];
     [self addURLSegment:value];
     return self;
 }
 
--(NUXRequest *)addCategory:(NSString *)category {
+- (NUXRequest *)addCategory:(NSString *)category {
     _categories = [_categories arrayByAddingObject:category];
     return self;
 }
 
--(NUXRequest *)addCategories:(NSArray *)categories {
+- (NUXRequest *)addCategories:(NSArray *)categories {
     _categories = [_categories arrayByAddingObjectsFromArray:categories];
     return self;
 }
 
--(NUXRequest *)addSchema:(NSString *)schema {
+- (NUXRequest *)addSchema:(NSString *)schema {
     _schemas = [_schemas arrayByAddingObject:schema];
     return self;
 }
 
--(NUXRequest *)addSchemas:(NSArray *)schemas {
+- (NUXRequest *)addSchemas:(NSArray *)schemas {
     _schemas = [_schemas arrayByAddingObjectsFromArray:schemas];
     return self;
 }
 
 
--(NUXRequest *)addHeaderWithKey:(NSString *)key value:(NSString *)value {
+- (NUXRequest *)addHeaderWithKey:(NSString *)key value:(NSString *)value {
     [self.mutableHeaders setObject:value forKey:key];
     return self;
 }
 
--(NSURL *)URL {
+- (NSURL *)URL {
     return self.url;
 }
 
--(NSDictionary *)headers {
+- (NSDictionary *)headers {
     return [NSDictionary dictionaryWithDictionary:self.mutableHeaders];
 }
 
--(void)setCompletionBlock:(NUXResponseBlock)aCompletionBlock {
+- (void)setCompletionBlock:(NUXResponseBlock)aCompletionBlock {
     completion = aCompletionBlock;
 }
 
--(void)setFailureBlock:(NUXResponseBlock)aFailureBlock {
+- (void)setFailureBlock:(NUXResponseBlock)aFailureBlock {
     failure = aFailureBlock;
 }
 
--(void)start {
+- (void)start {
     [self.session startRequest:self withCompletionBlock:completion failureBlock:failure];
 }
 
--(void)startSynchronous {
+- (void)startSynchronous {
     [self.session startRequestSynchronous:self withCompletionBlock:completion failureBlock:failure];
 }
 
--(void)startWithCompletionBlock:(NUXResponseBlock)completionBlock FailureBlock:(NUXResponseBlock)failureBlock {
+- (void)startWithCompletionBlock:(NUXResponseBlock)completionBlock FailureBlock:(NUXResponseBlock)failureBlock {
     [self.session startRequest:self withCompletionBlock:completionBlock failureBlock:failureBlock];
 }
 
 
--(void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message {
+- (void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message {
     _responseData = data;
     _responseStatusCode = statusCode;
     _responseEncoding = encoding;
     _responseMessage = message;
 }
 
--(NSData *)responseData {
+- (NSData *)responseData {
     return _responseData;
 }
 
--(NSString *)responseString {
+- (NSString *)responseString {
     return [[NSString alloc] initWithData:[self responseData] encoding:NSUTF8StringEncoding];
 }
 
--(id)responseJSONWithError:(NSError **)error {
+- (id)responseJSONWithError:(NSError **)error {
     id res = [NSJSONSerialization JSONObjectWithData:[self responseData] options:NSJSONReadingMutableContainers error:error];
-    
+
     return res;
 }
 

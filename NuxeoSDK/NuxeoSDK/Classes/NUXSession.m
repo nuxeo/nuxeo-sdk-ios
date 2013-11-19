@@ -7,11 +7,10 @@
 //
 
 #import "NUXSession.h"
-#import "NUXRequest.h"
 #import <ASIHTTPRequest.h>
 
 @interface NUXSession () {
-    
+
 }
 
 @property NSOperationQueue *queue;
@@ -22,25 +21,25 @@
 
 @implementation NUXSession
 
-NSString * const kPropertyFileName = @"NUXSession-info";
-NSString * const kURLKey = @"URL";
-NSString * const kUsernameKey = @"Username";
-NSString * const kPasswordKey = @"Password";
-NSString * const kRepositoryKey = @"Repository";
+NSString *const kPropertyFileName = @"NUXSession-info";
+NSString *const kURLKey = @"URL";
+NSString *const kUsernameKey = @"Username";
+NSString *const kPasswordKey = @"Password";
+NSString *const kRepositoryKey = @"Repository";
 
--(id)init {
+- (id)init {
     self = [super init];
     if (self) {
         self.queue = [NSOperationQueue mainQueue];
         self.schemas = [NSMutableArray new];
         self.categories = [NSMutableArray new];
-        
+
         self.repository = @"default";
     }
     return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
     [self setQueue:Nil];
     [self setSchemas:Nil];
     [self setUsername:Nil];
@@ -49,7 +48,7 @@ NSString * const kRepositoryKey = @"Repository";
     [self setRepository:Nil];
 }
 
--(id)initWithServerURL:(NSURL *)url username:(NSString *)username password:(NSString *)password {
+- (id)initWithServerURL:(NSURL *)url username:(NSString *)username password:(NSString *)password {
     self = [[NUXSession alloc] init];
     if (self) {
         if ([url.absoluteString rangeOfString:@"api"].location == NSNotFound) {
@@ -62,31 +61,31 @@ NSString * const kRepositoryKey = @"Repository";
     return self;
 }
 
--(void)addDefaultSchemas: (NSArray *)schemas {
+- (void)addDefaultSchemas:(NSArray *)schemas {
     [self.schemas addObjectsFromArray:schemas];
 }
 
--(void)addDefaultCategories: (NSArray *)categories {
+- (void)addDefaultCategories:(NSArray *)categories {
     [self.categories addObjectsFromArray:categories];
 }
 
--(void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure {
+- (void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure {
     ASIHTTPRequest *httpReq = [self httpRequestWithRequest:request withCompletionBlock:completion failureBlock:failure];
     [self.queue addOperation:httpReq];
 }
 
--(void)startRequestSynchronous:(NUXRequest *)request withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure {
+- (void)startRequestSynchronous:(NUXRequest *)request withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure {
     ASIHTTPRequest *httpReq = [self httpRequestWithRequest:request withCompletionBlock:completion failureBlock:failure];
     [httpReq startSynchronous];
 }
 
--(ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure {
+- (ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure {
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:nRequest.URL];
     [request setRequestMethod:nRequest.method];
     if (nRequest.postData.length > 0) {
         [request appendPostData:nRequest.postData];
     }
-    
+
     ASIHTTPRequest *__weak wRequest = request;
     [request setCompletionBlock:^{
         [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage];
@@ -102,25 +101,25 @@ NSString * const kRepositoryKey = @"Repository";
         NSString *hs = [schemas indexOfObject:@"*"] == NSNotFound ? [schemas componentsJoinedByString:@","] : @"*";
         [request addRequestHeader:@"X-NXDocumentProperties" value:hs];
     }
-    
+
     NSArray *categories = [nRequest.categories arrayByAddingObjectsFromArray:self.categories];
     if (categories.count > 0) {
         [request addRequestHeader:@"X-NXContext-Category" value:[categories componentsJoinedByString:@","]];
     }
-    
+
     for (NSString *header in nRequest.headers.allKeys) {
         NSString *value = [nRequest.headers valueForKey:header];
         [request addRequestHeader:header value:value];
     }
     [request addRequestHeader:@"Content-Type" value:nRequest.contentType];
-    
+
     request.username = self.username;
     request.password = self.password;
-    
+
     return request;
 }
 
--(void)setupWithFile:(NSString *)filePath {
+- (void)setupWithFile:(NSString *)filePath {
     NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:filePath];
     NSString *value = [plist valueForKey:kUsernameKey];
     if (value != nil) {
@@ -140,9 +139,9 @@ NSString * const kRepositoryKey = @"Repository";
     }
 }
 
-+(NUXSession *)sharedSession {
++ (NUXSession *)sharedSession {
     static dispatch_once_t pred = 0;
-    static NUXSession *__strong  _shared = nil;
+    static NUXSession *__strong _shared = nil;
 
     dispatch_once(&pred, ^{
         _shared = [NUXSession new];
@@ -152,7 +151,7 @@ NSString * const kRepositoryKey = @"Repository";
         }
         [_shared setupWithFile:properties];
     });
-    
+
     return _shared;
 }
 

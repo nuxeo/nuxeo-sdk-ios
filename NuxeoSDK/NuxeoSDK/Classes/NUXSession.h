@@ -21,18 +21,20 @@
 
 // Convenience init function to create a NUXSession object with url, username and password.
 // url must contains application name like: http://localhost:8080/nuxeo
--(id)initWithServerURL: (NSURL *)url username: (NSString *)username password: (NSString *)password;
+- (id)initWithServerURL:(NSURL *)url username:(NSString *)username password:(NSString *)password;
 
 // Register some schemas that will be added to all requests
--(void)addDefaultSchemas: (NSArray *)schemas;
+- (void)addDefaultSchemas:(NSArray *)schemas;
+
 // Register some categories that will be added to all requests
--(void)addDefaultCategories: (NSArray *)categories;
+- (void)addDefaultCategories:(NSArray *)categories;
 
 // Execute a NUXRequest asynchronously using this session and authentication challenge.
--(void)startRequest: (NUXRequest *)request withCompletionBlock: (NUXResponseBlock)completion failureBlock: (NUXResponseBlock)failure;
-// Execute a NUXRequest synchronously using this session and authentication challenge.
--(void)startRequestSynchronous: (NUXRequest *)request withCompletionBlock: (NUXResponseBlock)completion failureBlock: (NUXResponseBlock)failure;
+- (void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure;
 
-+(NUXSession *)sharedSession;
+// Execute a NUXRequest synchronously using this session and authentication challenge.
+- (void)startRequestSynchronous:(NUXRequest *)request withCompletionBlock:(NUXResponseBlock)completion failureBlock:(NUXResponseBlock)failure;
+
++ (NUXSession *)sharedSession;
 
 @end
