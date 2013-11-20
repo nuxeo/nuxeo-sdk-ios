@@ -46,6 +46,7 @@ NSData *_responseData;
 }
 
 - (void)dealloc {
+    _downloadDestinationPath = nil;
     _adaptors = Nil;
     _categories = Nil;
     _schemas = Nil;

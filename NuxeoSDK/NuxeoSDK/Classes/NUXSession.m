@@ -112,6 +112,10 @@ NSString *const kRepositoryKey = @"Repository";
         [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage];
         failure();
     }];
+    
+    if (nRequest.downloadDestinationPath != nil) {
+        request.downloadDestinationPath = nRequest.downloadDestinationPath;
+    }
 
     NSArray *schemas = [nRequest.schemas arrayByAddingObjectsFromArray:self.schemas];
     if (schemas.count > 0) {

@@ -32,6 +32,9 @@
 // Convenience method to query documents in NXQL
 - (NUXRequest *)requestQuery:(NSString *)query;
 
+// Convenience method to query documents in NXQL
+- (NUXRequest *)requestDownloadBlobFrom:(NSString *)documentRef inMetadata:(NSString *)metadata;
+
 // Convenience method get a request prepared to execute a Nuxeo Operation
 - (NUXAutomationRequest *)requestOperation:(NSString *)operationId;
 

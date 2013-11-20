@@ -223,4 +223,57 @@ NUXSession *session;
     [request startSynchronous];
 }
 
+-(void)testDownloadBlob {
+    NSString *__block uid;
+    
+    // upload file first
+    NSString *file = [[NSBundle bundleForClass:[NUXSession class]] pathForResource:@"NUXSession-info" ofType:@"plist"];
+    NSDictionary *plistAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:file error:nil];
+    NUXRequest *request = [session requestImportFile:file withParent:@"/management"];
+    
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(200, request.responseStatusCode);
+        NSDictionary *json = [request responseJSONWithError:nil];
+        uid = [json valueForKey:@"uid"];
+    }];
+    [request startSynchronous];
+    
+    request = [session requestDownloadBlobFrom:uid inMetadata:@"file:content"];
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(200, request.responseStatusCode);
+        XCTAssertEqual([[plistAttributes valueForKey:NSFileSize] unsignedLongValue], request.responseData.length);
+    }];
+    
+    [request startSynchronous];
+}
+
+-(void)testDownloadToFile {
+    NSString *__block uid;
+    
+    // upload file first
+    NSString *file = [[NSBundle bundleForClass:[NUXSession class]] pathForResource:@"NUXSession-info" ofType:@"plist"];
+    NSDictionary *plistAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:file error:nil];
+    NUXRequest *request = [session requestImportFile:file withParent:@"/management"];
+
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(200, request.responseStatusCode);
+        NSDictionary *json = [request responseJSONWithError:nil];
+        uid = [json valueForKey:@"uid"];
+    }];
+    [request startSynchronous];
+    
+    NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"tempfile%d.tmp", rand()]];
+    request = [session requestDownloadBlobFrom:uid inMetadata:@"file:content"];
+    request.downloadDestinationPath = tempFile;
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(200, request.responseStatusCode);
+    }];
+    
+    [request startSynchronous];
+    
+    XCTAssertTrue([[NSFileManager defaultManager] isReadableFileAtPath:tempFile]);
+    NSDictionary *dlAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:tempFile error:nil];
+    XCTAssertEqual([plistAttributes valueForKey:NSFileSize], [dlAttributes valueForKey:NSFileSize]);
+}
+
 @end

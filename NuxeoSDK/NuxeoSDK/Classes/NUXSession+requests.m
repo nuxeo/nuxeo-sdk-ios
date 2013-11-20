@@ -60,6 +60,13 @@
     return request;
 }
 
+- (NUXRequest *)requestDownloadBlobFrom:(NSString *)documentRef inMetadata:(NSString *)metadata {
+    NUXRequest *request = [self requestDocument:documentRef];
+    [request addAdaptor:@"blob" withValue:metadata];
+    
+    return request;
+}
+
 #pragma mark -
 #pragma mark NUXAutomationRequest convenience methods
 
