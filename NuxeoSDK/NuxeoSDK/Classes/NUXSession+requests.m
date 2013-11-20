@@ -10,6 +10,15 @@
 
 @implementation NUXSession (requests)
 
+#pragma mark Internal methods
+
+- (NSString *)segmentForDocumentRef:(NSString *)docRef {
+    return [docRef characterAtIndex:0] == '/' ? @"path" : @"id";
+}
+
+#pragma mark -
+#pragma mark NUXRequest convenience methods
+
 - (NUXRequest *)request {
     return [[NUXRequest alloc] initWithSession:self];
 }
@@ -44,12 +53,6 @@
     return [[self requestDocument:documentRef] addAdaptor:@"children"];
 }
 
-- (NUXAutomationRequest *)requestOperation:(NSString *)operationId {
-    NUXAutomationRequest *request = [[NUXAutomationRequest alloc] initWithSession:self];
-    [[request addURLSegment:@"automation"] addURLSegment:operationId];
-    return request;
-}
-
 - (NUXRequest *)requestQuery:(NSString *)query {
     NUXAutomationRequest *request = [self requestOperation:@"Document.Query"];
     [request addParameterValue:query forKey:@"query"];
@@ -57,17 +60,20 @@
     return request;
 }
 
-- (NSString *)segmentForDocumentRef:(NSString *)docRef {
-    return [docRef characterAtIndex:0] == '/' ? @"path" : @"id";
+#pragma mark -
+#pragma mark NUXAutomationRequest convenience methods
+
+- (NUXAutomationRequest *)requestOperation:(NSString *)operationId {
+    NUXAutomationRequest *request = [[NUXAutomationRequest alloc] initWithSession:self];
+    [[request addURLSegment:@"automation"] addURLSegment:operationId];
+    return request;
 }
 
 -(NUXAutomationRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef {
     NUXAutomationRequest *request = [self requestOperation:@"FileManager.Import"];
     
-//    id json = [NSJSONSerialization dataWithJSONObject:@{@"context" : @{@"currentDocument" : documentRef}} options:0 error:nil];
     [request addContextValue:documentRef forKey:@"currentDocument"];
     [request setInputFile:file];
-//    [request addPostFile:file forKey:@"input"];
     
     return request;
 }
