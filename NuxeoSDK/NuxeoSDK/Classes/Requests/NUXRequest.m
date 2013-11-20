@@ -20,32 +20,32 @@ NUXResponseBlock _completion;
 NUXResponseBlock _failure;
 
 NSData *_responseData;
-NSMutableDictionary *_postParams;
-NSMutableDictionary *_postFiles;
 
-- (id)initWithSession:(NUXSession *)session {
-    self = [NUXRequest new];
+-(id)init {
+    self = [super init];
     if (self) {
-        self.session = session;
         self.method = @"GET";
         self.contentType = @"application/json";
-        self.url = [session.url copy];
-
+        
         _adaptors = [NSArray new];
         _categories = [NSArray new];
         _schemas = [NSArray new];
         _postData = [NSMutableData new];
         _mutableHeaders = [NSMutableDictionary new];
-        _postParams = [NSMutableDictionary new];
-        _postFiles = [NSMutableDictionary new];
+    }
+    return self;
+}
 
+- (id)initWithSession:(NUXSession *)session {
+    self = [self init];
+    if (self) {
+        self.session = session;
+        self.url = [session.url copy];
     }
     return self;
 }
 
 - (void)dealloc {
-    _postParams = Nil;
-    _postFiles = Nil;
     _adaptors = Nil;
     _categories = Nil;
     _schemas = Nil;
@@ -107,22 +107,6 @@ NSMutableDictionary *_postFiles;
 
 - (NSDictionary *)headers {
     return [NSDictionary dictionaryWithDictionary:self.mutableHeaders];
-}
-
-- (void)addPostParamValue:(id)value forKey:(NSString *)key {
-    [_postParams setObject:value forKey:key];
-}
-
--(void)addPostFile:(NSString *)filePath forKey:(NSString *)key {
-    [_postFiles setObject:filePath forKey:key];
-}
-
-- (NSDictionary *)postParams {
-    return [NSDictionary dictionaryWithDictionary:_postParams];
-}
-
--(NSDictionary *)postFiles {
-    return [NSDictionary dictionaryWithDictionary:_postFiles];
 }
 
 - (void)setCompletionBlock:(NUXResponseBlock)aCompletionBlock {

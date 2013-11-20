@@ -44,20 +44,15 @@
     return [[self requestDocument:documentRef] addAdaptor:@"children"];
 }
 
-- (NUXRequest *)requestOperation:(NSString *)operationId {
-    NUXRequest *request = [self request];
-    request.contentType = @"application/json+nxrequest";
-    request.method = @"POST";
+- (NUXAutomationRequest *)requestOperation:(NSString *)operationId {
+    NUXAutomationRequest *request = [[NUXAutomationRequest alloc] initWithSession:self];
     [[request addURLSegment:@"automation"] addURLSegment:operationId];
-
     return request;
 }
 
 - (NUXRequest *)requestQuery:(NSString *)query {
-    NUXRequest *request = [self requestOperation:@"Document.Query"];
-
-    NSDictionary *params = @{@"params" : @{@"query" : query}};
-    [request.postData appendData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil]];
+    NUXAutomationRequest *request = [self requestOperation:@"Document.Query"];
+    [request addParameterValue:query forKey:@"query"];
 
     return request;
 }
@@ -66,12 +61,13 @@
     return [docRef characterAtIndex:0] == '/' ? @"path" : @"id";
 }
 
--(NUXRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef {
-    NUXRequest *request = [self requestOperation:@"FileManager.Import"];
+-(NUXAutomationRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef {
+    NUXAutomationRequest *request = [self requestOperation:@"FileManager.Import"];
     
-    id json = [NSJSONSerialization dataWithJSONObject:@{@"context" : @{@"currentDocument" : documentRef}} options:0 error:nil];
-    [request addPostParamValue:json forKey:@"params"];
-    [request addPostFile:file forKey:@"input"];
+//    id json = [NSJSONSerialization dataWithJSONObject:@{@"context" : @{@"currentDocument" : documentRef}} options:0 error:nil];
+    [request addContextValue:documentRef forKey:@"currentDocument"];
+    [request setInputFile:file];
+//    [request addPostFile:file forKey:@"input"];
     
     return request;
 }

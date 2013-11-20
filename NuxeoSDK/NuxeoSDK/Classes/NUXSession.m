@@ -6,9 +6,10 @@
 //  Copyright (c) 2013 Nuxeo. All rights reserved.
 //
 
-#import "NUXSession.h"
 #import <ASIHTTPRequest.h>
 #import <ASIFormDataRequest.h>
+#import "NUXSession.h"
+#import "NUXAutomationRequest.h"
 
 @interface NUXSession () {
 
@@ -82,20 +83,24 @@ NSString *const kRepositoryKey = @"Repository";
 
 - (ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
     ASIHTTPRequest *request;
-    if (nRequest.postParams.count == 0) {
+    // XXX Should be moved in Request Impl class, but internally.
+    if ([nRequest class] == [NUXAutomationRequest class]) {
+        NUXAutomationRequest *aReq = (NUXAutomationRequest *)nRequest;
+        ASIFormDataRequest *fRequest = [[ASIFormDataRequest alloc] initWithURL:nRequest.URL];
+        
+        NSDictionary *params = @{@"context" : aReq.context, @"params" : aReq.parameters};
+        [fRequest addData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil] forKey:@"params"];
+        if (aReq.fileInput != nil) {
+            [fRequest addFile:aReq.fileInput forKey:@"input"];
+        } else {
+            [fRequest addData:aReq.input forKey:@"input"];
+        }
+        request = fRequest;
+    } else {
         request = [[ASIHTTPRequest alloc] initWithURL:nRequest.URL];
         [request appendPostData:nRequest.postData];
-    } else {
-        ASIFormDataRequest *fRequest = [[ASIFormDataRequest alloc] initWithURL:nRequest.URL];
-        [nRequest.postParams enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            [fRequest addData:obj forKey:key];
-        }];
-        
-        [nRequest.postFiles enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            [fRequest addFile:obj forKey:key];
-        }];
-        request = fRequest;
     }
+    
     [request setRequestMethod:nRequest.method];
 
     ASIHTTPRequest *__weak wRequest = request;

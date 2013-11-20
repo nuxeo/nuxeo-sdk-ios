@@ -86,6 +86,7 @@ NUXSession *session;
 
 - (void)testQueryRequestMethod {
     NUXRequest *request = [session requestQuery:@"Select * from Document"];
+    XCTAssertEqualObjects(@"application/json+nxrequest", request.contentType);
     [session startRequestSynchronous:request withCompletionBlock:^{
         XCTAssertEqual(200, request.responseStatusCode);
         NSDictionary *response = [request responseJSONWithError:nil];
@@ -210,7 +211,9 @@ NUXSession *session;
         XCTAssertEqual(200, request.responseStatusCode);
         NSDictionary *doc = [request responseJSONWithError:nil];
         XCTAssertNotNil([doc valueForKey:@"uid"]);
-        XCTAssertNotNil([[doc valueForKey:@"properties"] valueForKey:@"file:content"]);
+        NSDictionary *fileContent = [[doc valueForKey:@"properties"] valueForKey:@"file:content"];
+        XCTAssertNotNil(fileContent);
+        XCTAssertEqualObjects(@"NUXSession-info.plist", [fileContent valueForKey:@"name"]);
     }];
 
     [request setFailureBlock:^(NUXRequest *request) {

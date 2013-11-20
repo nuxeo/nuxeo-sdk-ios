@@ -7,6 +7,7 @@
 //
 
 #import "NUXSession.h"
+#import "NUXAutomationRequest.h"
 
 @interface NUXSession (requests)
 
@@ -28,13 +29,13 @@
 // Convenience method to create a request to fetch document's childen associated with this session, documentRef could be an id or a path.
 - (NUXRequest *)requestChildren:(NSString *)documentRef;
 
-// Convenience method get a request prepared to execute a Nuxeo Operation
-- (NUXRequest *)requestOperation:(NSString *)operationId;
-
 // Convenience method to query documents in NXQL
 - (NUXRequest *)requestQuery:(NSString *)query;
 
+// Convenience method get a request prepared to execute a Nuxeo Operation
+- (NUXAutomationRequest *)requestOperation:(NSString *)operationId;
+
 // Convenience method de import a file
-- (NUXRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef;
+- (NUXAutomationRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef;
 
 @end
