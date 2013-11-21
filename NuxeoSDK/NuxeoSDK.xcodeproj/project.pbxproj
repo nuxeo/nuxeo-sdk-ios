@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		0330425B4DD5438799AE0594 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		5104E9A0183A80E100F1EB5D /* NUXSession-info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5104E99F183A80E100F1EB5D /* NUXSession-info.plist */; };
+		51C75E71183E0CF000EE0DCC /* NUXDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E67183E0CF000EE0DCC /* NUXDocument.m */; };
+		51C75E72183E0CF000EE0DCC /* NUXDocuments.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E69183E0CF000EE0DCC /* NUXDocuments.m */; };
+		51C75E73183E0CF000EE0DCC /* NUXEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E6B183E0CF000EE0DCC /* NUXEntity.m */; };
+		51C75E74183E0CF000EE0DCC /* NUXJSONMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E6E183E0CF000EE0DCC /* NUXJSONMapper.m */; };
+		51C75E75183E0CF000EE0DCC /* NUXJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E70183E0CF000EE0DCC /* NUXJSONSerializer.m */; };
 		51E55C88182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
 		51E55C96182D415F009AC87C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C95182D415F009AC87C /* XCTest.framework */; };
 		51E55C97182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
@@ -48,6 +53,16 @@
 
 /* Begin PBXFileReference section */
 		5104E99F183A80E100F1EB5D /* NUXSession-info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NUXSession-info.plist"; sourceTree = "<group>"; };
+		51C75E66183E0CF000EE0DCC /* NUXDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXDocument.h; sourceTree = "<group>"; };
+		51C75E67183E0CF000EE0DCC /* NUXDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXDocument.m; sourceTree = "<group>"; };
+		51C75E68183E0CF000EE0DCC /* NUXDocuments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXDocuments.h; sourceTree = "<group>"; };
+		51C75E69183E0CF000EE0DCC /* NUXDocuments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXDocuments.m; sourceTree = "<group>"; };
+		51C75E6A183E0CF000EE0DCC /* NUXEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXEntity.h; sourceTree = "<group>"; };
+		51C75E6B183E0CF000EE0DCC /* NUXEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXEntity.m; sourceTree = "<group>"; };
+		51C75E6D183E0CF000EE0DCC /* NUXJSONMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXJSONMapper.h; sourceTree = "<group>"; };
+		51C75E6E183E0CF000EE0DCC /* NUXJSONMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXJSONMapper.m; sourceTree = "<group>"; };
+		51C75E6F183E0CF000EE0DCC /* NUXJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXJSONSerializer.h; sourceTree = "<group>"; };
+		51C75E70183E0CF000EE0DCC /* NUXJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXJSONSerializer.m; sourceTree = "<group>"; };
 		51E55C84182D415F009AC87C /* libNuxeoSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNuxeoSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E55C87182D415F009AC87C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		51E55C8B182D415F009AC87C /* NuxeoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NuxeoSDK-Prefix.pch"; sourceTree = "<group>"; };
@@ -94,6 +109,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		51C75E65183E0CF000EE0DCC /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				51C75E66183E0CF000EE0DCC /* NUXDocument.h */,
+				51C75E67183E0CF000EE0DCC /* NUXDocument.m */,
+				51C75E68183E0CF000EE0DCC /* NUXDocuments.h */,
+				51C75E69183E0CF000EE0DCC /* NUXDocuments.m */,
+				51C75E6A183E0CF000EE0DCC /* NUXEntity.h */,
+				51C75E6B183E0CF000EE0DCC /* NUXEntity.m */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		51C75E6C183E0CF000EE0DCC /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				51C75E6D183E0CF000EE0DCC /* NUXJSONMapper.h */,
+				51C75E6E183E0CF000EE0DCC /* NUXJSONMapper.m */,
+				51C75E6F183E0CF000EE0DCC /* NUXJSONSerializer.h */,
+				51C75E70183E0CF000EE0DCC /* NUXJSONSerializer.m */,
+			);
+			path = Parser;
+			sourceTree = "<group>";
+		};
 		51E55C7B182D415F009AC87C = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +203,8 @@
 		AC0003DEE7C4FC5F7F4E26C7 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				51C75E65183E0CF000EE0DCC /* Entity */,
+				51C75E6C183E0CF000EE0DCC /* Parser */,
 				AC0004618FF088ECAACE69C9 /* Requests */,
 				AC0009D5DAB2ADA610230E4B /* NUXSession+requests.h */,
 				AC000994E59079813C7DE2FD /* NUXSession+requests.m */,
@@ -345,7 +386,12 @@
 				AC00067C9BC7671E5ACF632E /* NUXSession+requests.m in Sources */,
 				AC0008BBE6F5D7709B958244 /* NUXSession.m in Sources */,
 				AC0007560E2BEEB56D1B23EF /* NUXRequest.m in Sources */,
+				51C75E71183E0CF000EE0DCC /* NUXDocument.m in Sources */,
+				51C75E74183E0CF000EE0DCC /* NUXJSONMapper.m in Sources */,
+				51C75E72183E0CF000EE0DCC /* NUXDocuments.m in Sources */,
+				51C75E73183E0CF000EE0DCC /* NUXEntity.m in Sources */,
 				AC00070B2CE31ABACE21E867 /* NUXAutomationRequest.m in Sources */,
+				51C75E75183E0CF000EE0DCC /* NUXJSONSerializer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
