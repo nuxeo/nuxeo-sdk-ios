@@ -63,6 +63,7 @@
 		51C75E6E183E0CF000EE0DCC /* NUXJSONMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXJSONMapper.m; sourceTree = "<group>"; };
 		51C75E6F183E0CF000EE0DCC /* NUXJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXJSONSerializer.h; sourceTree = "<group>"; };
 		51C75E70183E0CF000EE0DCC /* NUXJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXJSONSerializer.m; sourceTree = "<group>"; };
+		51C75E76183E4F6700EE0DCC /* NUXConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXConstants.h; sourceTree = "<group>"; };
 		51E55C84182D415F009AC87C /* libNuxeoSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNuxeoSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E55C87182D415F009AC87C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		51E55C8B182D415F009AC87C /* NuxeoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NuxeoSDK-Prefix.pch"; sourceTree = "<group>"; };
@@ -210,6 +211,7 @@
 				AC000994E59079813C7DE2FD /* NUXSession+requests.m */,
 				AC0000295749D5BB4EC27292 /* NUXSession.h */,
 				AC0002BBFCFD456D7E66DAC0 /* NUXSession.m */,
+				51C75E76183E4F6700EE0DCC /* NUXConstants.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";

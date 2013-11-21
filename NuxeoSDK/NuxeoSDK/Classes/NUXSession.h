@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NUXConstants.h"
 #import "NUXRequest.h"
 
 @class NUXRequest;
