@@ -38,7 +38,9 @@ NUXSession *session;
     XCTAssertEqualObjects(@"default", session.repository);
     XCTAssertEqualObjects(@"Administrator", session.username);
     XCTAssertEqualObjects(@"Administrator", session.password);
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1", session.url.absoluteString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo", session.url.absoluteString);
+    NSURL *server = [session.url URLByAppendingPathComponent:session.apiPrefix];
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1", server.absoluteString);
 }
 
 - (void)testBasicRequestExecution {
@@ -166,6 +168,9 @@ NUXSession *session;
     session.username = @"another";
     NUXSession *sessionNd = [NUXSession sharedSession];
     XCTAssertEqualObjects(@"another", sessionNd.username);
+    
+    NUXRequest *request = [session requestChildren:@"/default-domain/test"];
+    XCTAssertEqualObjects(@"http://localhost:8080/test/api/v2/path/default-domain/test/@children", request.URL.absoluteString);
 }
 
 -(void)testDeleteDocumentRequest {

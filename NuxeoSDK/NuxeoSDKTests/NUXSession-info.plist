@@ -8,6 +8,8 @@
 	<string>adminSharedPass</string>
 	<key>Repository</key>
 	<string>test</string>
+	<key>ApiPrefix</key>
+	<string>api/v2</string>
 	<key>URL</key>
 	<string>http://localhost:8080/test</string>
 </dict>

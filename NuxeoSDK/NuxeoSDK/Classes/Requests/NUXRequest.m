@@ -40,7 +40,7 @@ NSData *_responseData;
     self = [self init];
     if (self) {
         self.session = session;
-        self.url = [session.url copy];
+        self.url = [session.url URLByAppendingPathComponent:self.session.apiPrefix];
     }
     return self;
 }

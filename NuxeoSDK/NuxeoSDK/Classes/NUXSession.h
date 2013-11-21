@@ -15,6 +15,7 @@
 @interface NUXSession : NSObject
 
 @property NSURL *url;
+@property NSString *apiPrefix;
 @property NSString *username;
 @property NSString *password;
 @property NSString *repository;

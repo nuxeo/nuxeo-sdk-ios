@@ -28,6 +28,7 @@ NSString *const kURLKey = @"URL";
 NSString *const kUsernameKey = @"Username";
 NSString *const kPasswordKey = @"Password";
 NSString *const kRepositoryKey = @"Repository";
+NSString *const kApiPrefix = @"ApiPrefix";
 
 - (id)init {
     self = [super init];
@@ -37,6 +38,7 @@ NSString *const kRepositoryKey = @"Repository";
         self.categories = [NSMutableArray new];
 
         self.repository = @"default";
+        self.apiPrefix = @"api/v1";
     }
     return self;
 }
@@ -53,9 +55,6 @@ NSString *const kRepositoryKey = @"Repository";
 - (id)initWithServerURL:(NSURL *)url username:(NSString *)username password:(NSString *)password {
     self = [[NUXSession alloc] init];
     if (self) {
-        if ([url.absoluteString rangeOfString:@"api"].location == NSNotFound) {
-            url = [url URLByAppendingPathComponent:@"api/v1"];
-        }
         [self setUrl:url];
         [self setUsername:username];
         [self setPassword:password];
@@ -157,6 +156,10 @@ NSString *const kRepositoryKey = @"Repository";
     value = [plist valueForKey:kURLKey];
     if (value != nil) {
         self.url = [NSURL URLWithString:value];
+    }
+    value = [plist valueForKey:kApiPrefix];
+    if (value != nil) {
+        self.apiPrefix = value;
     }
 }
 
