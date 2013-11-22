@@ -246,7 +246,9 @@ NUXSession *session;
     request = [session requestDownloadBlobFrom:uid inMetadata:@"file:content"];
     [request setCompletionBlock:^(NUXRequest *request) {
         XCTAssertEqual(200, request.responseStatusCode);
-        XCTAssertEqual([[plistAttributes valueForKey:NSFileSize] unsignedLongValue], request.responseData.length);
+        NSNumber *rSize = [NSNumber numberWithLong:request.responseData.length];
+        NSNumber *oSize = [NSNumber numberWithLong:[[plistAttributes valueForKey:NSFileSize] longValue]];
+        XCTAssertEqualObjects(oSize, rSize);
     }];
     
     [request startSynchronous];
@@ -278,7 +280,7 @@ NUXSession *session;
     
     XCTAssertTrue([[NSFileManager defaultManager] isReadableFileAtPath:tempFile]);
     NSDictionary *dlAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:tempFile error:nil];
-    XCTAssertEqual([plistAttributes valueForKey:NSFileSize], [dlAttributes valueForKey:NSFileSize]);
+    XCTAssertEqualObjects([plistAttributes valueForKey:NSFileSize], [dlAttributes valueForKey:NSFileSize]);
 }
 
 @end
