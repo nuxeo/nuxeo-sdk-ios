@@ -54,7 +54,7 @@
 }
 
 - (NUXRequest *)requestQuery:(NSString *)query {
-    NUXAutomationRequest *request = [self requestOperation:@"Document.Query"];
+    NUXRequest *request = [[self request] addAdaptor:@"search"];
     [request addParameterValue:query forKey:@"query"];
 
     return request;

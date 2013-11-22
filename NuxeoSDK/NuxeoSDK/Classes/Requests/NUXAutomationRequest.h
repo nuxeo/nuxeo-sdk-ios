@@ -10,13 +10,11 @@
 @interface NUXAutomationRequest : NUXRequest
 
 - (void)addContextValue:(id)value forKey:(NSString *)key;
-- (void)addParameterValue:(id)value forKey:(NSString *)key;
 
 - (void)setInputFile:(NSString *)filePath;
 - (void)setInput:(id)input;
 
 - (NSDictionary *)context;
-- (NSDictionary *)parameters;
 - (id)fileInput;
 - (id)input;
 

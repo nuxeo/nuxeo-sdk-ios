@@ -53,7 +53,7 @@ NUXRequest *request;
     XCTAssertTrue([[request schemas] containsObject:@"uid"]);
     XCTAssertTrue(3 == [request schemas].count);
 
-    [request addHeaderWithKey:@"X-MyHeader" value:@"myValue"];
+    [request addHeaderValue:@"myValue" forKey:@"X-MyHeader"];
     XCTAssertTrue(1 == [[request headers] count]);
     XCTAssertEqualObjects(@"myValue", [request.headers valueForKey:@"X-MyHeader"]);
 }
@@ -134,6 +134,10 @@ NUXRequest *request;
         XCTFail(@"Fail.");
     }];
     [request startSynchronous];
+}
+
+- (void)testRequestParameters {
+    
 }
 
 @end

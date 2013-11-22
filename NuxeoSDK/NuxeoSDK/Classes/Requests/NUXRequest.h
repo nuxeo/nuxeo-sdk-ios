@@ -47,13 +47,19 @@
 - (NUXRequest *)addSchemas:(NSArray *)schemas;
 
 // Add custom header to the request
-- (NUXRequest *)addHeaderWithKey:(NSString *)key value:(NSString *)value;
+- (NUXRequest *)addHeaderValue:(NSString *)value forKey:(NSString *)key;
+
+// Add parameters to the request
+- (NUXRequest *)addParameterValue:(NSString *)value forKey:(NSString *)key;
 
 // Read access to the complete URL
 - (NSURL *)URL;
 
 // Read access to registered headers
 - (NSDictionary *)headers;
+
+// Read access to registered parameters
+- (NSDictionary *)parameters;
 
 - (void)setCompletionBlock:(NUXResponseBlock)aCompletionBlock;
 

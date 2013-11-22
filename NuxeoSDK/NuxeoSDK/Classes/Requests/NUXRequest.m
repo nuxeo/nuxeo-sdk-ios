@@ -13,6 +13,7 @@
 @property NSURL *url;
 @property NUXSession *session;
 @property NSMutableDictionary *mutableHeaders;
+@property NSMutableDictionary *mutableParameters;
 @end
 
 @implementation NUXRequest
@@ -33,6 +34,7 @@ NSData *_responseData;
         _schemas = [NSArray new];
         _postData = [NSMutableData new];
         _mutableHeaders = [NSMutableDictionary new];
+        _mutableParameters = [NSMutableDictionary new];
     }
     return self;
 }
@@ -58,6 +60,8 @@ NSData *_responseData;
     self.method = Nil;
     self.repository = Nil;
     self.postData = Nil;
+    self.mutableHeaders = nil;
+    self.mutableParameters = nil;
 }
 
 - (NUXRequest *)addURLSegment:(NSString *)aSegment {
@@ -98,8 +102,13 @@ NSData *_responseData;
 }
 
 
-- (NUXRequest *)addHeaderWithKey:(NSString *)key value:(NSString *)value {
+- (NUXRequest *)addHeaderValue:(NSString *)value forKey:(NSString *)key  {
     [self.mutableHeaders setObject:value forKey:key];
+    return self;
+}
+
+- (NUXRequest *)addParameterValue:(NSString *)value forKey:(NSString *)key {
+    [self.mutableParameters setObject:value forKey:key];
     return self;
 }
 
@@ -109,6 +118,10 @@ NSData *_responseData;
 
 - (NSDictionary *)headers {
     return [NSDictionary dictionaryWithDictionary:self.mutableHeaders];
+}
+
+- (NSDictionary *)parameters {
+    return [NSDictionary dictionaryWithDictionary:self.mutableParameters];
 }
 
 - (void)setCompletionBlock:(NUXResponseBlock)aCompletionBlock {
@@ -175,6 +188,18 @@ NSData *_responseData;
 -(ASIHTTPRequest *)requestASI {
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:self.URL];
     [request appendPostData:self.postData];
+    
+    if (self.parameters.count > 0) {
+        NSMutableArray *parameters = [NSMutableArray new];
+        [self.parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            NSString *pKey = [key stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *pValue = [obj stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            [parameters addObject:[NSString stringWithFormat:@"%@=%@", pKey, pValue]];
+        }];
+        request.url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", request.url.absoluteString, [parameters componentsJoinedByString:@"&"]]];
+    }
+    
     return request;
 }
 

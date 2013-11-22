@@ -88,7 +88,8 @@ NUXSession *session;
 
 - (void)testQueryRequestMethod {
     NUXRequest *request = [session requestQuery:@"Select * from Document"];
-    XCTAssertEqualObjects(@"application/json+nxrequest", request.contentType);
+    XCTAssertEqualObjects(@"application/json", request.contentType);
+    NSLog(@"%@", request.URL.absoluteString);
     [session startRequestSynchronous:request withCompletionBlock:^{
         XCTAssertEqual(200, request.responseStatusCode);
         NSDictionary *response = [request responseJSONWithError:nil];

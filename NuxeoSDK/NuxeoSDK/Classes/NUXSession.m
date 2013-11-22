@@ -114,10 +114,9 @@ NSString *const kApiPrefix = @"ApiPrefix";
         [request addRequestHeader:@"X-NXContext-Category" value:[categories componentsJoinedByString:@","]];
     }
 
-    for (NSString *header in nRequest.headers.allKeys) {
-        NSString *value = [nRequest.headers valueForKey:header];
-        [request addRequestHeader:header value:value];
-    }
+    [nRequest.headers enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [request addRequestHeader:key value:obj];
+    }];
     [request addRequestHeader:@"Content-Type" value:nRequest.contentType];
 
     request.username = self.username;

@@ -11,14 +11,12 @@
     NSString *_inputFile;
     id _input;
     NSMutableDictionary *_context;
-    NSMutableDictionary *_params;
 }
 
 -(id)init {
     self = [super init];
     if (self) {
         _context = [NSMutableDictionary new];
-        _params = [NSMutableDictionary new];
         
         self.contentType = @"application/json+nxrequest";
         self.method = @"POST";
@@ -30,14 +28,10 @@
     _inputFile = nil;
     _input = nil;
     _context = nil;
-    _params = nil;
 }
 
 - (void)addContextValue:(id)value forKey:(NSString *)key {
     [_context setObject:value forKey:key];
-}
-- (void)addParameterValue:(id)value forKey:(NSString *)key {
-    [_params setObject:value forKey:key];
 }
 
 // Add post file
@@ -50,10 +44,6 @@
 
 - (NSDictionary *)context {
     return [[NSDictionary alloc] initWithDictionary:_context];
-}
-
-- (NSDictionary *)parameters {
-    return [[NSDictionary alloc] initWithDictionary:_params];
 }
 
 - (id)fileInput {
