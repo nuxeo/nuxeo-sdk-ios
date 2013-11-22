@@ -5,6 +5,7 @@
 
 
 #import "NUXAutomationRequest.h"
+#import <ASIFormDataRequest.h>
 
 @implementation NUXAutomationRequest {
     NSString *_inputFile;
@@ -60,6 +61,19 @@
 }
 - (id)input {
     return [_input copy];
+}
+
+-(ASIHTTPRequest *)requestASI {
+    ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:self.URL];
+    
+    NSDictionary *params = @{@"context" : self.context, @"params" : self.parameters};
+    [request addData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil] forKey:@"params"];
+    if (self.fileInput != nil) {
+        [request addFile:self.fileInput forKey:@"input"];
+    } else {
+        [request addData:self.input forKey:@"input"];
+    }
+    return request;
 }
 
 @end

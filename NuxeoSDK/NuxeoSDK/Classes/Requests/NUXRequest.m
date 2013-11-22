@@ -7,6 +7,7 @@
 //
 
 #import "NUXRequest.h"
+#import <ASIHTTPRequest.h>
 
 @interface NUXRequest ()
 @property NSURL *url;
@@ -169,6 +170,12 @@ NSData *_responseData;
     id res = [NSJSONSerialization JSONObjectWithData:[self responseData] options:NSJSONReadingMutableContainers error:error];
 
     return res;
+}
+
+-(ASIHTTPRequest *)requestASI {
+    ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:self.URL];
+    [request appendPostData:self.postData];
+    return request;
 }
 
 @end

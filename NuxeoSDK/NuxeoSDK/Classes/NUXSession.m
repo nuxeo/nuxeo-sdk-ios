@@ -11,6 +11,10 @@
 #import "NUXSession.h"
 #import "NUXAutomationRequest.h"
 
+@interface NUXRequest (session)
+-(ASIHTTPRequest *)requestASI;
+@end
+
 @interface NUXSession () {
 
 }
@@ -81,24 +85,7 @@ NSString *const kApiPrefix = @"ApiPrefix";
 }
 
 - (ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
-    ASIHTTPRequest *request;
-    // XXX Should be moved in Request Impl class, but internally.
-    if ([nRequest class] == [NUXAutomationRequest class]) {
-        NUXAutomationRequest *aReq = (NUXAutomationRequest *)nRequest;
-        ASIFormDataRequest *fRequest = [[ASIFormDataRequest alloc] initWithURL:nRequest.URL];
-        
-        NSDictionary *params = @{@"context" : aReq.context, @"params" : aReq.parameters};
-        [fRequest addData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil] forKey:@"params"];
-        if (aReq.fileInput != nil) {
-            [fRequest addFile:aReq.fileInput forKey:@"input"];
-        } else {
-            [fRequest addData:aReq.input forKey:@"input"];
-        }
-        request = fRequest;
-    } else {
-        request = [[ASIHTTPRequest alloc] initWithURL:nRequest.URL];
-        [request appendPostData:nRequest.postData];
-    }
+    ASIHTTPRequest *request = [nRequest requestASI];
     
     [request setRequestMethod:nRequest.method];
 
