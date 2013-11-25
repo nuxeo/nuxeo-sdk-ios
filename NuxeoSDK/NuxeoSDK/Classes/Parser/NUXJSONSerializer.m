@@ -7,6 +7,7 @@
 //
 
 #import "NUXJSONSerializer.h"
+#import "NUXJSONMapper.h"
 
 #include <objc/runtime.h>
 
@@ -87,6 +88,9 @@
     } else if (strcmp(rawPropertyType, @encode(id)) == 0) {
         //it's some sort of object
         return @"id";
+    } if (strcmp(rawPropertyType, @encode(BOOL)) == 0) {
+        //it's some sort of object
+        return @"BOOL";
     } else {
         // According to Apples Documentation you can determine the corresponding encoding values
     }
@@ -103,17 +107,50 @@
     return nil;
 }
 
++(void)fillEntity:(id)entity withJSON:(NSDictionary *)json error:(NSError **)error {
+    [[NUXJSONSerializer dictionaryOfPropertiesForObject:[entity class]] enumerateKeysAndObjectsUsingBlock:^(id name, id type, BOOL *stop) {
+        id value = [json valueForKey:name];
+        if (!value) {
+            NSLog(@"Missing json value for %@ field", name);
+            return;
+        }
+        
+        if ([@"NSDate" isEqual:type]) {
+            NSDateFormatter *df = [NSDateFormatter new];
+            [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSZZZ"];
+            value = [df dateFromString:value];
+        }
+
+        NSLog(@"Value '%@' for field %@", value, name);
+        [entity setValue:value forKeyPath:name];
+    }];
+}
+
 @end
 
 
 @implementation NUXJSONSerializer
 
-+ (id)businessObjectWithData:(NSData *)data error:(NSError **)error
++ (id)entityWithData:(NSData *)data error:(NSError **)error
 {
-    return nil;
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:error];
+    if (!json && error) {
+        return nil;
+    }
+    NSDictionary *mappings = [[NUXJSONMapper sharedMapper] entityMapping];
+    Class destinationClass = [mappings objectForKey:@"0"]; // XXX
+    if (!destinationClass) {
+        // Set Error before returning
+        return nil;
+    }
+    
+    id entity = [[destinationClass alloc] init];
+    [NUXJSONSerializer fillEntity:entity withJSON:json error:error];
+    
+    return entity;
 }
 
-+ (NSData *) dataWithBusinnesObject:(id)bObject error:(NSError **)error
++ (NSData *) dataWithEntity:(id)bObject error:(NSError **)error
 {
     return nil;
 }

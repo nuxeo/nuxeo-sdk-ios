@@ -12,4 +12,19 @@
 
 @interface NUXDocument : NUXEntity
 
+@property (nonatomic) NSString* repository;
+@property (nonatomic) NSString* uid;
+@property (nonatomic) NSString* path;
+@property (nonatomic) NSString* type;
+@property (nonatomic) NSString* state;
+@property (nonatomic) NSString* versionLabel;
+@property (nonatomic) NSString* title;
+@property (nonatomic) NSString* changeToken;
+@property (nonatomic) NSDate* lastModified;
+@property (nonatomic) BOOL isCheckedOut;
+
+@property (nonatomic) NSMutableDictionary* properties;
+@property (nonatomic) NSMutableArray* facets;
+@property (nonatomic) NSMutableDictionary* context;
+
 @end

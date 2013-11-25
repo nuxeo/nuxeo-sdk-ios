@@ -14,6 +14,7 @@
 		51C75E73183E0CF000EE0DCC /* NUXEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E6B183E0CF000EE0DCC /* NUXEntity.m */; };
 		51C75E74183E0CF000EE0DCC /* NUXJSONMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E6E183E0CF000EE0DCC /* NUXJSONMapper.m */; };
 		51C75E75183E0CF000EE0DCC /* NUXJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E70183E0CF000EE0DCC /* NUXJSONSerializer.m */; };
+		51C75E7B1843B95200EE0DCC /* NUXJSONSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E7A1843B95200EE0DCC /* NUXJSONSerializerTests.m */; };
 		51E55C88182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
 		51E55C96182D415F009AC87C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C95182D415F009AC87C /* XCTest.framework */; };
 		51E55C97182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
@@ -64,6 +65,7 @@
 		51C75E6F183E0CF000EE0DCC /* NUXJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXJSONSerializer.h; sourceTree = "<group>"; };
 		51C75E70183E0CF000EE0DCC /* NUXJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXJSONSerializer.m; sourceTree = "<group>"; };
 		51C75E76183E4F6700EE0DCC /* NUXConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXConstants.h; sourceTree = "<group>"; };
+		51C75E7A1843B95200EE0DCC /* NUXJSONSerializerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXJSONSerializerTests.m; sourceTree = "<group>"; };
 		51E55C84182D415F009AC87C /* libNuxeoSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNuxeoSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E55C87182D415F009AC87C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		51E55C8B182D415F009AC87C /* NuxeoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NuxeoSDK-Prefix.pch"; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 			children = (
 				AC0002645273819F993E5C1B /* NUXRequestTests.m */,
 				AC000022E7EC18768D35852D /* NUXSessionTests.m */,
+				51C75E7A1843B95200EE0DCC /* NUXJSONSerializerTests.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51C75E7B1843B95200EE0DCC /* NUXJSONSerializerTests.m in Sources */,
 				AC00015C9A8DDBE3CFE409A2 /* NUXRequestTests.m in Sources */,
 				AC000B77A341A810EE6DACC4 /* NUXSessionTests.m in Sources */,
 			);

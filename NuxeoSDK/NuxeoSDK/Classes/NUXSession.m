@@ -15,9 +15,7 @@
 -(ASIHTTPRequest *)requestASI;
 @end
 
-@interface NUXSession () {
-
-}
+@interface NUXSession ()
 
 @property NSOperationQueue *queue;
 @property NSMutableArray *schemas;
@@ -156,10 +154,9 @@ NSString *const kApiPrefix = @"ApiPrefix";
     dispatch_once(&pred, ^{
         _shared = [NUXSession new];
         NSString *properties = [[NSBundle bundleForClass:[_shared class]] pathForResource:kPropertyFileName ofType:@"plist"];
-        if (properties == nil) {
-            [NSException raise:properties format:@"Unable to locate file %@.plist", kPropertyFileName];
+        if (properties != nil) {
+            [_shared setupWithFile:properties];
         }
-        [_shared setupWithFile:properties];
     });
 
     return _shared;

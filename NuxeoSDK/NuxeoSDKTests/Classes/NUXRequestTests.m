@@ -136,8 +136,4 @@ NUXRequest *request;
     [request startSynchronous];
 }
 
-- (void)testRequestParameters {
-    
-}
-
 @end

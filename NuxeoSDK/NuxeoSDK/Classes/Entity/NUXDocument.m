@@ -10,7 +10,6 @@
 
 @implementation NUXDocument
 
-
 - (void)dealloc
 {
     
