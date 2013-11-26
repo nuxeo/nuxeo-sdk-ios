@@ -109,9 +109,13 @@
 
 +(void)fillEntity:(id)entity withJSON:(NSDictionary *)json error:(NSError **)error {
     [[NUXJSONSerializer dictionaryOfPropertiesForObject:[entity class]] enumerateKeysAndObjectsUsingBlock:^(id name, id type, BOOL *stop) {
-        id value = [json valueForKey:name];
+        NSString *jsonKey = name;
+        if ([jsonKey isEqualToString:@"entityType"]) {
+            jsonKey = @"entity-type";
+        }
+        id value = [json valueForKey:jsonKey];
         if (!value) {
-            NSLog(@"Missing json value for %@ field", name);
+            NSLog(@"Missing json value for %@ field", name); //XXX Debug
             return;
         }
         
@@ -121,8 +125,23 @@
             value = [df dateFromString:value];
         }
 
-        NSLog(@"Value '%@' for field %@", value, name);
+        NSLog(@"Value '%@' for field %@", value, name); //XXX Debug
         [entity setValue:value forKeyPath:name];
+    }];
+}
+
++(void)fillDictionnary:(NSMutableDictionary *)json withEntity:(NUXEntity *)entity error:(NSError **)error {
+    [json setValue:entity.entityType forKey:@"entity-type"];
+    [[NUXJSONSerializer dictionaryOfPropertiesForObject:[entity class]] enumerateKeysAndObjectsUsingBlock:^(id name, id type, BOOL *stop) {
+        id value = [entity valueForKeyPath:name];
+        
+        if (value && [@"NSDate" isEqual:type]) {
+            NSDateFormatter *df = [NSDateFormatter new];
+            [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSZZZ"];
+            value = [df stringFromDate:value];
+        }
+        
+        [json setValue:value forKey:name];
     }];
 }
 
@@ -140,7 +159,10 @@
     NSDictionary *mappings = [[NUXJSONMapper sharedMapper] entityMapping];
     Class destinationClass = [mappings objectForKey:@"0"]; // XXX
     if (!destinationClass) {
-        // Set Error before returning
+        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+        [userInfo setValue:[NSString stringWithFormat:@"Unable to find mapping for entity-type %@", @""] forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:@"Nuxeo" code:1 userInfo:userInfo];
+        
         return nil;
     }
     
@@ -152,7 +174,21 @@
 
 + (NSData *) dataWithEntity:(id)bObject error:(NSError **)error
 {
-    return nil;
+    NSMutableDictionary *json = [NSMutableDictionary new];
+    
+    NSDictionary *mappings = [[NUXJSONMapper sharedMapper] entityMapping];
+    Class destinationClass = [mappings objectForKey:@"0"]; // XXX
+    if (!destinationClass) {
+        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+        [userInfo setValue:[NSString stringWithFormat:@"Unable to find mapping from class %@", @""] forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:@"Nuxeo" code:1 userInfo:userInfo];
+        
+        return nil;
+    }
+    
+    [NUXJSONSerializer fillDictionnary:json withEntity:bObject error:error];
+    
+    return [NSJSONSerialization dataWithJSONObject:json options:0 error:error];
 }
 
 

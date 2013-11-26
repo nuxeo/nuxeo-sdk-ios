@@ -7,13 +7,26 @@
 //
 
 #import "NUXSession+requests.h"
+#import "NUXEntity.h"
+#import "NUXJSONSerializer.h"
 
 @implementation NUXSession (requests)
 
 #pragma mark Internal methods
 
-- (NSString *)segmentForDocumentRef:(NSString *)docRef {
++ (NSString *)segmentForDocumentRef:(NSString *)docRef {
     return [docRef characterAtIndex:0] == '/' ? @"path" : @"id";
+}
+
++ (NSData *)dataFromDocument:(id) document {
+    NSData *data;
+    // Handle JSON based document and NUXEntity serialized document
+    if ([document isKindOfClass:[NUXEntity class]]) {
+        data = [NUXJSONSerializer dataWithEntity:document error:nil];
+    } else {
+        data = [NSJSONSerialization dataWithJSONObject:document options:0 error:nil];
+    }
+    return data;
 }
 
 #pragma mark -
@@ -24,13 +37,13 @@
 }
 
 - (NUXRequest *)requestDocument:(NSString *)documentRef {
-    return [[[[NUXRequest alloc] initWithSession:self] addURLSegment:[self segmentForDocumentRef:documentRef]] addURLSegment:documentRef];
+    return [[[[NUXRequest alloc] initWithSession:self] addURLSegment:[NUXSession segmentForDocumentRef:documentRef]] addURLSegment:documentRef];
 }
 
 - (NUXRequest *)requestUpdateDocument:(id)document {
     NUXRequest *request = [self request];
     request.method = @"put";
-    [request.postData appendData:[NSJSONSerialization dataWithJSONObject:document options:0 error:nil]];
+    [request.postData appendData:[NUXSession dataFromDocument:document]];
     [[request addURLSegment:@"id"] addURLSegment:[document valueForKey:@"uid"]];
 
     return request;
@@ -39,7 +52,7 @@
 - (NUXRequest *)requestCreateDocument:(id)document withParent:(NSString *)documentRef {
     NUXRequest *request = [self requestDocument:documentRef];
     request.method = @"post";
-    [request.postData appendData:[NSJSONSerialization dataWithJSONObject:document options:0 error:nil]];
+    [request.postData appendData:[NUXSession dataFromDocument:document]];
     return request;
 }
 
@@ -76,7 +89,7 @@
     return request;
 }
 
--(NUXAutomationRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef {
+- (NUXAutomationRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef {
     NUXAutomationRequest *request = [self requestOperation:@"FileManager.Import"];
     
     [request addContextValue:documentRef forKey:@"currentDocument"];
