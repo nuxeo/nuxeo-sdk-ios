@@ -8,6 +8,7 @@
 
 #import "NUXJSONMapper.h"
 
+#import "NUXEntity.h"
 #import "NUXDocument.h"
 #import "NUXDocuments.h"
 
@@ -30,18 +31,22 @@
 
 - (void) setup
 {
-    // can override and let the children singleton process their first init there
-    
     // default mapping map
     _entityMapping = [NSMutableDictionary dictionary];
-    [self registerEntityClass:[NUXDocument class] forType:NUXEntityDocument];
-    [self registerEntityClass:[NUXDocuments class] forType:NUXEntityDocuments];
+    
+    [self registerEntityClass:[NUXDocument class]];
+    [self registerEntityClass:[NUXDocuments class]];
 }
 
 
-- (void) registerEntityClass:(Class) bClass forType:(NUXEntityType)entityType
+- (void) registerEntityClass:(Class) bClass
 {
-    [self.entityMapping setValue:bClass forKey:[NSString stringWithFormat:@"%d", entityType]];
+    // Create empty instance to get entity-type
+    id obj = [[bClass alloc] init];
+    if (![obj isKindOfClass:[NUXEntity class]]) {
+        [NSException raise:@"Class error" format:@"Trying to register class %@ without inherite %@ class.", bClass, [NUXEntity class]];
+    }
+    [self.entityMapping setValue:bClass forKey:[obj valueForKey:@"entityType"]];
 }
 
 - (void)dealloc

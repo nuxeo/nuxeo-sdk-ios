@@ -134,7 +134,6 @@
 
 +(NSDictionary *)directoryWithEntity:(NUXEntity *)entity error:(NSError **)error {
     NSMutableDictionary *json = [NSMutableDictionary new];
-    [json setValue:entity.entityType forKey:@"entity-type"];
     [[NUXJSONSerializer dictionaryOfPropertiesForObject:[entity class]] enumerateKeysAndObjectsUsingBlock:^(id name, id type, BOOL *stop) {
         id value = [entity valueForKeyPath:name];
         
@@ -162,7 +161,7 @@
     }
     
     NSDictionary *mappings = [[NUXJSONMapper sharedMapper] entityMapping];
-    Class destinationClass = [mappings objectForKey:@"0"]; // XXX
+    Class destinationClass = [mappings objectForKey:[json objectForKey:@"entity-type"]]; // XXX
     if (!destinationClass) {
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         [userInfo setValue:[NSString stringWithFormat:@"Unable to find mapping for entity-type %@", @""] forKey:NSLocalizedDescriptionKey];
@@ -178,8 +177,16 @@
 
 + (NSData *) dataWithEntity:(id)bObject error:(NSError **)error
 {
+    if (![bObject isKindOfClass:[NUXEntity class]]) {
+        if (error != nil) {
+            *error = [NSError errorWithDomain:@"Nuxeo" code:1 userInfo:nil];
+        }
+        
+        return nil;
+    }
+    
     NSDictionary *mappings = [[NUXJSONMapper sharedMapper] entityMapping];
-    Class destinationClass = [mappings objectForKey:@"0"]; // XXX
+    Class destinationClass = [mappings objectForKey:[bObject valueForKey:@"entityType"]];
     if (!destinationClass) {
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         [userInfo setValue:[NSString stringWithFormat:@"Unable to find mapping from class %@", @""] forKey:NSLocalizedDescriptionKey];
