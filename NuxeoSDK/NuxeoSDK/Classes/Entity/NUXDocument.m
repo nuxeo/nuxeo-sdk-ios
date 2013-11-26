@@ -23,6 +23,7 @@
 {
     _repository = nil;
     _uid = nil;
+    _name = nil;
     _path = nil;
     _type = nil;
     _state = nil;

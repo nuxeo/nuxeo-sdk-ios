@@ -133,4 +133,25 @@ NUXSession *session;
     XCTAssertNotNil(doc.path);
 }
 
+-(void)testDocumentEntityCreation {
+    NUXDocument *__block doc = [NUXDocument new];
+    NSString *name = [NSString stringWithFormat:@"%@", @(random())];
+    doc.name = name;
+    doc.type = @"Folder";
+    doc.properties = [NSMutableDictionary dictionaryWithDictionary:@{@"dc:title" : @"My note",
+                                                                     @"dc:description" : @"something"}];
+    
+    NUXRequest *request = [session requestCreateDocument:doc withParent:@"/default-domain"];
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(201, request.responseStatusCode);
+        doc = [request responseEntityWithError:nil];
+    }];
+    XCTAssertNil(doc.uid);
+    [request startSynchronous];
+    
+    NSString *path = [NSString stringWithFormat:@"/default-domain/%@", name];
+    XCTAssertEqualObjects(path, doc.path);
+    XCTAssertNotNil(doc.uid);
+}
+
 @end

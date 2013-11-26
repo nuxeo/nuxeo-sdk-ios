@@ -14,6 +14,7 @@
 
 @property (nonatomic) NSString* repository;
 @property (nonatomic) NSString* uid;
+@property (nonatomic) NSString* name;
 @property (nonatomic) NSString* path;
 @property (nonatomic) NSString* type;
 @property (nonatomic) NSString* state;
