@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#include <stdlib.h>
 #import "NUXSession+requests.h"
 #import "NUXJSONMapper.h"
 #import "NUXJSONSerializer.h"
@@ -135,7 +136,7 @@ NUXSession *session;
 
 -(void)testDocumentEntityCreation {
     NUXDocument *__block doc = [NUXDocument new];
-    NSString *name = [NSString stringWithFormat:@"%@", @(random())];
+    NSString *name = [NSString stringWithFormat:@"%@", @(arc4random())];
     doc.name = name;
     doc.type = @"Folder";
     doc.properties = [NSMutableDictionary dictionaryWithDictionary:@{@"dc:title" : @"My note",

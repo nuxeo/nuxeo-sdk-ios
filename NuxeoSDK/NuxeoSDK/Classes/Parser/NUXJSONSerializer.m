@@ -122,7 +122,7 @@
         }
         id value = [json valueForKey:jsonKey];
         if (!value) {
-            NSLog(@"Missing json value for %@ field", name); //XXX Debug
+            NSLog(@"Missing json value for %@ field", name);
             return;
         }
         
@@ -144,7 +144,7 @@
             value = values;
         }
 
-        NSLog(@"Value '%@' for field %@", value, name); //XXX Debug
+        //NSLog(@"Value '%@' for field %@", value, name);
         [entity setValue:value forKeyPath:name];
     }];
     return entity;
@@ -185,7 +185,6 @@
 
 @end
 
-
 @implementation NUXJSONSerializer
 
 + (id)entityWithData:(NSData *)data error:(NSError **)error
@@ -223,8 +222,5 @@
     NSDictionary *json = [NUXJSONSerializer directoryWithEntity:bObject error:error];
     return [NSJSONSerialization dataWithJSONObject:json options:0 error:error];
 }
-
-
-
 
 @end

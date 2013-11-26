@@ -15,10 +15,10 @@
 
 @end
 
-@implementation NUXRequestTests
-
-NUXSession *session;
-NUXRequest *request;
+@implementation NUXRequestTests {
+    NUXSession *session;
+    NUXRequest *request;
+}
 
 - (void)setUp {
     [super setUp];
@@ -96,7 +96,7 @@ NUXRequest *request;
     }];
 
     [session startRequestSynchronous:req withCompletionBlock:^{
-        NSDictionary *json = [request responseJSONWithError:nil];
+        NSDictionary *json = [req responseJSONWithError:nil];
         XCTAssertEqualObjects(@"/default-domain", [json valueForKey:@"path"]);
     }                   failureBlock:^{
         XCTFail(@"Request should not fail: %@", request.responseMessage);
@@ -116,24 +116,24 @@ NUXRequest *request;
 
 - (void)testUploadNuxeoWithASI {
     NSURL *url = [NSURL URLWithString:@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@op/FileManager.Import"];
-    ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:url];
-    [request setRequestMethod:@"post"];
-    [request addRequestHeader:@"Content-type" value:@"application/json+nxrequest"];
+    ASIFormDataRequest *iRequest = [[ASIFormDataRequest alloc] initWithURL:url];
+    [iRequest setRequestMethod:@"post"];
+    [iRequest addRequestHeader:@"Content-type" value:@"application/json+nxrequest"];
 
     NSString *file = [[NSBundle bundleForClass:[NUXSession class]] pathForResource:@"NUXSession-info" ofType:@"plist"];
     id json = [NSJSONSerialization dataWithJSONObject:@{@"context" : @{@"currentDocument" : @"/management"}} options:0 error:nil];
 
-    [request addData:json forKey:@"params"];
-    [request addFile:file forKey:@"input"];
+    [iRequest addData:json forKey:@"params"];
+    [iRequest addFile:file forKey:@"input"];
 
-    ASIFormDataRequest *__weak wReq = request;
-    [request setCompletionBlock:^{
+    ASIFormDataRequest *__weak wReq = iRequest;
+    [iRequest setCompletionBlock:^{
         XCTAssertEqual(200, wReq.responseStatusCode);
     }];
-    [request setFailedBlock:^{
+    [iRequest setFailedBlock:^{
         XCTFail(@"Fail.");
     }];
-    [request startSynchronous];
+    [iRequest startSynchronous];
 }
 
 @end

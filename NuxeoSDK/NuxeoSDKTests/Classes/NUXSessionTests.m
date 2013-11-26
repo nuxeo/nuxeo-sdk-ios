@@ -14,9 +14,9 @@
 
 @end
 
-@implementation NUXSessionTests
-
-NUXSession *session;
+@implementation NUXSessionTests {
+    NUXSession *session;
+}
 
 - (void)setUp {
     [super setUp];
@@ -30,16 +30,16 @@ NUXSession *session;
 }
 
 - (void)testSessionInit {
-    NUXSession *session = [NUXSession new];
-    XCTAssertEqualObjects(@"default", session.repository);
+    NUXSession *iSession = [NUXSession new];
+    XCTAssertEqualObjects(@"default", iSession.repository);
 
     NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
-    session = [[NUXSession alloc] initWithServerURL:url username:@"Administrator" password:@"Administrator"];
-    XCTAssertEqualObjects(@"default", session.repository);
-    XCTAssertEqualObjects(@"Administrator", session.username);
-    XCTAssertEqualObjects(@"Administrator", session.password);
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo", session.url.absoluteString);
-    NSURL *server = [session.url URLByAppendingPathComponent:session.apiPrefix];
+    iSession = [[NUXSession alloc] initWithServerURL:url username:@"Administrator" password:@"Administrator"];
+    XCTAssertEqualObjects(@"default", iSession.repository);
+    XCTAssertEqualObjects(@"Administrator", iSession.username);
+    XCTAssertEqualObjects(@"Administrator", iSession.password);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo", iSession.url.absoluteString);
+    NSURL *server = [iSession.url URLByAppendingPathComponent:iSession.apiPrefix];
     XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1", server.absoluteString);
 }
 
@@ -160,17 +160,17 @@ NUXSession *session;
 }
 
 - (void)testSharedSession {
-    NUXSession *session = [NUXSession sharedSession];
-    XCTAssertEqualObjects(@"http://localhost:8080/test", session.url.absoluteString);
-    XCTAssertEqualObjects(@"adminShared", session.username);
-    XCTAssertEqualObjects(@"adminSharedPass", session.password);
-    XCTAssertEqualObjects(@"test", session.repository);
+    NUXSession *iSession = [NUXSession sharedSession];
+    XCTAssertEqualObjects(@"http://localhost:8080/test", iSession.url.absoluteString);
+    XCTAssertEqualObjects(@"adminShared", iSession.username);
+    XCTAssertEqualObjects(@"adminSharedPass", iSession.password);
+    XCTAssertEqualObjects(@"test", iSession.repository);
 
-    session.username = @"another";
+    iSession.username = @"another";
     NUXSession *sessionNd = [NUXSession sharedSession];
     XCTAssertEqualObjects(@"another", sessionNd.username);
     
-    NUXRequest *request = [session requestChildren:@"/default-domain/test"];
+    NUXRequest *request = [iSession requestChildren:@"/default-domain/test"];
     XCTAssertEqualObjects(@"http://localhost:8080/test/api/v2/path/default-domain/test/@children", request.URL.absoluteString);
 }
 
