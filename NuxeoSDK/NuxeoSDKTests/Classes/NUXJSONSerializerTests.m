@@ -11,12 +11,29 @@
 #import "NUXJSONMapper.h"
 #import "NUXJSONSerializer.h"
 #import "NUXDocument.h"
+#import "NUXDocuments.h"
 
 @interface NUXJSONSerializerTests : XCTestCase
 
 @end
 
 @implementation NUXJSONSerializerTests
+
+NUXSession *session;
+
+- (void)setUp {
+    [super setUp];
+    
+    NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
+    session = [[NUXSession alloc] initWithServerURL:url username:@"Administrator" password:@"Administrator"];
+    [session addDefaultSchemas:@[@"dublincore"]];
+}
+
+- (void)tearDown {
+    [super tearDown];
+    
+    session = Nil;
+}
 
 - (void)testDocumentJSONMapper {
     NSDictionary *document = @{@"entity-type" : @"document",
@@ -63,9 +80,6 @@
 }
 
 -(void)testUpdateDocument {
-    NUXSession *session = [[NUXSession alloc] initWithServerURL:[NSURL URLWithString:@"http://localhost:8080/nuxeo"] username:@"Administrator" password:@"Administrator"];
-    [session addDefaultSchemas:@[@"dublincore"]];
-    
     NUXRequest *request = [session requestDocument:@"/default-domain"];
     
     NSData *__block response;
@@ -98,6 +112,25 @@
     
     XCTAssertEqualObjects(description, [docNd.properties valueForKey:@"dc:description"]);
     XCTAssertTrue([lastModified compare:docNd.lastModified] == NSOrderedAscending);
+}
+
+-(void)testDocumentListEntity {
+    NUXRequest *request = [session requestQuery:@"select * from document"];
+    NUXDocuments * docs;
+    [request setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(200, request.responseStatusCode);
+
+    }];
+    [request startSynchronous];
+
+    NSLog(@"%@", [request responseJSONWithError:nil]);
+    docs = [request responseEntityWithError:nil];
+    XCTAssertTrue(docs.entries.count > 4);
+    
+    NUXDocument *doc = [docs.entries objectAtIndex:0];
+    XCTAssertTrue([doc isKindOfClass:[NUXEntity class]]);
+    XCTAssertNotNil(doc.uid);
+    XCTAssertNotNil(doc.path);
 }
 
 @end

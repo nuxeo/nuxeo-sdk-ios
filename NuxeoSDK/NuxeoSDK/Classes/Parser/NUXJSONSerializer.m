@@ -82,9 +82,15 @@
     if (strcmp(rawPropertyType, @encode(float)) == 0) {
         //it's a float
         return @"float";
-    } else if (strcmp(rawPropertyType, @encode(int)) == 0) {
+    } else if (strcmp(rawPropertyType, @encode(int)) == 0 ||
+               strcmp(rawPropertyType, @encode(unsigned int)) == 0) {
         //it's an int
         return @"int";
+    } else if (strcmp(rawPropertyType, @encode(long)) == 0 ||
+               strcmp(rawPropertyType, @encode(long long)) == 0 ||
+               strcmp(rawPropertyType, @encode(unsigned long long)) == 0) {
+        //it's a long
+        return @"long";
     } else if (strcmp(rawPropertyType, @encode(id)) == 0) {
         //it's some sort of object
         return @"id";
@@ -120,10 +126,22 @@
             return;
         }
         
-        if ([@"NSDate" isEqual:type]) {
+        if ([@"NSDate" isEqualToString:type]) {
+            // Format date as Nuxeo send them
             NSDateFormatter *df = [NSDateFormatter new];
             [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSZZZ"];
             value = [df dateFromString:value];
+        } else if ([@"NSArray" isEqualToString:type]) {
+            // Iterate through the table to find an entity equivalent
+            NSMutableArray *values = [NSMutableArray new];
+            [value enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                id entity = [NUXJSONSerializer entityWithJSON:obj error:nil];
+                if (entity != nil) {
+                    obj = entity;
+                }
+                [values addObject:obj];
+            }];
+            value = values;
         }
 
         NSLog(@"Value '%@' for field %@", value, name); //XXX Debug
@@ -148,18 +166,8 @@
     return json;
 }
 
-@end
-
-
-@implementation NUXJSONSerializer
-
-+ (id)entityWithData:(NSData *)data error:(NSError **)error
++ (id)entityWithJSON:(NSDictionary *)json error:(NSError **)error
 {
-    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:error];
-    if (!json && error) {
-        return nil;
-    }
-    
     NSDictionary *mappings = [[NUXJSONMapper sharedMapper] entityMapping];
     Class destinationClass = [mappings objectForKey:[json objectForKey:@"entity-type"]]; // XXX
     if (!destinationClass) {
@@ -173,6 +181,21 @@
     }
     
     return [NUXJSONSerializer entityFromClass:destinationClass withJSON:json error:error];
+}
+
+@end
+
+
+@implementation NUXJSONSerializer
+
++ (id)entityWithData:(NSData *)data error:(NSError **)error
+{
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:error];
+    if (!json && error) {
+        return nil;
+    }
+    
+    return [NUXJSONSerializer entityWithJSON:json error:error];
 }
 
 + (NSData *) dataWithEntity:(id)bObject error:(NSError **)error

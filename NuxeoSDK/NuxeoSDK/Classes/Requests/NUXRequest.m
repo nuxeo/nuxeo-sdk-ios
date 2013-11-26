@@ -7,6 +7,7 @@
 //
 
 #import "NUXRequest.h"
+#import "NUXJSONSerializer.h"
 #import <ASIHTTPRequest.h>
 
 @interface NUXRequest ()
@@ -183,6 +184,10 @@ NSData *_responseData;
     id res = [NSJSONSerialization JSONObjectWithData:[self responseData] options:NSJSONReadingMutableContainers error:error];
 
     return res;
+}
+
+- (id)responseEntityWithError:(NSError **)error {
+    return [NUXJSONSerializer entityWithData:self.responseData error:error];
 }
 
 -(ASIHTTPRequest *)requestASI {

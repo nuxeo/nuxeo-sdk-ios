@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "NUXSession.h"
+#import "NUXEntity.h"
 
 @class NUXSession;
 
@@ -79,6 +80,8 @@
 - (NSString *)responseString;
 
 - (NSData *)responseData;
+
+- (id)responseEntityWithError:(NSError **)error;
 
 - (id)responseJSONWithError:(NSError **)error;
 
