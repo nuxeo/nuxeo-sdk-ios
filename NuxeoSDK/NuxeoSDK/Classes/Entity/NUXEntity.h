@@ -13,6 +13,8 @@
     
 }
 
+-(id)initWithEntityType: (NSString *)entityType;
+
 @property (nonatomic, retain, readonly) NSString * entityType;
 
 @end

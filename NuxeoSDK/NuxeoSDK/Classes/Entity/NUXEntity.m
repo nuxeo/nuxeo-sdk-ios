@@ -10,6 +10,14 @@
 
 @implementation NUXEntity
 
+-(id)initWithEntityType: (NSString *)entityType {
+    self = [super init];
+    if (self) {
+        [self setValue:entityType forKeyPath:@"entityType"];
+    }
+    return self;
+}
+
 - (void)dealloc
 {
     _entityType = nil;

@@ -24,7 +24,7 @@
                                @"type" : @"File",
                                @"state" : @"project",
                                @"title" : @"my Title",
-                               @"isCheckedOut" : @true,
+                               @"isCheckedOut" : @(true),
                                @"lastModified" : @"2013-11-22T10:01:45.40Z",
                                @"properties" : @{@"dc:title" : @"my Title",
                                                  @"dc:description" : @"Description is cool"}};
@@ -48,6 +48,7 @@
 
 -(void)testEntityToData {
     NUXDocument *doc = [NUXDocument new];
+    XCTAssertEqualObjects(@"document", doc.entityType);
     doc.uid = @"53-345-435-345";
     doc.title = @"Salut";
     doc.lastModified = [NSDate new];

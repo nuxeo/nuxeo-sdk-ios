@@ -10,6 +10,14 @@
 
 @implementation NUXDocuments
 
+-(id)init
+{
+    self = [super initWithEntityType:@"documents"];
+    if (self) {
+        // Initialize
+    }
+    return self;
+}
 
 - (void)dealloc
 {

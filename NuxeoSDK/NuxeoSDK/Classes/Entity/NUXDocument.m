@@ -10,8 +10,29 @@
 
 @implementation NUXDocument
 
+-(id)init
+{
+    self = [super initWithEntityType:@"document"];
+    if (self) {
+        // Initialize
+    }
+    return self;
+}
+
 - (void)dealloc
 {
+    _repository = nil;
+    _uid = nil;
+    _path = nil;
+    _type = nil;
+    _state = nil;
+    _versionLabel = nil;
+    _title = nil;
+    _changeToken = nil;
+    _lastModified = nil;
     
+    _properties = nil;
+    _facets = nil;
+    _context = nil;
 }
 @end

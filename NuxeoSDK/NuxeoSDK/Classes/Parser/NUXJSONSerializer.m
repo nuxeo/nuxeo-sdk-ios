@@ -68,10 +68,10 @@
 
 + (NSString *) getPropertyType:(objc_property_t) property
 {
-    const char * name = property_getName(property);
-    NSString *propertyName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
+    //const char * name = property_getName(property);
+    //NSString *propertyName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
     const char * type = property_getAttributes(property);
-    NSString *attr = [NSString stringWithCString:type encoding:NSUTF8StringEncoding];
+    //NSString *attr = [NSString stringWithCString:type encoding:NSUTF8StringEncoding];
     
     NSString * typeString = [NSString stringWithUTF8String:type];
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
@@ -107,8 +107,9 @@
     return nil;
 }
 
-+(void)fillEntity:(id)entity withJSON:(NSDictionary *)json error:(NSError **)error {
-    [[NUXJSONSerializer dictionaryOfPropertiesForObject:[entity class]] enumerateKeysAndObjectsUsingBlock:^(id name, id type, BOOL *stop) {
++(id)entityFromClass:(Class)entityClass withJSON:(NSDictionary *)json error:(NSError **)error {
+    id entity = [[entityClass alloc] init];
+    [[NUXJSONSerializer dictionaryOfPropertiesForObject:entityClass] enumerateKeysAndObjectsUsingBlock:^(id name, id type, BOOL *stop) {
         NSString *jsonKey = name;
         if ([jsonKey isEqualToString:@"entityType"]) {
             jsonKey = @"entity-type";
@@ -128,9 +129,11 @@
         NSLog(@"Value '%@' for field %@", value, name); //XXX Debug
         [entity setValue:value forKeyPath:name];
     }];
+    return entity;
 }
 
-+(void)fillDictionnary:(NSMutableDictionary *)json withEntity:(NUXEntity *)entity error:(NSError **)error {
++(NSDictionary *)directoryWithEntity:(NUXEntity *)entity error:(NSError **)error {
+    NSMutableDictionary *json = [NSMutableDictionary new];
     [json setValue:entity.entityType forKey:@"entity-type"];
     [[NUXJSONSerializer dictionaryOfPropertiesForObject:[entity class]] enumerateKeysAndObjectsUsingBlock:^(id name, id type, BOOL *stop) {
         id value = [entity valueForKeyPath:name];
@@ -143,6 +146,7 @@
         
         [json setValue:value forKey:name];
     }];
+    return json;
 }
 
 @end
@@ -156,38 +160,37 @@
     if (!json && error) {
         return nil;
     }
+    
     NSDictionary *mappings = [[NUXJSONMapper sharedMapper] entityMapping];
     Class destinationClass = [mappings objectForKey:@"0"]; // XXX
     if (!destinationClass) {
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         [userInfo setValue:[NSString stringWithFormat:@"Unable to find mapping for entity-type %@", @""] forKey:NSLocalizedDescriptionKey];
-        *error = [NSError errorWithDomain:@"Nuxeo" code:1 userInfo:userInfo];
+        if (error != nil) {
+            *error = [NSError errorWithDomain:@"Nuxeo" code:1 userInfo:userInfo];
+        }
         
         return nil;
     }
     
-    id entity = [[destinationClass alloc] init];
-    [NUXJSONSerializer fillEntity:entity withJSON:json error:error];
-    
-    return entity;
+    return [NUXJSONSerializer entityFromClass:destinationClass withJSON:json error:error];
 }
 
 + (NSData *) dataWithEntity:(id)bObject error:(NSError **)error
 {
-    NSMutableDictionary *json = [NSMutableDictionary new];
-    
     NSDictionary *mappings = [[NUXJSONMapper sharedMapper] entityMapping];
     Class destinationClass = [mappings objectForKey:@"0"]; // XXX
     if (!destinationClass) {
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         [userInfo setValue:[NSString stringWithFormat:@"Unable to find mapping from class %@", @""] forKey:NSLocalizedDescriptionKey];
-        *error = [NSError errorWithDomain:@"Nuxeo" code:1 userInfo:userInfo];
+        if (error != nil) {
+            *error = [NSError errorWithDomain:@"Nuxeo" code:1 userInfo:userInfo];
+        }
         
         return nil;
     }
     
-    [NUXJSONSerializer fillDictionnary:json withEntity:bObject error:error];
-    
+    NSDictionary *json = [NUXJSONSerializer directoryWithEntity:bObject error:error];
     return [NSJSONSerialization dataWithJSONObject:json options:0 error:error];
 }
 
