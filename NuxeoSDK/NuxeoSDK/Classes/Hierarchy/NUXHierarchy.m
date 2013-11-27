@@ -91,7 +91,7 @@
             // XXX Todo build next page query
             [NSException raise:@"Not yet implemented" format:@"This great feature is not yet implemented."];
         } else {
-            [self buildHierarchyFromDocuments:docs];
+            [self startBuildingHierarchyWithDocuments:docs];
         }
     };
     
@@ -104,7 +104,7 @@
     [request start];
 }
 
--(void)buildHierarchyFromDocuments:(NSArray *)documents
+-(void)startBuildingHierarchyWithDocuments:(NSArray *)documents
 {
     documents = [documents sortedArrayUsingComparator:^NSComparisonResult(NUXDocument *doc1, NUXDocument *doc2) {
         return [doc1.path compare:doc2.path];
@@ -121,7 +121,6 @@
         [children addObject:doc];
     }];
     
-    NSLog(@"%@", documents);
     [self buildHierarchy:documents];
     [self setupCompleted];
 }
