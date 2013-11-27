@@ -37,6 +37,11 @@
                BlueprintName = "NuxeoSDKTests"
                ReferencedContainer = "container:NuxeoSDK.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "NUXAbstractTestCase">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

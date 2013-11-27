@@ -6,27 +6,20 @@
 //  Copyright (c) 2013 Nuxeo. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
-#import "NUXSession.h"
-#import "NUXSession+requests.h"
+#import "NUXAbstractTestCase.h"
 
-@interface NUXSessionTests : XCTestCase
+@interface NUXSessionTests : NUXAbstractTestCase
 
 @end
 
-@implementation NUXSessionTests {
-    NUXSession *session;
-}
+@implementation NUXSessionTests
 
 - (void)setUp {
     [super setUp];
-    NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
-    session = [[NUXSession alloc] initWithServerURL:url username:@"Administrator" password:@"Administrator"];
 }
 
 - (void)tearDown {
     [super tearDown];
-    session = Nil;
 }
 
 - (void)testSessionInit {

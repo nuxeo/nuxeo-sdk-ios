@@ -6,34 +6,23 @@
 //  Copyright (c) 2013 Nuxeo. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
-#include <stdlib.h>
-#import "NUXSession+requests.h"
+#import "NUXAbstractTestCase.h"
+
 #import "NUXJSONMapper.h"
 #import "NUXJSONSerializer.h"
-#import "NUXDocument.h"
-#import "NUXDocuments.h"
 
-@interface NUXJSONSerializerTests : XCTestCase
+@interface NUXJSONSerializerTests : NUXAbstractTestCase
 
 @end
 
 @implementation NUXJSONSerializerTests
 
-NUXSession *session;
-
 - (void)setUp {
     [super setUp];
-    
-    NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
-    session = [[NUXSession alloc] initWithServerURL:url username:@"Administrator" password:@"Administrator"];
-    [session addDefaultSchemas:@[@"dublincore"]];
 }
 
 - (void)tearDown {
     [super tearDown];
-    
-    session = Nil;
 }
 
 - (void)testDocumentJSONMapper {
