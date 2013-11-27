@@ -20,5 +20,7 @@
 -(NUXDocuments *)childrenOfRoot;
 
 -(bool)isLoaded;
+-(void)waitUntilLoadingIsDone;
+-(void)setCompletionBlock:(NUXBasicBlock)completion;
 
 @end

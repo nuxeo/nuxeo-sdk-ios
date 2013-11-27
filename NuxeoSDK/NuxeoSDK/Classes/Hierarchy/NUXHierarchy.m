@@ -9,7 +9,10 @@
 
 @implementation NUXHierarchy {
     bool _isLoaded;
+    bool _isFailure;
     NSMutableDictionary *_documents;
+    
+    NUXBasicBlock _completion;
 }
 
 -(id)initWithRequest:(NUXRequest *)request
@@ -17,10 +20,17 @@
     self = [super init];
     if (self) {
         _isLoaded = NO;
+        _isFailure = NO;
         _documents = [NSMutableDictionary new];
         [self setupWithRequest:request];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    _documents = nil;
+    _completion = nil;
 }
 
 -(NUXDocuments *)childrenOfDocument:(NUXDocument *)document
@@ -52,6 +62,22 @@
     return _isLoaded;
 }
 
+-(void)waitUntilLoadingIsDone {
+    while (!(_isLoaded || _isFailure) && [[NSRunLoop mainRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
+}
+
+-(void)setCompletionBlock:(NUXBasicBlock)completion {
+    _completion = completion;
+}
+
+-(void)setupCompleted
+{
+    _isLoaded = YES;
+    if (_completion != nil) {
+        _completion();
+    }
+}
+
 -(void)setupWithRequest:(NUXRequest *)request
 {
     NSMutableArray *docs = [NSMutableArray new];
@@ -69,8 +95,13 @@
         }
     };
     
+    void (^failureBlock)(NUXRequest *) = ^(NUXRequest *request) {
+        _isFailure = YES;
+    };
+    
     [request setCompletionBlock:appendDocs];
-    [request startSynchronous];
+    [request setFailureBlock:failureBlock];
+    [request start];
 }
 
 -(void)buildHierarchyFromDocuments:(NSArray *)documents
@@ -92,8 +123,7 @@
     
     NSLog(@"%@", documents);
     [self buildHierarchy:documents];
-    
-    _isLoaded = YES;
+    [self setupCompleted];
 }
 
 -(void)buildHierarchy:(NSArray *)pDocuments {

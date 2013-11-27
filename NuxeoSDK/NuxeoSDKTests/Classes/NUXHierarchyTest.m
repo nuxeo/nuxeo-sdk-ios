@@ -28,7 +28,9 @@
 - (void)testDocumentSorter {
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
     hierarchy = [[NUXHierarchy alloc] initWithRequest:request];
+    [hierarchy waitUntilLoadingIsDone];
     
+    XCTAssertTrue(hierarchy.isLoaded);
     XCTAssertTrue(hierarchy.childrenOfRoot.entries.count >= 3);
     
     // find default-domain
@@ -43,6 +45,22 @@
         return [doc.path hasSuffix:@"workspaces"];
     }];
     XCTAssertNotNil(workspaces);
+}
+
+-(void)testOnlyOneDocHierarchy {
+    NUXRequest *request = [session requestQuery:@"select * from Domain"];
+    hierarchy = [[NUXHierarchy alloc] initWithRequest:request];
+    [hierarchy waitUntilLoadingIsDone];
+
+    XCTAssertTrue(hierarchy.isLoaded);
+    XCTAssertTrue(hierarchy.childrenOfRoot.entries.count == 1);
+
+    NUXDocuments *entries = hierarchy.childrenOfRoot;
+    NUXDocument *domain = [NUXHierarchyTest findDocumentInEntries:entries withCompareBlock:^bool(NUXDocument *doc) {
+        return [doc.path isEqualToString:@"/default-domain"];
+    }];
+    
+    XCTAssertNil([hierarchy childrenOfDocument:domain]);
 }
 
 +(NUXDocument *)findDocumentInEntries:(NUXDocuments *)documents withCompareBlock:(bool (^)(NUXDocument *))compareBlock {
