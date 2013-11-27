@@ -28,6 +28,32 @@
 - (void)testDocumentSorter {
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
     hierarchy = [[NUXHierarchy alloc] initWithRequest:request];
+    
+    XCTAssertTrue(hierarchy.childrenOfRoot.entries.count >= 3);
+    
+    // find default-domain
+    NUXDocuments *entries = hierarchy.childrenOfRoot;
+    NUXDocument *defaultDomain = [NUXHierarchyTest findDocumentInEntries:entries withCompareBlock:^bool(NUXDocument *doc) {
+        return [doc.path isEqualToString:@"/default-domain"];
+    }];
+    XCTAssertNotNil(defaultDomain);
+    
+    entries = [hierarchy childrenOfDocument:defaultDomain];
+    NUXDocument *workspaces = [NUXHierarchyTest findDocumentInEntries:entries withCompareBlock:^bool(NUXDocument *doc) {
+        return [doc.path hasSuffix:@"workspaces"];
+    }];
+    XCTAssertNotNil(workspaces);
+}
+
++(NUXDocument *)findDocumentInEntries:(NUXDocuments *)documents withCompareBlock:(bool (^)(NUXDocument *))compareBlock {
+    NUXDocument *__block result;
+    [documents.entries enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
+        if (compareBlock(doc)) {
+            *stop = YES;
+            result = doc;
+        }
+    }];
+    return result;
 }
 
 @end

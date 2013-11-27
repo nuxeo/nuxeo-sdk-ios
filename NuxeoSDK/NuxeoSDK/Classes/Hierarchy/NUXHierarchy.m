@@ -9,6 +9,7 @@
 
 @implementation NUXHierarchy {
     bool _isLoaded;
+    NSMutableDictionary *_documents;
 }
 
 -(id)initWithRequest:(NUXRequest *)request
@@ -16,6 +17,7 @@
     self = [super init];
     if (self) {
         _isLoaded = NO;
+        _documents = [NSMutableDictionary new];
         [self setupWithRequest:request];
     }
     return self;
@@ -23,7 +25,26 @@
 
 -(NUXDocuments *)childrenOfDocument:(NUXDocument *)document
 {
-    return nil;
+    NSArray *entries = [_documents valueForKey:document.uid];
+    if (entries == nil) {
+        return nil;
+    }
+    
+    NUXDocuments *docs = [NUXDocuments new];
+    docs.entries = entries;
+    return docs;
+}
+
+-(NUXDocuments *)childrenOfRoot
+{
+    NSArray *entries = [_documents valueForKey:kRootKey];
+    if (entries == nil) {
+        [NSException raise:@"Hierarchy not initialized" format:@""];
+    }
+    
+    NUXDocuments *docs = [NUXDocuments new];
+    docs.entries = entries;
+    return docs;
 }
 
 -(bool)isLoaded
@@ -81,13 +102,12 @@
     }
     
     NSMutableArray *documents = [NSMutableArray arrayWithArray:pDocuments];
-    NSMutableDictionary *__block children = [NSMutableDictionary new];
     NSMutableArray *__block parents = [NSMutableArray new];
     [documents enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
         if (idx == 0) {
             [parents addObject:doc];
             NSMutableArray *child = [NSMutableArray arrayWithObject:doc];
-            [children setObject:child forKey:kRootKey];
+            [_documents setObject:child forKey:kRootKey];
             return;
         }
 
@@ -102,21 +122,19 @@
         
         NSMutableArray *child;
         if (parents.count == 0) {
-            child = [children valueForKey:kRootKey];
+            child = [_documents valueForKey:kRootKey];
             [child addObject:doc];
         } else {
-            child = [children valueForKey:parent.uid];
+            child = [_documents valueForKey:parent.uid];
             if (child == nil) {
                 child = [NSMutableArray new];
             }
             
             [child addObject:doc];
-            [children setValue:child forKey:parent.uid];
+            [_documents setValue:child forKey:parent.uid];
         }
         [parents addObject:doc];
     }];
-    
-    NSLog(@"%@", children);
 }
 
 @end

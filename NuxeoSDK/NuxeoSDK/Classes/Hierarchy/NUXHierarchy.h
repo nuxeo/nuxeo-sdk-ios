@@ -16,6 +16,9 @@
 // Returns a lightweight NUXDocuments object with only entries property filled.
 -(NUXDocuments *)childrenOfDocument:(NUXDocument *)document;
 
+// Returns a lightweight NUXDocuments object form the root entry point.
+-(NUXDocuments *)childrenOfRoot;
+
 -(bool)isLoaded;
 
 @end
