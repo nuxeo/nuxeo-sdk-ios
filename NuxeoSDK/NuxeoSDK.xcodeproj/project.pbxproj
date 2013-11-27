@@ -15,6 +15,8 @@
 		51C75E74183E0CF000EE0DCC /* NUXJSONMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E6E183E0CF000EE0DCC /* NUXJSONMapper.m */; };
 		51C75E75183E0CF000EE0DCC /* NUXJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E70183E0CF000EE0DCC /* NUXJSONSerializer.m */; };
 		51C75E7B1843B95200EE0DCC /* NUXJSONSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E7A1843B95200EE0DCC /* NUXJSONSerializerTests.m */; };
+		51C75E7E1846071100EE0DCC /* NUXHierarchyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E7D1846071100EE0DCC /* NUXHierarchyTest.m */; };
+		51C75E81184608DF00EE0DCC /* NUXAbstractTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E80184608DF00EE0DCC /* NUXAbstractTestCase.m */; };
 		51E55C88182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
 		51E55C96182D415F009AC87C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C95182D415F009AC87C /* XCTest.framework */; };
 		51E55C97182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
@@ -26,6 +28,7 @@
 		AC00070B2CE31ABACE21E867 /* NUXAutomationRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AC00024765DFE4A961C3058E /* NUXAutomationRequest.m */; };
 		AC0007560E2BEEB56D1B23EF /* NUXRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AC00017BEBFA87418A7DA04F /* NUXRequest.m */; };
 		AC0008BBE6F5D7709B958244 /* NUXSession.m in Sources */ = {isa = PBXBuildFile; fileRef = AC0002BBFCFD456D7E66DAC0 /* NUXSession.m */; };
+		AC000B62D7FEF9198EA59EEB /* NUXHierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = AC000FF33EB2746781F69B27 /* NUXHierarchy.m */; };
 		AC000B77A341A810EE6DACC4 /* NUXSessionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC000022E7EC18768D35852D /* NUXSessionTests.m */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +69,9 @@
 		51C75E70183E0CF000EE0DCC /* NUXJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXJSONSerializer.m; sourceTree = "<group>"; };
 		51C75E76183E4F6700EE0DCC /* NUXConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXConstants.h; sourceTree = "<group>"; };
 		51C75E7A1843B95200EE0DCC /* NUXJSONSerializerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXJSONSerializerTests.m; sourceTree = "<group>"; };
+		51C75E7D1846071100EE0DCC /* NUXHierarchyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXHierarchyTest.m; sourceTree = "<group>"; };
+		51C75E80184608DF00EE0DCC /* NUXAbstractTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXAbstractTestCase.m; sourceTree = "<group>"; };
+		51C75E821846269100EE0DCC /* NUXAbstractTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXAbstractTestCase.h; sourceTree = "<group>"; };
 		51E55C84182D415F009AC87C /* libNuxeoSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNuxeoSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E55C87182D415F009AC87C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		51E55C8B182D415F009AC87C /* NuxeoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NuxeoSDK-Prefix.pch"; sourceTree = "<group>"; };
@@ -77,6 +83,7 @@
 		5280D3516EB8463E996F4F5A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC000022E7EC18768D35852D /* NUXSessionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXSessionTests.m; sourceTree = "<group>"; };
 		AC0000295749D5BB4EC27292 /* NUXSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXSession.h; sourceTree = "<group>"; };
+		AC0001638D653A80B59D9554 /* NUXHierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXHierarchy.h; sourceTree = "<group>"; };
 		AC00017BEBFA87418A7DA04F /* NUXRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXRequest.m; sourceTree = "<group>"; };
 		AC00024765DFE4A961C3058E /* NUXAutomationRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXAutomationRequest.m; sourceTree = "<group>"; };
 		AC0002645273819F993E5C1B /* NUXRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXRequestTests.m; sourceTree = "<group>"; };
@@ -85,6 +92,7 @@
 		AC0003ABCA754BCD0180F66B /* NUXAutomationRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXAutomationRequest.h; sourceTree = "<group>"; };
 		AC000994E59079813C7DE2FD /* NUXSession+requests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NUXSession+requests.m"; sourceTree = "<group>"; };
 		AC0009D5DAB2ADA610230E4B /* NUXSession+requests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NUXSession+requests.h"; sourceTree = "<group>"; };
+		AC000FF33EB2746781F69B27 /* NUXHierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXHierarchy.m; sourceTree = "<group>"; };
 		FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -207,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				51C75E65183E0CF000EE0DCC /* Entity */,
+				AC000701894D032D9193C612 /* Hierarchy */,
 				51C75E6C183E0CF000EE0DCC /* Parser */,
 				AC0004618FF088ECAACE69C9 /* Requests */,
 				AC0009D5DAB2ADA610230E4B /* NUXSession+requests.h */,
@@ -235,8 +244,20 @@
 				AC0002645273819F993E5C1B /* NUXRequestTests.m */,
 				AC000022E7EC18768D35852D /* NUXSessionTests.m */,
 				51C75E7A1843B95200EE0DCC /* NUXJSONSerializerTests.m */,
+				51C75E7D1846071100EE0DCC /* NUXHierarchyTest.m */,
+				51C75E80184608DF00EE0DCC /* NUXAbstractTestCase.m */,
+				51C75E821846269100EE0DCC /* NUXAbstractTestCase.h */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		AC000701894D032D9193C612 /* Hierarchy */ = {
+			isa = PBXGroup;
+			children = (
+				AC0001638D653A80B59D9554 /* NUXHierarchy.h */,
+				AC000FF33EB2746781F69B27 /* NUXHierarchy.m */,
+			);
+			path = Hierarchy;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -397,6 +418,7 @@
 				51C75E73183E0CF000EE0DCC /* NUXEntity.m in Sources */,
 				AC00070B2CE31ABACE21E867 /* NUXAutomationRequest.m in Sources */,
 				51C75E75183E0CF000EE0DCC /* NUXJSONSerializer.m in Sources */,
+				AC000B62D7FEF9198EA59EEB /* NUXHierarchy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,9 +426,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51C75E81184608DF00EE0DCC /* NUXAbstractTestCase.m in Sources */,
 				51C75E7B1843B95200EE0DCC /* NUXJSONSerializerTests.m in Sources */,
 				AC00015C9A8DDBE3CFE409A2 /* NUXRequestTests.m in Sources */,
 				AC000B77A341A810EE6DACC4 /* NUXSessionTests.m in Sources */,
+				51C75E7E1846071100EE0DCC /* NUXHierarchyTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

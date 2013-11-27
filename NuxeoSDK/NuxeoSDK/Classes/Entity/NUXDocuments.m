@@ -21,12 +21,6 @@
 
 - (void)dealloc
 {
-    _isPaginable = nil;
-    _isPreviousPageAvailable = nil;
-    _isNextPageAvailable = nil;
-    _isLastPageAvailable = nil;
-    _isSortable = nil;
-    _hasError = nil;
     _errorMessage = nil;
     _entries = nil;
 }

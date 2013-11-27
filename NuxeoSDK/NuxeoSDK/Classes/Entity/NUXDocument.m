@@ -36,4 +36,9 @@
     _facets = nil;
     _context = nil;
 }
+
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"%@ %@ path=%@ type=%@", [self class], _uid, _path, _type];
+}
 @end

@@ -17,12 +17,12 @@
 @property NSMutableDictionary *mutableParameters;
 @end
 
-@implementation NUXRequest
-
-NUXResponseBlock _completion;
-NUXResponseBlock _failure;
-
-NSData *_responseData;
+@implementation NUXRequest {
+    NUXResponseBlock _completion;
+    NUXResponseBlock _failure;
+    
+    NSData *_responseData;
+}
 
 -(id)init {
     self = [super init];

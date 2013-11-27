@@ -7,12 +7,15 @@
 //
 
 #import "NUXAbstractTestCase.h"
+#import "NUXHierarchy.h"
 
 @interface NUXHierarchyTest : NUXAbstractTestCase
 
 @end
 
-@implementation NUXHierarchyTest
+@implementation NUXHierarchyTest {
+    NUXHierarchy *hierarchy;
+}
 
 - (void)setUp {
     [super setUp];
@@ -20,6 +23,11 @@
 
 - (void)tearDown {
     [super tearDown];
+}
+
+- (void)testDocumentSorter {
+    NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
+    hierarchy = [[NUXHierarchy alloc] initWithRequest:request];
 }
 
 @end

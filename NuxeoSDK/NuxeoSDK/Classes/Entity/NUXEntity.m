@@ -23,4 +23,9 @@
     _entityType = nil;
     
 }
+
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"NUXEntity of type %@", _entityType];
+}
 @end
