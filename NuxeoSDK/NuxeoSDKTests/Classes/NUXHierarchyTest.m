@@ -63,6 +63,17 @@
     XCTAssertNil([hierarchy childrenOfDocument:domain]);
 }
 
+-(void)testHierarchyWithMoreResultsThanPageSize {
+    NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
+    [request addParameterValue:@"10" forKey:@"pageSize"];
+    
+    hierarchy = [[NUXHierarchy alloc] initWithRequest:request];
+    [hierarchy waitUntilLoadingIsDone];
+    
+    XCTAssertTrue(hierarchy.isLoaded);
+    XCTAssertTrue(hierarchy.childrenOfRoot.entries.count >= 3);
+}
+
 +(NUXDocument *)findDocumentInEntries:(NUXDocuments *)documents withCompareBlock:(bool (^)(NUXDocument *))compareBlock {
     NUXDocument *__block result;
     [documents.entries enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {

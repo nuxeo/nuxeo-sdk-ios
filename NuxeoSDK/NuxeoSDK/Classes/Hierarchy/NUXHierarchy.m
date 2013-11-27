@@ -67,6 +67,9 @@
 }
 
 -(void)setCompletionBlock:(NUXBasicBlock)completion {
+    if (_isLoaded) {
+        completion();
+    }
     _completion = completion;
 }
 
@@ -86,10 +89,9 @@
     void (^appendDocs)(NUXRequest *) = ^(NUXRequest *request) {
         NUXDocuments *res = [request responseEntityWithError:nil];
         [docs addObjectsFromArray:res.entries];
-        
         if (res.isNextPageAvailable) {
-            // XXX Todo build next page query
-            [NSException raise:@"Not yet implemented" format:@"This great feature is not yet implemented."];
+            [request addParameterValue:[NSString stringWithFormat:@"%@", @(res.currentPageIndex + 1)] forKey:@"currentPageIndex"];
+            [request start];
         } else {
             [self startBuildingHierarchyWithDocuments:docs];
         }
@@ -121,6 +123,7 @@
         [children addObject:doc];
     }];
     
+    NSLog(@"%@", documents);
     [self buildHierarchy:documents];
     [self setupCompleted];
 }
