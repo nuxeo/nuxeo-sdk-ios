@@ -65,13 +65,37 @@
 
 -(void)testHierarchyWithMoreResultsThanPageSize {
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
-    [request addParameterValue:@"10" forKey:@"pageSize"];
+    [request addParameterValue:@"3" forKey:@"pageSize"];
     
     hierarchy = [[NUXHierarchy alloc] initWithRequest:request];
     [hierarchy waitUntilLoadingIsDone];
     
     XCTAssertTrue(hierarchy.isLoaded);
     XCTAssertTrue(hierarchy.childrenOfRoot.entries.count >= 3);
+}
+
+-(void)testLeafBlock {
+    NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
+    NSMutableArray *leaf = [NSMutableArray new];
+    hierarchy = [[NUXHierarchy alloc] initWithRequest:request leafBlock:^NSArray *(NUXEntity *entity) {
+        NUXDocument *doc = (NUXDocument *)entity;
+        [leaf addObject:doc];
+        
+        NSMutableArray *children = [NSMutableArray new];
+        [children addObject:[NUXDocument new]];
+        [children addObject:[NUXDocument new]];
+        
+//        NSLog(@"BLOCK %@", doc);
+        
+        return children;
+    }];
+    [hierarchy waitUntilLoadingIsDone];
+    
+    XCTAssertTrue([leaf count] > 0);
+    [leaf enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
+        NSLog(@"\nLeaf: %@\n%@", doc.uid, [hierarchy childrenOfDocument:doc].entries);
+        XCTAssertEqualObjects(@2, @([hierarchy childrenOfDocument:doc].entries.count));
+    }];
 }
 
 +(NUXDocument *)findDocumentInEntries:(NUXDocuments *)documents withCompareBlock:(bool (^)(NUXDocument *))compareBlock {

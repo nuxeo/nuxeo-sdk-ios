@@ -13,6 +13,7 @@
     NSMutableDictionary *_documents;
     
     NUXBasicBlock _completion;
+    NUXHierarchyBlock _leafBlock;
 }
 
 -(id)initWithRequest:(NUXRequest *)request
@@ -27,10 +28,20 @@
     return self;
 }
 
+-(id)initWithRequest:(NUXRequest *)request leafBlock:(NUXHierarchyBlock)leafBlock
+{
+    self = [self initWithRequest:request];
+    if (self) {
+        _leafBlock = leafBlock;
+    }
+    return self;
+}
+
 - (void)dealloc
 {
     _documents = nil;
     _completion = nil;
+    _leafBlock = nil;
 }
 
 -(NUXDocuments *)childrenOfDocument:(NUXDocument *)document
@@ -138,35 +149,54 @@
     [documents enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
         if (idx == 0) {
             [parents addObject:doc];
-            NSMutableArray *child = [NSMutableArray arrayWithObject:doc];
-            [_documents setObject:child forKey:kRootKey];
+            [NUXHierarchy addChild:doc toHierarchy:_documents key:kRootKey];
             return;
         }
 
+        // Try to find if a passed parent exists.
         NUXDocument *parent;
+        BOOL leafPassed = NO;
+        NSLog(@"doc: %@", doc);
         do {
             if (parent != nil) {
+                // If we have to test the previous parent; we are in a leaf node
+                if (!leafPassed && _leafBlock) {
+                    NSArray *leaf = _leafBlock(parent);
+                    if ([leaf count] > 0) {
+                        NSLog(@"  leaf: %@", parent);
+                        [NUXHierarchy addChildren:leaf toHierarchy:_documents key:parent.uid];
+                    }
+                }
+                leafPassed = YES;
                 [parents removeLastObject];
             }
             
             parent = [parents lastObject];
+            NSLog(@"  parent: %@", parent);
         } while (!(parent == nil || [doc.path hasPrefix:[NSString stringWithFormat:@"%@/", parent.path]]));
-        
-        NSMutableArray *child;
-        if (parents.count == 0) {
-            child = [_documents valueForKey:kRootKey];
-            [child addObject:doc];
-        } else {
-            child = [_documents valueForKey:parent.uid];
-            if (child == nil) {
-                child = [NSMutableArray new];
-            }
-            
-            [child addObject:doc];
-            [_documents setValue:child forKey:parent.uid];
-        }
+
+        NSString *hKey = parents.count == 0 ? kRootKey : parent.uid;
+        [NUXHierarchy addChild:doc toHierarchy:_documents key:hKey];
         [parents addObject:doc];
     }];
+    NSLog(@"%@", _documents);
+}
+
++(void)addChild:(NUXDocument *)child toHierarchy:(NSDictionary *)hierarchy key:(NSString *)key {
+    [NUXHierarchy addChildren:@[child] toHierarchy:hierarchy key:key];
+}
+
++(void)addChildren:(NSArray *)children toHierarchy:(NSDictionary *)hierarchy key:(NSString *)key  {
+    if (!([children count] > 0)) {
+        return;
+    }
+    
+    NSMutableArray *hChildren = [hierarchy objectForKey:key];
+    if (!hChildren) {
+        hChildren = [NSMutableArray new];
+        [hierarchy setValue:hChildren forKey:key];
+    }
+    [hChildren addObjectsFromArray:children];
 }
 
 @end
