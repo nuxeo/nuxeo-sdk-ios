@@ -10,7 +10,17 @@
 
 @implementation NUXAbstractTestCase
 
-- (void)setUp {
+-(id)init
+{
+    self = [super init];
+    if (self) {
+        self.continueAfterFailure = NO;
+    }
+    return self;
+}
+
+- (void)setUp
+{
     [super setUp];
     
     NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
@@ -18,7 +28,8 @@
     [session addDefaultSchemas:@[@"dublincore"]];
 }
 
-- (void)tearDown {
+- (void)tearDown
+{
     [super tearDown];
     
     session = Nil;

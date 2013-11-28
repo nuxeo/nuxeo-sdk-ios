@@ -17,6 +17,8 @@
 		51C75E7B1843B95200EE0DCC /* NUXJSONSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E7A1843B95200EE0DCC /* NUXJSONSerializerTests.m */; };
 		51C75E7E1846071100EE0DCC /* NUXHierarchyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E7D1846071100EE0DCC /* NUXHierarchyTest.m */; };
 		51C75E81184608DF00EE0DCC /* NUXAbstractTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E80184608DF00EE0DCC /* NUXAbstractTestCase.m */; };
+		51C75E851847895800EE0DCC /* NUXDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E841847895800EE0DCC /* NUXDatabaseTests.m */; };
+		51C75E8718478A4200EE0DCC /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 51C75E8618478A4200EE0DCC /* libsqlite3.0.dylib */; };
 		51E55C88182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
 		51E55C96182D415F009AC87C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C95182D415F009AC87C /* XCTest.framework */; };
 		51E55C97182D415F009AC87C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E55C87182D415F009AC87C /* Foundation.framework */; };
@@ -30,6 +32,7 @@
 		AC0008BBE6F5D7709B958244 /* NUXSession.m in Sources */ = {isa = PBXBuildFile; fileRef = AC0002BBFCFD456D7E66DAC0 /* NUXSession.m */; };
 		AC000B62D7FEF9198EA59EEB /* NUXHierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = AC000FF33EB2746781F69B27 /* NUXHierarchy.m */; };
 		AC000B77A341A810EE6DACC4 /* NUXSessionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC000022E7EC18768D35852D /* NUXSessionTests.m */; };
+		AC000CE8D4A58A05FB777DCA /* NUXSQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = AC000342DB7B371007317F38 /* NUXSQLiteDatabase.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +75,8 @@
 		51C75E7D1846071100EE0DCC /* NUXHierarchyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXHierarchyTest.m; sourceTree = "<group>"; };
 		51C75E80184608DF00EE0DCC /* NUXAbstractTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXAbstractTestCase.m; sourceTree = "<group>"; };
 		51C75E821846269100EE0DCC /* NUXAbstractTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXAbstractTestCase.h; sourceTree = "<group>"; };
+		51C75E841847895800EE0DCC /* NUXDatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXDatabaseTests.m; sourceTree = "<group>"; };
+		51C75E8618478A4200EE0DCC /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		51E55C84182D415F009AC87C /* libNuxeoSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNuxeoSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E55C87182D415F009AC87C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		51E55C8B182D415F009AC87C /* NuxeoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NuxeoSDK-Prefix.pch"; sourceTree = "<group>"; };
@@ -88,8 +93,10 @@
 		AC00024765DFE4A961C3058E /* NUXAutomationRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXAutomationRequest.m; sourceTree = "<group>"; };
 		AC0002645273819F993E5C1B /* NUXRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXRequestTests.m; sourceTree = "<group>"; };
 		AC0002BBFCFD456D7E66DAC0 /* NUXSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXSession.m; sourceTree = "<group>"; };
+		AC000342DB7B371007317F38 /* NUXSQLiteDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXSQLiteDatabase.m; sourceTree = "<group>"; };
 		AC000378F5A55200B69CF1FA /* NUXRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXRequest.h; sourceTree = "<group>"; };
 		AC0003ABCA754BCD0180F66B /* NUXAutomationRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXAutomationRequest.h; sourceTree = "<group>"; };
+		AC000659EAAF451BAB3EEF19 /* NUXSQLiteDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXSQLiteDatabase.h; sourceTree = "<group>"; };
 		AC000994E59079813C7DE2FD /* NUXSession+requests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NUXSession+requests.m"; sourceTree = "<group>"; };
 		AC0009D5DAB2ADA610230E4B /* NUXSession+requests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NUXSession+requests.h"; sourceTree = "<group>"; };
 		AC000FF33EB2746781F69B27 /* NUXHierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXHierarchy.m; sourceTree = "<group>"; };
@@ -110,6 +117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51C75E8718478A4200EE0DCC /* libsqlite3.0.dylib in Frameworks */,
 				51E55C9C182D415F009AC87C /* libNuxeoSDK.a in Frameworks */,
 				51E55C96182D415F009AC87C /* XCTest.framework in Frameworks */,
 				51E55C99182D415F009AC87C /* UIKit.framework in Frameworks */,
@@ -167,6 +175,7 @@
 		51E55C86182D415F009AC87C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				51C75E8618478A4200EE0DCC /* libsqlite3.0.dylib */,
 				51E55C87182D415F009AC87C /* Foundation.framework */,
 				51E55C95182D415F009AC87C /* XCTest.framework */,
 				51E55C98182D415F009AC87C /* UIKit.framework */,
@@ -211,12 +220,22 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		AC00009CFD47B22ECE42CB55 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				AC000659EAAF451BAB3EEF19 /* NUXSQLiteDatabase.h */,
+				AC000342DB7B371007317F38 /* NUXSQLiteDatabase.m */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
 		AC0003DEE7C4FC5F7F4E26C7 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				51C75E65183E0CF000EE0DCC /* Entity */,
 				AC000701894D032D9193C612 /* Hierarchy */,
 				51C75E6C183E0CF000EE0DCC /* Parser */,
+				AC00009CFD47B22ECE42CB55 /* Persistence */,
 				AC0004618FF088ECAACE69C9 /* Requests */,
 				AC0009D5DAB2ADA610230E4B /* NUXSession+requests.h */,
 				AC000994E59079813C7DE2FD /* NUXSession+requests.m */,
@@ -247,6 +266,7 @@
 				51C75E7D1846071100EE0DCC /* NUXHierarchyTest.m */,
 				51C75E80184608DF00EE0DCC /* NUXAbstractTestCase.m */,
 				51C75E821846269100EE0DCC /* NUXAbstractTestCase.h */,
+				51C75E841847895800EE0DCC /* NUXDatabaseTests.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -419,6 +439,7 @@
 				AC00070B2CE31ABACE21E867 /* NUXAutomationRequest.m in Sources */,
 				51C75E75183E0CF000EE0DCC /* NUXJSONSerializer.m in Sources */,
 				AC000B62D7FEF9198EA59EEB /* NUXHierarchy.m in Sources */,
+				AC000CE8D4A58A05FB777DCA /* NUXSQLiteDatabase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,6 +451,7 @@
 				51C75E7B1843B95200EE0DCC /* NUXJSONSerializerTests.m in Sources */,
 				AC00015C9A8DDBE3CFE409A2 /* NUXRequestTests.m in Sources */,
 				AC000B77A341A810EE6DACC4 /* NUXSessionTests.m in Sources */,
+				51C75E851847895800EE0DCC /* NUXDatabaseTests.m in Sources */,
 				51C75E7E1846071100EE0DCC /* NUXHierarchyTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
