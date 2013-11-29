@@ -13,6 +13,12 @@
 
 #if NS_BLOCKS_AVAILABLE
 typedef void (^NUXBasicBlock)(void);
-typedef void (^NUXResponseBlock)(NUXRequest *);
-typedef NSArray * (^NUXHierarchyBlock)(NUXEntity *);
+typedef void (^NUXResponseBlock)(NUXRequest *request);
+typedef NSArray * (^NUXHierarchyBlock)(NUXEntity *entity, NSUInteger depth);
+#endif
+
+#ifdef DEBUG
+    #define NUXDebug(x, ...) NSLog(@"%s %d: " x, __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+    #define NUXDebug(x, ...)
 #endif

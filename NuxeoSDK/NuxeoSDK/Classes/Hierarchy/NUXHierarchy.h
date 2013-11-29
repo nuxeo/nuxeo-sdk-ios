@@ -16,13 +16,14 @@
 // leafBlock is executed on each tree leaf. LeafBlock is executed synchronously in
 // the hierarchy generation thread which is async.
 // Leaf block could be used to fill leaf with a specific request, like calling a pageProvider
--(id)initWithRequest:(NUXRequest *)request leafBlock:(NUXHierarchyBlock)leafBlock;
+-(id)initWithRequest:(NUXRequest *)request nodeBlock:(NUXHierarchyBlock)nodeBlock;
 
-// Returns a lightweight NUXDocuments object with only entries property filled.
--(NUXDocuments *)childrenOfDocument:(NUXDocument *)document;
-
+// Returns an array of NUXEntity corresponding to the document children.
+-(NSArray *)childrenOfDocument:(NUXDocument *)document;
+// Returns an array of NUXEntity corresponding to content of the document node.
+-(NSArray *)contentOfDocument:(NUXDocument *)document;
 // Returns a lightweight NUXDocuments object form the root entry point.
--(NUXDocuments *)childrenOfRoot;
+-(NSArray *)childrenOfRoot;
 
 -(bool)isLoaded;
 -(void)waitUntilLoadingIsDone;

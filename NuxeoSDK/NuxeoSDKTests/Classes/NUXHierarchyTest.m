@@ -31,10 +31,10 @@
     [hierarchy waitUntilLoadingIsDone];
     
     XCTAssertTrue(hierarchy.isLoaded);
-    XCTAssertTrue(hierarchy.childrenOfRoot.entries.count >= 3);
+    XCTAssertTrue(hierarchy.childrenOfRoot.count >= 3);
     
     // find default-domain
-    NUXDocuments *entries = hierarchy.childrenOfRoot;
+    NSArray *entries = hierarchy.childrenOfRoot;
     NUXDocument *defaultDomain = [NUXHierarchyTest findDocumentInEntries:entries withCompareBlock:^bool(NUXDocument *doc) {
         return [doc.path isEqualToString:@"/default-domain"];
     }];
@@ -53,9 +53,9 @@
     [hierarchy waitUntilLoadingIsDone];
 
     XCTAssertTrue(hierarchy.isLoaded);
-    XCTAssertTrue(hierarchy.childrenOfRoot.entries.count == 1);
+    XCTAssertTrue(hierarchy.childrenOfRoot.count == 1);
 
-    NUXDocuments *entries = hierarchy.childrenOfRoot;
+    NSArray *entries = hierarchy.childrenOfRoot;
     NUXDocument *domain = [NUXHierarchyTest findDocumentInEntries:entries withCompareBlock:^bool(NUXDocument *doc) {
         return [doc.path isEqualToString:@"/default-domain"];
     }];
@@ -71,21 +71,30 @@
     [hierarchy waitUntilLoadingIsDone];
     
     XCTAssertTrue(hierarchy.isLoaded);
-    XCTAssertTrue(hierarchy.childrenOfRoot.entries.count >= 3);
+    XCTAssertTrue(hierarchy.childrenOfRoot.count >= 3);
 }
 
 -(void)testLeafBlock {
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
     NSMutableArray *leaf = [NSMutableArray new];
-    hierarchy = [[NUXHierarchy alloc] initWithRequest:request leafBlock:^NSArray *(NUXEntity *entity) {
+    BOOL __block workspacesChecked = NO;
+    BOOL __block defaultDomainChecked = NO;
+    hierarchy = [[NUXHierarchy alloc] initWithRequest:request nodeBlock:^NSArray *(NUXEntity *entity, NSUInteger depth) {
         NUXDocument *doc = (NUXDocument *)entity;
+        if ([doc.path isEqualToString:@"/default-domain"]) {
+            XCTAssertEqualObjects(@0, @(depth));
+            defaultDomainChecked = YES;
+        }
+        if ([doc.path isEqualToString:@"/default-domain/workspaces"]) {
+            XCTAssertEqualObjects(@1, @(depth));
+            workspacesChecked = YES;
+        }
+        
         [leaf addObject:doc];
         
         NSMutableArray *children = [NSMutableArray new];
         [children addObject:[NUXDocument new]];
         [children addObject:[NUXDocument new]];
-        
-//        NSLog(@"BLOCK %@", doc);
         
         return children;
     }];
@@ -93,14 +102,15 @@
     
     XCTAssertTrue([leaf count] > 0);
     [leaf enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
-        NSLog(@"\nLeaf: %@\n%@", doc.uid, [hierarchy childrenOfDocument:doc].entries);
-        XCTAssertEqualObjects(@2, @([hierarchy childrenOfDocument:doc].entries.count));
+        NSLog(@"\nLeaf: %@\n%lu", doc.uid, (unsigned long)[hierarchy contentOfDocument:doc].count);
+        XCTAssertEqualObjects(@2, @([hierarchy contentOfDocument:doc].count));
     }];
+    XCTAssertTrue(workspacesChecked && defaultDomainChecked);
 }
 
-+(NUXDocument *)findDocumentInEntries:(NUXDocuments *)documents withCompareBlock:(bool (^)(NUXDocument *))compareBlock {
++(NUXDocument *)findDocumentInEntries:(NSArray *)documents withCompareBlock:(bool (^)(NUXDocument *))compareBlock {
     NUXDocument *__block result;
-    [documents.entries enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
+    [documents enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
         if (compareBlock(doc)) {
             *stop = YES;
             result = doc;
