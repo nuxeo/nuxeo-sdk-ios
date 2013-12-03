@@ -34,7 +34,7 @@
 {
     NSString *tblNAme = @"tmpTable";
     NSString *query = [NSString stringWithFormat:@"drop table if exists '%@';", tblNAme];
-    XCTAssertTrue([db executeQuery:query]);
+    [db executeQuery:query];
     
     query = [NSString stringWithFormat:@"create table '%@' ('id' varchar, 'position' integer);", tblNAme];
     XCTAssertTrue([db executeQuery:query]);
