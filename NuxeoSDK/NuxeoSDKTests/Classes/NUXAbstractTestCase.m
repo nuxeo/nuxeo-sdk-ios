@@ -19,6 +19,18 @@
     return self;
 }
 
+-(NUXDocument *)dummyDocument {
+    NUXDocument *doc = [NUXDocument new];
+    
+    doc.uid = [NSString stringWithFormat:@"%@-%@-%@", @(random()), @(random()), @(random())];
+    doc.title = [NSString stringWithFormat:@"Dummy Title %@", @(random())];
+    doc.path = [NSString stringWithFormat:@"/%@/%@/%@", @(random()), @(random()), @(random())];
+    doc.type = @"File";
+    doc.name = [NSString stringWithFormat:@"%@", @(random())];
+    
+    return doc;
+}
+
 - (void)setUp
 {
     [super setUp];

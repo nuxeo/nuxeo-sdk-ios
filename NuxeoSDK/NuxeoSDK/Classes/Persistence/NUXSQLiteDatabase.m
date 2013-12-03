@@ -18,6 +18,28 @@
     return self;
 }
 
+-(void)deleteDatabase {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    if ([manager isWritableFileAtPath:[self databasePath]]) {
+        [manager removeItemAtPath:[self databasePath] error:nil];
+    }
+}
+
++ (NUXSQLiteDatabase *)shared {
+    static dispatch_once_t pred = 0;
+    static NUXSQLiteDatabase *__strong _shared = nil;
+    
+    dispatch_once(&pred, ^{
+        _shared = [[NUXSQLiteDatabase alloc] initWithName:@"sharedOne"];
+    });
+    
+    return _shared;
+}
+
+-(void)createTableIfNotExists:(NSString *)tableName withField:(NSString *)fields {
+    [self executeQuery:[NSString stringWithFormat:@"create table if not exists '%@' (%@);", tableName, fields]];
+}
+
 -(BOOL)executeQuery:(NSString *)query {
     sqlite3 *db;
     NSString *dbPath = [self databasePath];
@@ -57,6 +79,7 @@
 	// Safely close database even if the connection was not done.
 	sqlite3_close(db);
     
+    NUXDebug(@"Query: '%@', Result: %@", query, [self sqlInformatiomFromCode:_ret]);
 	return (_ret == SQLITE_OK || _ret == SQLITE_DONE || _ret == SQLITE_ROW);
 }
 

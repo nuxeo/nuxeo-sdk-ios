@@ -9,6 +9,7 @@
 
 #import "NUXAbstractTestCase.h"
 #import "NUXSQLiteDatabase.h"
+#import "NUXHierarchyDB.h"
 
 @interface NUXDatabaseTests : NUXAbstractTestCase
 
@@ -21,12 +22,13 @@
 - (void)setUp {
     [super setUp];
     
-    db = [[NUXSQLiteDatabase alloc] initWithName:@"testDb"];
+    db = [NUXSQLiteDatabase shared];
 }
 
 - (void)tearDown {
     [super tearDown];
     
+//    [db deleteDatabase];
     db = nil;
 }
 
@@ -44,6 +46,19 @@
     
     query = [NSString stringWithFormat:@"insert into '%@' ('id', 'position') values ('abc', 123);", tblNAme];
     XCTAssertTrue([db executeQuery:query], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
+}
+
+-(void)testHierarchyQuery
+{
+    NUXHierarchyDB *hDb = [NUXHierarchyDB shared];
+    NSArray *root = @[[self dummyDocument], [self dummyDocument], [self dummyDocument]];
+    
+    NUXDocument *childParent = [root objectAtIndex:0];
+    NSArray *child = @[[self dummyDocument], [self dummyDocument]];
+    
+    [hDb insertNodes:root fromHierarchy:@"test" withParent:@"/"];
+    
+    [hDb insertNodes:child fromHierarchy:@"test" withParent:childParent.uid];
 }
 
 @end

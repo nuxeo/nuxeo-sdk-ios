@@ -17,4 +17,6 @@
     NUXSession *session;
 }
 
+-(NUXDocument *)dummyDocument;
+
 @end

@@ -122,7 +122,6 @@
     };
     
     void (^failureBlock)(NUXRequest *) = ^(NUXRequest *request) {
-        NSLog(@"pouet pouet");
         _isFailure = YES;
     };
     
