@@ -83,6 +83,51 @@
 	return (_ret == SQLITE_OK || _ret == SQLITE_DONE || _ret == SQLITE_ROW);
 }
 
+- (NSArray*)arrayOfObjectsFromQuery:(NSString*)query block:(id (^)(sqlite3_stmt *))aBlock
+{
+    NSMutableArray* aArray = [NSMutableArray new];
+	NSString* aDBpath = [self databasePath];
+	
+	// Holds the database connection
+	sqlite3* aDatabase;
+    
+	if (sqlite3_open([aDBpath UTF8String], &aDatabase) == SQLITE_OK)
+	{
+		sqlite3_stmt *statement;
+		
+		// Preparing a statement compiles the SQL query into a byte-code program in the SQLite library.
+		// The third parameter is either the length of the SQL string or -1 to read up to the first null terminator.
+		_ret = sqlite3_prepare_v2(aDatabase, [query cStringUsingEncoding:NSUTF8StringEncoding], -1, &statement, NULL);
+		if (_ret == SQLITE_OK)
+		{
+			NSInteger aNbFetchedObject = 0;
+			// We "step" through the results - once for each row.
+            int step;
+			while ((step = sqlite3_step(statement)) == SQLITE_ROW)
+			{
+                [aArray addObject:aBlock(statement)];
+				
+				// Increase number of fetched objects
+				++aNbFetchedObject;
+			}
+            NUXDebug(@"pouet: %@", [self sqlInformatiomFromCode:step]);
+		}
+		else {
+            // handle error
+        }
+		
+		sqlite3_finalize(statement);
+		
+	}
+	
+	// Safely close database even if the connection was not done.
+	sqlite3_close(aDatabase);
+	
+    NUXDebug(@"Query: '%@', Result: %@", query, [self sqlInformatiomFromCode:_ret]);
+	return aArray;
+	
+}
+
 -(NSInteger)lastReturnCode {
     return _ret;
 }
@@ -199,6 +244,11 @@
 		case SQLITE_DONE:
 			aErrorType = @" SQLITE_DONE          (sqlite_step() has finished executing)";
 			break;
+            
+        case SQLITE_OK:
+			aErrorType = @" SQLITE_OK            (Successful result)";
+			break;
+            
 		default:
 			aErrorType = @" unknown";
 			break;

@@ -28,7 +28,7 @@
 - (void)tearDown {
     [super tearDown];
     
-//    [db deleteDatabase];
+    [db deleteDatabase];
     db = nil;
 }
 
@@ -51,14 +51,21 @@
 -(void)testHierarchyQuery
 {
     NUXHierarchyDB *hDb = [NUXHierarchyDB shared];
+    NSString *hName = @"test";
     NSArray *root = @[[self dummyDocument], [self dummyDocument], [self dummyDocument]];
     
     NUXDocument *childParent = [root objectAtIndex:0];
     NSArray *child = @[[self dummyDocument], [self dummyDocument]];
     
-    [hDb insertNodes:root fromHierarchy:@"test" withParent:@"/"];
+    [hDb insertNodes:root fromHierarchy:hName withParent:@"/"];
+    NSArray *docs = [hDb selectNodesFromParent:@"/" hierarchy:hName];
+    XCTAssertTrue(3 == docs.count);
     
-    [hDb insertNodes:child fromHierarchy:@"test" withParent:childParent.uid];
+    
+    
+    [hDb insertNodes:child fromHierarchy:hName withParent:childParent.uid];
+    docs = [hDb selectNodesFromParent:childParent.uid hierarchy:hName];
+    XCTAssertTrue(2 == docs.count);
 }
 
 @end

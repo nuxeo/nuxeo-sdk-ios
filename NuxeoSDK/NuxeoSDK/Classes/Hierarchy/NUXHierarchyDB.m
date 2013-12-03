@@ -38,7 +38,7 @@
 
 -(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
     NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"content", @"order"]];
-    NSString *bQuery = [NSString stringWithFormat:@"insert into '%@' (%@) values (%@)", kHierarchyTable, columns, @"%@"];
+    NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kHierarchyTable, columns, @"%@"];
     [docs enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
         NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, doc.uid, parentId, @"", @(idx)]];
         if (![_db executeQuery:[NSString stringWithFormat:bQuery, values]]) {
@@ -48,10 +48,16 @@
     }];
 }
 
--(NSArray *)selectNodes:(NSString *)parentId fromHierarchy:(NSString *)hierarchyName {
-    NSString *query = [NSString stringWithFormat:@"select * from %@ where parentId = '%@' and hierarchyName = '%@' order by order", kHierarchyTable, parentId, hierarchyName];
-    NSLog(@"%@", query);
-    return nil;
+-(NSArray *)selectNodesFromParent:(NSString *)parentId hierarchy:(NSString *)hierarchyName {
+    NSString *query = [NSString stringWithFormat:@"select docId, content from %@ where parentId = '%@' and hierarchyName = '%@' order by 'order'", kHierarchyTable, parentId, hierarchyName];
+//    NSString *query = [NSString stringWithFormat:@"SELECT parentId, docId, content FROM '%@' WHERE parentId = '/'", kHierarchyTable];
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+        // Should fetch Document JSON from storage.
+        NUXDocument *doc = [NUXDocument new];
+        doc.uid = [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
+        return doc;
+    }];
+    return ret;
 }
 
 #pragma mark
@@ -65,7 +71,7 @@
         }
         
         if (![value isKindOfClass:[NSNumber class]]) {
-            [ret appendString:[NSString stringWithFormat:@"'%@'", value]];
+            [ret appendString:[NSString stringWithFormat:@"\"%@\"", value]];
         } else {
             [ret appendString:[NSString stringWithFormat:@"%@", value]];
         }

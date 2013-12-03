@@ -12,6 +12,6 @@
 +(NUXHierarchyDB *)shared;
 
 -(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId;
--(NSArray *)selectNodes:(NSString *)parentId fromHierarchy:(NSString *)hierarchyName;
+-(NSArray *)selectNodesFromParent:(NSString *)parentId hierarchy:(NSString *)hierarchyName;
 
 @end
