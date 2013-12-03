@@ -84,7 +84,7 @@ NSString *const kApiPrefix = @"ApiPrefix";
 
 - (ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
     ASIHTTPRequest *request = [nRequest requestASI];
-    
+
     [request setRequestMethod:nRequest.method];
 
     ASIHTTPRequest *__weak wRequest = request;

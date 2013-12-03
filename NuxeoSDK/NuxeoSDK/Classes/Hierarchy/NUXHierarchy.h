@@ -10,23 +10,24 @@
 
 @interface NUXHierarchy : NSObject
 
-// Initiate a hierarchy with a request. Request must returns a documents typed response.
--(id)initWithRequest:(NUXRequest *)request;
-
-// leafBlock is executed on each tree leaf. LeafBlock is executed synchronously in
-// the hierarchy generation thread which is async.
-// Leaf block could be used to fill leaf with a specific request, like calling a pageProvider
--(id)initWithRequest:(NUXRequest *)request nodeBlock:(NUXHierarchyBlock)nodeBlock;
+@property(strong) NUXHierarchyBlock nodeBlock;
+@property(strong) NUXBasicBlock nodeInvalidationBlock;
+@property(strong) NUXBasicBlock completionBlock;
+@property NUXRequest *request;
 
 // Returns an array of NUXEntity corresponding to the document children.
 -(NSArray *)childrenOfDocument:(NUXDocument *)document;
 // Returns an array of NUXEntity corresponding to content of the document node.
 -(NSArray *)contentOfDocument:(NUXDocument *)document;
+// Returns an array of NUXEntity corresponding to the whole hierarchy nodes content
+-(NSArray *)contentOfAllDocuments;
 // Returns a lightweight NUXDocuments object form the root entry point.
 -(NSArray *)childrenOfRoot;
 
+-(void)load;
 -(bool)isLoaded;
 -(void)waitUntilLoadingIsDone;
--(void)setCompletionBlock:(NUXBasicBlock)completion;
+
++(NUXHierarchy *)hierarchyWithName:(NSString *)name;
 
 @end

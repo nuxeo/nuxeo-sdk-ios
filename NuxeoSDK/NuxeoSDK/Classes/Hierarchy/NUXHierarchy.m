@@ -12,29 +12,30 @@
     bool _isFailure;
     NSMutableDictionary *_documents;
     NSMutableDictionary *_contents;
-    
-    NUXBasicBlock _completion;
-    NUXHierarchyBlock _nodeBlock;
 }
 
--(id)initWithRequest:(NUXRequest *)request
-{
++(NUXHierarchy *)hierarchyWithName:(NSString *)name {
+    static dispatch_once_t pred = 0;
+    static NSMutableDictionary *__strong _hierarchies = nil;
+    
+    dispatch_once(&pred, ^{
+        _hierarchies = [NSMutableDictionary new];
+    });
+    
+    if (![_hierarchies objectForKey:name]) {
+        [_hierarchies setObject:[NUXHierarchy new] forKey:name];
+    }
+    
+    return [_hierarchies objectForKey:name];
+}
+
+-(id)init {
     self = [super init];
     if (self) {
         _isLoaded = NO;
         _isFailure = NO;
         _documents = [NSMutableDictionary new];
         _contents = [NSMutableDictionary new];
-        [self setupWithRequest:request];
-    }
-    return self;
-}
-
--(id)initWithRequest:(NUXRequest *)request nodeBlock:(NUXHierarchyBlock)nodeBlock
-{
-    self = [self initWithRequest:request];
-    if (self) {
-        _nodeBlock = nodeBlock;
     }
     return self;
 }
@@ -43,8 +44,13 @@
 {
     _documents = nil;
     _contents = nil;
-    _completion = nil;
+    _completionBlock= nil;
+    _nodeInvalidationBlock = nil;
     _nodeBlock = nil;
+}
+
+-(void)load {
+    [self setup];
 }
 
 -(NSArray *)childrenOfDocument:(NUXDocument *)document
@@ -64,11 +70,19 @@
     return [NSArray arrayWithArray:entries];
 }
 
+-(NSArray *)contentOfAllDocuments {
+    NSMutableArray *content = [NSMutableArray new];
+    [_contents enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [content addObject:obj];
+    }];
+    return content;
+}
+
 -(NSArray *)childrenOfRoot
 {
     NSArray *entries = [_documents valueForKey:kRootKey];
     if (entries == nil) {
-        [NSException raise:@"Hierarchy not initialized" format:@""];
+        [NSException raise:@"Not initialized" format:@"Hierarchy not initialized"];
     }
     return [NSArray arrayWithArray:entries];
 }
@@ -82,22 +96,16 @@
     while (!(_isLoaded || _isFailure) && [[NSRunLoop mainRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
 }
 
--(void)setCompletionBlock:(NUXBasicBlock)completion {
-    if (_isLoaded) {
-        completion();
-    }
-    _completion = completion;
-}
 
 -(void)setupCompleted
 {
     _isLoaded = YES;
-    if (_completion != nil) {
-        _completion();
+    if (self.completionBlock != nil) {
+        self.completionBlock();
     }
 }
 
--(void)setupWithRequest:(NUXRequest *)request
+-(void)setup
 {
     NSMutableArray *docs = [NSMutableArray new];
     
@@ -114,12 +122,13 @@
     };
     
     void (^failureBlock)(NUXRequest *) = ^(NUXRequest *request) {
+        NSLog(@"pouet pouet");
         _isFailure = YES;
     };
     
-    [request setCompletionBlock:appendDocs];
-    [request setFailureBlock:failureBlock];
-    [request start];
+    [self.request setCompletionBlock:appendDocs];
+    [self.request setFailureBlock:failureBlock];
+    [self.request start];
 }
 
 -(void)startBuildingHierarchyWithDocuments:(NSArray *)documents

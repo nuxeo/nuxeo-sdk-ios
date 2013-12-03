@@ -13,9 +13,7 @@
 
 @end
 
-@implementation NUXHierarchyTest {
-    NUXHierarchy *hierarchy;
-}
+@implementation NUXHierarchyTest
 
 - (void)setUp {
     [super setUp];
@@ -27,7 +25,9 @@
 
 - (void)testDocumentSorter {
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
-    hierarchy = [[NUXHierarchy alloc] initWithRequest:request];
+    NUXHierarchy *hierarchy = [NUXHierarchy new];
+    hierarchy.request = request;
+    [hierarchy load];
     [hierarchy waitUntilLoadingIsDone];
     
     XCTAssertTrue(hierarchy.isLoaded);
@@ -49,7 +49,9 @@
 
 -(void)testOnlyOneDocHierarchy {
     NUXRequest *request = [session requestQuery:@"select * from Domain"];
-    hierarchy = [[NUXHierarchy alloc] initWithRequest:request];
+    NUXHierarchy *hierarchy = [NUXHierarchy new];
+    hierarchy.request = request;
+    [hierarchy load];
     [hierarchy waitUntilLoadingIsDone];
 
     XCTAssertTrue(hierarchy.isLoaded);
@@ -67,7 +69,9 @@
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
     [request addParameterValue:@"3" forKey:@"pageSize"];
     
-    hierarchy = [[NUXHierarchy alloc] initWithRequest:request];
+    NUXHierarchy *hierarchy = [NUXHierarchy new];
+    hierarchy.request = request;
+    [hierarchy load];
     [hierarchy waitUntilLoadingIsDone];
     
     XCTAssertTrue(hierarchy.isLoaded);
@@ -79,7 +83,9 @@
     NSMutableArray *leaf = [NSMutableArray new];
     BOOL __block workspacesChecked = NO;
     BOOL __block defaultDomainChecked = NO;
-    hierarchy = [[NUXHierarchy alloc] initWithRequest:request nodeBlock:^NSArray *(NUXEntity *entity, NSUInteger depth) {
+    NUXHierarchy *hierarchy = [NUXHierarchy new];
+    hierarchy.request = request;
+    hierarchy.nodeBlock = ^NSArray *(NUXEntity *entity, NSUInteger depth) {
         NUXDocument *doc = (NUXDocument *)entity;
         if ([doc.path isEqualToString:@"/default-domain"]) {
             XCTAssertEqualObjects(@0, @(depth));
@@ -97,7 +103,8 @@
         [children addObject:[NUXDocument new]];
         
         return children;
-    }];
+    };
+    [hierarchy load];
     [hierarchy waitUntilLoadingIsDone];
     
     XCTAssertTrue([leaf count] > 0);
@@ -106,6 +113,15 @@
         XCTAssertEqualObjects(@2, @([hierarchy contentOfDocument:doc].count));
     }];
     XCTAssertTrue(workspacesChecked && defaultDomainChecked);
+}
+
+-(void)testMultipleHierarchies {
+    NUXHierarchy *h1 = [NUXHierarchy hierarchyWithName:@"test1"];
+    NUXHierarchy *h2 = [NUXHierarchy hierarchyWithName:@"test2"];
+    NUXHierarchy *h3 = [NUXHierarchy hierarchyWithName:@"test1"];
+    
+    XCTAssertNotEqual(h1, h2);
+    XCTAssertEqual(h1, h3);
 }
 
 +(NUXDocument *)findDocumentInEntries:(NSArray *)documents withCompareBlock:(bool (^)(NUXDocument *))compareBlock {
