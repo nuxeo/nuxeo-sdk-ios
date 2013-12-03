@@ -55,8 +55,12 @@
 	
 	// Safely close database even if the connection was not done.
 	sqlite3_close(db);
-	
-	return (ret == SQLITE_OK || ret == SQLITE_DONE || ret == SQLITE_ROW);
+    
+    BOOL success = ret == SQLITE_OK || ret == SQLITE_DONE || ret == SQLITE_ROW;
+	if (!success) {
+        [NSException raise:@"Query failed" format:@"Query: '%@' Error: %@", query, [self sqlInformatiomFromCode:ret]];
+    }
+	return success;
 }
 
 #pragma mark -
@@ -66,6 +70,126 @@
     // Find a file in user's cache directory based on database name
     NSArray *directories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     return [[directories objectAtIndex:0] stringByAppendingPathComponent:_name];
+}
+
+- (NSString*) sqlInformatiomFromCode:(NSInteger)iErrorCode
+{
+	NSString* aErrorType = @"";
+	switch (iErrorCode)
+	{
+		case SQLITE_ERROR:
+			aErrorType = @" SQLITE_ERROR         (SQL error or missing database)";
+			break;
+			
+		case SQLITE_INTERNAL:
+			aErrorType = @" SQLITE_INTERNAL      (Internal logic error in SQLite)";
+			break;
+			
+		case SQLITE_PERM:
+			aErrorType = @" SQLITE_PERM          (Access permission denied)";
+			break;
+			
+		case SQLITE_ABORT:
+			aErrorType = @" SQLITE_ABORT         (Callback routine requested an abort)";
+			break;
+			
+		case SQLITE_BUSY:
+			aErrorType = @" SQLITE_BUSY          (The database file is locked)";
+			break;
+			
+		case SQLITE_LOCKED:
+			aErrorType = @" SQLITE_LOCKED        (A table in the database is locked)";
+			break;
+			
+		case SQLITE_NOMEM:
+			aErrorType = @" SQLITE_NOMEM         (A malloc() failed)";
+			break;
+			
+		case SQLITE_READONLY:
+			aErrorType = @" SQLITE_READONLY      (Attempt to write a readonly database)";
+			break;
+			
+		case SQLITE_INTERRUPT:
+			aErrorType = @" SQLITE_INTERRUPT     (Operation terminated by sqlite_interrupt())";
+			break;
+			
+		case SQLITE_CORRUPT:
+			aErrorType = @" SQLITE_CORRUPT       (The database disk image is malformed)";
+			break;
+			
+		case SQLITE_NOTFOUND:
+			aErrorType = @" SQLITE_NOTFOUND      (NOT USED. Table or record not found)";
+			break;
+			
+		case SQLITE_FULL:
+			aErrorType = @" SQLITE_FULL          (Insertion failed because database is full)";
+			break;
+			
+		case SQLITE_CANTOPEN:
+			aErrorType = @" SQLITE_CANTOPEN      (Unable to open the database file)";
+			break;
+			
+		case SQLITE_PROTOCOL:
+			aErrorType = @" SQLITE_PROTOCOL      (Database lock protocol error)";
+			break;
+			
+		case SQLITE_EMPTY:
+			aErrorType = @" SQLITE_EMPTY         (Database is empty)";
+			break;
+			
+		case SQLITE_SCHEMA:
+			aErrorType = @" SQLITE_SCHEMA        (The database schema changed)";
+			break;
+			
+		case SQLITE_TOOBIG:
+			aErrorType = @" SQLITE_TOOBIG        (String or BLOB exceeds size limit)";
+			break;
+			
+		case SQLITE_CONSTRAINT:
+			aErrorType = @" SQLITE_CONSTRAINT    (Abort due to constraint violation)";
+			break;
+			
+		case SQLITE_MISMATCH:
+			aErrorType = @" SQLITE_MISMATCH      (Data type mismatch)";
+			break;
+			
+		case SQLITE_MISUSE:
+			aErrorType = @" SQLITE_MISUSE        (Library used incorrectly)";
+			break;
+			
+		case SQLITE_NOLFS:
+			aErrorType = @" SQLITE_NOLFS         (Uses OS features not supported on host)";
+			break;
+			
+		case SQLITE_AUTH:
+			aErrorType = @" SQLITE_AUTH          (Authorization denied)";
+			break;
+			
+		case SQLITE_FORMAT:
+			aErrorType = @" SQLITE_FORMAT        (Auxiliary database format error)";
+			break;
+			
+		case SQLITE_RANGE:
+			aErrorType = @" SQLITE_RANGE         (2nd parameter to sqlite_bind out of range)";
+			break;
+			
+		case SQLITE_NOTADB:
+			aErrorType = @" SQLITE_NOTADB        (File opened that is not a database file)";
+			break;
+			
+		case SQLITE_ROW:
+			aErrorType = @" SQLITE_ROW           (sqlite_step() has another row ready)";
+			break;
+			
+		case SQLITE_DONE:
+			aErrorType = @" SQLITE_DONE          (sqlite_step() has finished executing)";
+			break;
+		default:
+			aErrorType = @" unknown";
+			break;
+	}
+	
+	return aErrorType;
 }
 
 @end
