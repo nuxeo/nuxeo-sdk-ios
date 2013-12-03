@@ -12,4 +12,8 @@
 
 -(BOOL)executeQuery:(NSString *)query;
 
+-(NSString*)sqlInformatiomFromCode:(NSInteger)iErrorCode;
+
+-(NSInteger)lastReturnCode;
+
 @end

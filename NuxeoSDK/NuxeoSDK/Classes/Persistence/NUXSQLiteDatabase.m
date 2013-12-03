@@ -7,6 +7,7 @@
 
 @implementation NUXSQLiteDatabase {
     NSString *_name;
+    NSInteger _ret;
 }
 
 -(id)initWithName:(NSString *)name {
@@ -21,8 +22,8 @@
     sqlite3 *db;
     NSString *dbPath = [self databasePath];
     
-    NSInteger ret = sqlite3_open_v2([dbPath UTF8String], &db, SQLITE_OPEN_NOMUTEX|SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE, NULL);
-	if (ret == SQLITE_OK)
+    _ret = sqlite3_open_v2([dbPath UTF8String], &db, SQLITE_OPEN_NOMUTEX|SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE, NULL);
+	if (_ret == SQLITE_OK)
 	{
         sqlite3_stmt *statement = NULL;
 		const char* utf8query = [query cStringUsingEncoding:NSUTF8StringEncoding];
@@ -34,7 +35,7 @@
 			BOOL preparation = sqlite3_prepare_v2(db, utf8query, -1, &statement, &pzTail);
 			
 			// Step through the statement even if failed to retrieve the error code
-			ret = sqlite3_step(statement);
+			_ret = sqlite3_step(statement);
 			
 			// "Finalize" the statement - releases the resources associated with the statement.
 			sqlite3_finalize(statement);
@@ -56,20 +57,11 @@
 	// Safely close database even if the connection was not done.
 	sqlite3_close(db);
     
-    BOOL success = ret == SQLITE_OK || ret == SQLITE_DONE || ret == SQLITE_ROW;
-	if (!success) {
-        [NSException raise:@"Query failed" format:@"Query: '%@' Error: %@", query, [self sqlInformatiomFromCode:ret]];
-    }
-	return success;
+	return (_ret == SQLITE_OK || _ret == SQLITE_DONE || _ret == SQLITE_ROW);
 }
 
-#pragma mark -
-#pragma mark Internal
-
--(NSString *)databasePath {
-    // Find a file in user's cache directory based on database name
-    NSArray *directories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    return [[directories objectAtIndex:0] stringByAppendingPathComponent:_name];
+-(NSInteger)lastReturnCode {
+    return _ret;
 }
 
 - (NSString*) sqlInformatiomFromCode:(NSInteger)iErrorCode
@@ -190,6 +182,15 @@
 	}
 	
 	return aErrorType;
+}
+
+#pragma mark -
+#pragma mark Internal
+
+-(NSString *)databasePath {
+    // Find a file in user's cache directory based on database name
+    NSArray *directories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    return [[directories objectAtIndex:0] stringByAppendingPathComponent:_name];
 }
 
 @end

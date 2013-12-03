@@ -34,16 +34,16 @@
 {
     NSString *tblNAme = @"tmpTable";
     NSString *query = [NSString stringWithFormat:@"drop table if exists '%@';", tblNAme];
-    [db executeQuery:query];
+    XCTAssertTrue([db executeQuery:query], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
     
     query = [NSString stringWithFormat:@"create table '%@' ('id' varchar, 'position' integer);", tblNAme];
-    XCTAssertTrue([db executeQuery:query]);
+    XCTAssertTrue([db executeQuery:query], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
     
     query = [NSString stringWithFormat:@"insert into '%@' ('wrongField', 'dsadsad') values ('abc', 123);", tblNAme];
-    XCTAssertFalse([db executeQuery:query]);
+    XCTAssertFalse([db executeQuery:query], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
     
     query = [NSString stringWithFormat:@"insert into '%@' ('id', 'position') values ('abc', 123);", tblNAme];
-    XCTAssertTrue([db executeQuery:query]);
+    XCTAssertTrue([db executeQuery:query], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
 }
 
 @end
