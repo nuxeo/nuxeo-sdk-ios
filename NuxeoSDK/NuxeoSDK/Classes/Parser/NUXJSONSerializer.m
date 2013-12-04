@@ -8,6 +8,7 @@
 
 #import "NUXJSONSerializer.h"
 #import "NUXJSONMapper.h"
+#import "NUXConstants.h"
 
 #include <objc/runtime.h>
 
@@ -46,7 +47,7 @@
                                         property_getName(properties[propertyNumber])];
             
             NSString * typeOfProperty = [self getPropertyType:properties[propertyNumber]];
-            NSLog(@"Property : %@ , Type : %@", nameOfProperty, typeOfProperty);
+            NUXDebug(@"Property : %@ , Type : %@", nameOfProperty, typeOfProperty);
             
             // add the property type to the dictionary
             [result
@@ -122,7 +123,7 @@
         }
         id value = [json valueForKey:jsonKey];
         if (!value) {
-            NSLog(@"Missing json value for %@ field", name);
+            NUXDebug(@"Missing json value for %@ field", name);
             return;
         }
         
@@ -144,7 +145,7 @@
             value = values;
         }
 
-        //NSLog(@"Value '%@' for field %@", value, name);
+        NUXDebug(@"Value '%@' for field %@", value, name);
         [entity setValue:value forKeyPath:name];
     }];
     return entity;

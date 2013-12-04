@@ -147,7 +147,6 @@
         [children addObject:doc];
     }];
     
-    NSLog(@"%@", documents);
     [self buildHierarchy:documents];
     [self setupCompleted];
 }

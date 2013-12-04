@@ -109,7 +109,7 @@
     
     XCTAssertTrue([leaf count] > 0);
     [leaf enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
-        NSLog(@"\nLeaf: %@\n%lu", doc.uid, (unsigned long)[hierarchy contentOfDocument:doc].count);
+        NUXDebug(@"\nLeaf: %@\n%lu", doc.uid, (unsigned long)[hierarchy contentOfDocument:doc].count);
         XCTAssertEqualObjects(@2, @([hierarchy contentOfDocument:doc].count));
     }];
     XCTAssertTrue(workspacesChecked && defaultDomainChecked);
