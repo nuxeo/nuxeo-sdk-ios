@@ -108,4 +108,16 @@
     XCTAssertTrue([bs hasBlob:ndDigest]);
 }
 
+-(void)testThatSizeLimitWorks {
+    long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+    // Should allow to store only 5 files
+    bs.sizeLimit = @(fileSize * 5.5);
+
+    for (int i = 0; i < 7; i++) {
+        [bs saveBlobFromPath:filePath withDigest:[self randomDigest]];
+    }
+    
+    XCTAssertTrue(5 == [bs count]);
+}
+
 @end

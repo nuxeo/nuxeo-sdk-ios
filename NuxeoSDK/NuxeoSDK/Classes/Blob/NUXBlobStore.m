@@ -9,10 +9,11 @@
 #import "NUXBlobStore.h"
 #import "NUXConstants.h"
 
-#define kStoreFolderName @"_blobStore"
+#define kStoreFolderName @"org.nuxeo.blobstore"
 
 @implementation NUXBlobStore {
     NSMutableArray *_blobsAccess;
+    NSNumber *_currentSize;
 }
 
 -(id)init
@@ -20,12 +21,22 @@
     self = [super init];
     if (self) {
         _blobsAccess = [NSMutableArray new];
+        _currentSize = @(0);
         self.countLimit = @(100);
         self.sizeLimit = @(-1);
+        
         
         [self recomputeBlobAccess];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    _blobsAccess = Nil;
+    _currentSize = Nil;
+    _countLimit = Nil;
+    _sizeLimit = Nil;
 }
 
 -(void)reset
@@ -66,8 +77,9 @@
         return NO;
     }
     
-    [[NSFileManager defaultManager] removeItemAtPath:[self blobPath:digest] error:nil];
+    [self removeBlobFileWithDigest:digest];
     [_blobsAccess removeObject:digest];
+    
     return YES;
 }
 
@@ -80,15 +92,17 @@
     
     NSError *error;
     [self removeBlob:digest];
-    BOOL ret = [fileManager copyItemAtPath:path toPath:[self blobPath:digest] error:&error];
+    NSString *blobPath = [self blobPath:digest];
+    BOOL ret = [fileManager copyItemAtPath:path toPath:blobPath error:&error];
     if (!ret) {
         NUXDebug(@"Can't save file localy. %@", error);
         return NULL;
     }
     
     [_blobsAccess insertObject:digest atIndex:0];
+    [self adjustFileSize:blobPath factor:1];
     [self cleanStore];
-    return [self blobPath:digest];
+    return blobPath;
 }
 
 #pragma mark -
@@ -119,11 +133,18 @@
 #pragma mark Internal methods
 
 -(void)cleanStore {
-    if (self.countLimit > 0 && [self.countLimit compare:@([self count])] == NSOrderedAscending) {
-        while ([self.countLimit compare:@([self count])] != NSOrderedSame) {
+    BOOL countOverLimit = [self.countLimit intValue] > 0 && [self.countLimit compare:@([self count])] == NSOrderedAscending;
+    BOOL sizeOverLimit = [self.sizeLimit longLongValue] > 0 && [self.sizeLimit compare:_currentSize] == NSOrderedAscending;
+    
+    if (countOverLimit || sizeOverLimit) {
+        while (countOverLimit || sizeOverLimit) {
             NSString *digest = [_blobsAccess lastObject];
+            NUXDebug(@"Remove last blob (%@) - count:%d size:%d", digest, countOverLimit, sizeOverLimit);
             [_blobsAccess removeLastObject];
-            [[NSFileManager defaultManager] removeItemAtPath:[self blobPath:digest] error:nil];
+            [self removeBlobFileWithDigest:digest];
+            
+            countOverLimit = [self.countLimit intValue] > 0 && [self.countLimit compare:@([self count])] == NSOrderedAscending;
+            sizeOverLimit = [self.sizeLimit longLongValue] > 0 && [self.sizeLimit compare:_currentSize] == NSOrderedAscending;
         }
     }
 }
@@ -140,7 +161,17 @@
     if (!blobs) {
         [NSException raise:@"Can't read dir content" format:@"Unable to read blob store files content. %@", error];
     }
-    [_blobsAccess addObjectsFromArray:blobs];
+    [blobs enumerateObjectsUsingBlock:^(NSString *blobPath, NSUInteger idx, BOOL *stop) {
+        NUXDebug(@"Load file from existing folder: %@", blobPath);
+        [self adjustFileSize:blobPath factor:1];
+        [_blobsAccess addObject:[blobPath lastPathComponent]];
+    }];
+}
+
+-(void)adjustFileSize:(NSString *)filePath factor:(int)factor {
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+    _currentSize = [NSNumber numberWithLongLong:[_currentSize longLongValue] + ([attributes fileSize] * factor)];
+    NUXDebug(@"Blob store size: %lld", [_currentSize longLongValue]);
 }
 
 -(NSString *)blobPath:(NSString *)digest {
@@ -167,6 +198,11 @@
         return NULL;
     }
     return [property valueForKey:@"digest"];
+}
+
+-(void)removeBlobFileWithDigest:(NSString *)digest {
+    [self adjustFileSize:[self blobPath:digest] factor:-1];
+    [[NSFileManager defaultManager] removeItemAtPath:[self blobPath:digest] error:nil];
 }
 
 #pragma mark -
