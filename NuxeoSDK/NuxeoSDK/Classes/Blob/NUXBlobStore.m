@@ -119,7 +119,13 @@
 #pragma mark Internal methods
 
 -(void)cleanStore {
-    // TODO
+    if (self.countLimit > 0 && [self.countLimit compare:@([self count])] == NSOrderedAscending) {
+        while ([self.countLimit compare:@([self count])] != NSOrderedSame) {
+            NSString *digest = [_blobsAccess lastObject];
+            [_blobsAccess removeLastObject];
+            [[NSFileManager defaultManager] removeItemAtPath:[self blobPath:digest] error:nil];
+        }
+    }
 }
 
 -(void)updateAccessForDigest:(NSString *)digest {

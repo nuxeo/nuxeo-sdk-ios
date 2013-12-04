@@ -87,16 +87,25 @@
 }
 
 -(void)testThatLatestItemIsRemoved {
-    NSInteger nbFiles = 18;
+    NSInteger nbFiles = 6;
     NSString *digest = [self randomDigest];
     [bs saveBlobFromPath:filePath withDigest:digest];
     
+    NSString *ndDigest = [self randomDigest];
+    [bs saveBlobFromPath:filePath withDigest:ndDigest];
+    
+    // Loop 2 times, to change access order of the second inserted file to still have it in the cache
+    for (int i = 0; i < nbFiles; i++) {
+        [bs saveBlobFromPath:filePath withDigest:[self randomDigest]];
+    }
+    [bs blob:ndDigest];
     for (int i = 0; i < nbFiles; i++) {
         [bs saveBlobFromPath:filePath withDigest:[self randomDigest]];
     }
     
-    XCTAssertTrue(15 == [bs count], @"Count should be 15 but is %@", @([bs count]));
+    XCTAssertTrue(10 == [bs count], @"Count should be 10 but is %@", @([bs count]));
     XCTAssertFalse([bs hasBlob:digest]);
+    XCTAssertTrue([bs hasBlob:ndDigest]);
 }
 
 @end
