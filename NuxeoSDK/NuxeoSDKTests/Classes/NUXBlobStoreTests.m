@@ -117,7 +117,7 @@
         [bs saveBlobFromPath:filePath withDigest:[self randomDigest]];
     }
     
-    XCTAssertTrue(5 == [bs count]);
+    XCTAssertTrue(5 == [bs count], @"Size limit count should be 6 but is %@", @([bs count]));
 }
 
 @end

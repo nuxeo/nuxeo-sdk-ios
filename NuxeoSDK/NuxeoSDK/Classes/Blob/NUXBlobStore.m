@@ -48,6 +48,7 @@
         [NSException raise:@"Unable to reset blob store" format:@"Can't delete blob store folder at path %@. %@", blobStorePath, error];
     }
     [_blobsAccess removeAllObjects];
+    _currentSize = @(0);
 }
 
 -(NSInteger)count

@@ -31,6 +31,11 @@
 // Register some categories that will be added to all requests
 - (void)addDefaultCategories:(NSArray *)categories;
 
+// Cancel current requests
+- (void)cancelAllRequests;
+// Cancel only requests that look like to download a blob
+- (void)cancelDownloadsRequests;
+
 // Execute a NUXRequest asynchronously using this session and authentication challenge.
 - (void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure;
 

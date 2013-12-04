@@ -18,6 +18,7 @@
 @interface NUXSession ()
 
 @property NSOperationQueue *queue;
+@property NSOperationQueue *downloadQueue;
 @property NSMutableArray *schemas;
 @property NSMutableArray *categories;
 
@@ -35,7 +36,8 @@ NSString *const kApiPrefix = @"ApiPrefix";
 - (id)init {
     self = [super init];
     if (self) {
-        self.queue = [NSOperationQueue mainQueue];
+        self.queue = [NSOperationQueue new];
+        self.downloadQueue = [NSOperationQueue new];
         self.schemas = [NSMutableArray new];
         self.categories = [NSMutableArray new];
 
@@ -47,6 +49,7 @@ NSString *const kApiPrefix = @"ApiPrefix";
 
 - (void)dealloc {
     [self setQueue:Nil];
+    [self setDownloadQueue:nil];
     [self setSchemas:Nil];
     [self setUsername:Nil];
     [self setUrl:Nil];
@@ -64,6 +67,15 @@ NSString *const kApiPrefix = @"ApiPrefix";
     return self;
 }
 
+- (void)cancelAllRequests {
+    [self.queue cancelAllOperations];
+    [self.downloadQueue cancelAllOperations];
+}
+
+- (void)cancelDownloadsRequests {
+    [self.downloadQueue cancelAllOperations];
+}
+
 - (void)addDefaultSchemas:(NSArray *)schemas {
     [self.schemas addObjectsFromArray:schemas];
 }
@@ -74,7 +86,11 @@ NSString *const kApiPrefix = @"ApiPrefix";
 
 - (void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
     ASIHTTPRequest *httpReq = [self httpRequestWithRequest:request withCompletionBlock:completion failureBlock:failure];
-    [self.queue addOperation:httpReq];
+    if (httpReq.downloadDestinationPath) {
+        [self.downloadQueue addOperation:httpReq];
+    } else {
+        [self.queue addOperation:httpReq];
+    }
 }
 
 - (void)startRequestSynchronous:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
