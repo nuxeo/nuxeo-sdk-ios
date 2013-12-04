@@ -27,6 +27,7 @@
     doc.path = [NSString stringWithFormat:@"/%@/%@/%@", @(random()), @(random()), @(random())];
     doc.type = @"File";
     doc.name = [NSString stringWithFormat:@"%@", @(random())];
+    doc.properties = [NSMutableDictionary dictionaryWithDictionary:@{@"file:content": @{@"digest": [NSString stringWithFormat:@"dummyDigest%@", @(random())]}}];
     
     return doc;
 }

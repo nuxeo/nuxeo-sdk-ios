@@ -50,7 +50,6 @@
 
 -(NSArray *)selectNodesFromParent:(NSString *)parentId hierarchy:(NSString *)hierarchyName {
     NSString *query = [NSString stringWithFormat:@"select docId, content from %@ where parentId = '%@' and hierarchyName = '%@' order by 'order'", kHierarchyTable, parentId, hierarchyName];
-//    NSString *query = [NSString stringWithFormat:@"SELECT parentId, docId, content FROM '%@' WHERE parentId = '/'", kHierarchyTable];
     NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
         // Should fetch Document JSON from storage.
         NUXDocument *doc = [NUXDocument new];

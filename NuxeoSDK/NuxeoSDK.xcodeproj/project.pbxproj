@@ -10,6 +10,8 @@
 		0330425B4DD5438799AE0594 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		5104E9A0183A80E100F1EB5D /* NUXSession-info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5104E99F183A80E100F1EB5D /* NUXSession-info.plist */; };
 		51B2B7B4184E269A00AE2DD1 /* NUXHierarchyDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */; };
+		51B2B7B7184F31FA00AE2DD1 /* NUXBlobStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B6184F31FA00AE2DD1 /* NUXBlobStore.m */; };
+		51B2B7BA184F651B00AE2DD1 /* NUXBlobStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */; };
 		51C75E71183E0CF000EE0DCC /* NUXDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E67183E0CF000EE0DCC /* NUXDocument.m */; };
 		51C75E72183E0CF000EE0DCC /* NUXDocuments.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E69183E0CF000EE0DCC /* NUXDocuments.m */; };
 		51C75E73183E0CF000EE0DCC /* NUXEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E6B183E0CF000EE0DCC /* NUXEntity.m */; };
@@ -63,6 +65,9 @@
 		5104E99F183A80E100F1EB5D /* NUXSession-info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NUXSession-info.plist"; sourceTree = "<group>"; };
 		51B2B7B2184E269A00AE2DD1 /* NUXHierarchyDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXHierarchyDB.h; sourceTree = "<group>"; };
 		51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXHierarchyDB.m; sourceTree = "<group>"; };
+		51B2B7B5184F31FA00AE2DD1 /* NUXBlobStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXBlobStore.h; sourceTree = "<group>"; };
+		51B2B7B6184F31FA00AE2DD1 /* NUXBlobStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXBlobStore.m; sourceTree = "<group>"; };
+		51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXBlobStoreTests.m; sourceTree = "<group>"; };
 		51C75E66183E0CF000EE0DCC /* NUXDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXDocument.h; sourceTree = "<group>"; };
 		51C75E67183E0CF000EE0DCC /* NUXDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXDocument.m; sourceTree = "<group>"; };
 		51C75E68183E0CF000EE0DCC /* NUXDocuments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXDocuments.h; sourceTree = "<group>"; };
@@ -235,6 +240,7 @@
 		AC0003DEE7C4FC5F7F4E26C7 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				AC000CD3B7BE6543923E151E /* Blob */,
 				51C75E65183E0CF000EE0DCC /* Entity */,
 				AC000701894D032D9193C612 /* Hierarchy */,
 				51C75E6C183E0CF000EE0DCC /* Parser */,
@@ -270,6 +276,7 @@
 				51C75E80184608DF00EE0DCC /* NUXAbstractTestCase.m */,
 				51C75E821846269100EE0DCC /* NUXAbstractTestCase.h */,
 				51C75E841847895800EE0DCC /* NUXDatabaseTests.m */,
+				51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -283,6 +290,15 @@
 				51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */,
 			);
 			path = Hierarchy;
+			sourceTree = "<group>";
+		};
+		AC000CD3B7BE6543923E151E /* Blob */ = {
+			isa = PBXGroup;
+			children = (
+				51B2B7B5184F31FA00AE2DD1 /* NUXBlobStore.h */,
+				51B2B7B6184F31FA00AE2DD1 /* NUXBlobStore.m */,
+			);
+			path = Blob;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -438,6 +454,7 @@
 				AC0008BBE6F5D7709B958244 /* NUXSession.m in Sources */,
 				AC0007560E2BEEB56D1B23EF /* NUXRequest.m in Sources */,
 				51C75E71183E0CF000EE0DCC /* NUXDocument.m in Sources */,
+				51B2B7B7184F31FA00AE2DD1 /* NUXBlobStore.m in Sources */,
 				51C75E74183E0CF000EE0DCC /* NUXJSONMapper.m in Sources */,
 				51C75E72183E0CF000EE0DCC /* NUXDocuments.m in Sources */,
 				51C75E73183E0CF000EE0DCC /* NUXEntity.m in Sources */,
@@ -453,6 +470,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51B2B7BA184F651B00AE2DD1 /* NUXBlobStoreTests.m in Sources */,
 				51C75E81184608DF00EE0DCC /* NUXAbstractTestCase.m in Sources */,
 				51C75E7B1843B95200EE0DCC /* NUXJSONSerializerTests.m in Sources */,
 				AC00015C9A8DDBE3CFE409A2 /* NUXRequestTests.m in Sources */,
