@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 
 #import "NUXEntity.h"
+#import "NUXEntityCache.h"
 
-@interface NUXDocument : NUXEntity
+@interface NUXDocument : NUXEntity <NUXEntityPersistable>
 
 @property (nonatomic) NSString* repository;
 @property (nonatomic) NSString* uid;

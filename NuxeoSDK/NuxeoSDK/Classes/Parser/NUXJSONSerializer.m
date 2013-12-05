@@ -153,7 +153,11 @@
 
 +(NSDictionary *)directoryWithEntity:(NUXEntity *)entity error:(NSError **)error {
     NSMutableDictionary *json = [NSMutableDictionary new];
+    [json setValue:entity.entityType forKey:@"entity-type"];
     [[NUXJSONSerializer dictionaryOfPropertiesForObject:[entity class]] enumerateKeysAndObjectsUsingBlock:^(id name, id type, BOOL *stop) {
+        if ([type isEqualToString:@"entityType"]) {
+            return;
+        }
         id value = [entity valueForKeyPath:name];
         
         if (value && [@"NSDate" isEqual:type]) {

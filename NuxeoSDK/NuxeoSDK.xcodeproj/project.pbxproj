@@ -12,6 +12,8 @@
 		51B2B7B4184E269A00AE2DD1 /* NUXHierarchyDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */; };
 		51B2B7B7184F31FA00AE2DD1 /* NUXBlobStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B6184F31FA00AE2DD1 /* NUXBlobStore.m */; };
 		51B2B7BA184F651B00AE2DD1 /* NUXBlobStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */; };
+		51B2B7BD1850945400AE2DD1 /* NUXEntityCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7BC1850945400AE2DD1 /* NUXEntityCache.m */; };
+		51B2B7C01850E10B00AE2DD1 /* NUXEntityCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7BF1850E10B00AE2DD1 /* NUXEntityCacheTests.m */; };
 		51C75E71183E0CF000EE0DCC /* NUXDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E67183E0CF000EE0DCC /* NUXDocument.m */; };
 		51C75E72183E0CF000EE0DCC /* NUXDocuments.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E69183E0CF000EE0DCC /* NUXDocuments.m */; };
 		51C75E73183E0CF000EE0DCC /* NUXEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E6B183E0CF000EE0DCC /* NUXEntity.m */; };
@@ -68,6 +70,9 @@
 		51B2B7B5184F31FA00AE2DD1 /* NUXBlobStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXBlobStore.h; sourceTree = "<group>"; };
 		51B2B7B6184F31FA00AE2DD1 /* NUXBlobStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXBlobStore.m; sourceTree = "<group>"; };
 		51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXBlobStoreTests.m; sourceTree = "<group>"; };
+		51B2B7BB1850945400AE2DD1 /* NUXEntityCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXEntityCache.h; sourceTree = "<group>"; };
+		51B2B7BC1850945400AE2DD1 /* NUXEntityCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXEntityCache.m; sourceTree = "<group>"; };
+		51B2B7BF1850E10B00AE2DD1 /* NUXEntityCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXEntityCacheTests.m; sourceTree = "<group>"; };
 		51C75E66183E0CF000EE0DCC /* NUXDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXDocument.h; sourceTree = "<group>"; };
 		51C75E67183E0CF000EE0DCC /* NUXDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXDocument.m; sourceTree = "<group>"; };
 		51C75E68183E0CF000EE0DCC /* NUXDocuments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXDocuments.h; sourceTree = "<group>"; };
@@ -145,6 +150,8 @@
 				51C75E69183E0CF000EE0DCC /* NUXDocuments.m */,
 				51C75E6A183E0CF000EE0DCC /* NUXEntity.h */,
 				51C75E6B183E0CF000EE0DCC /* NUXEntity.m */,
+				51B2B7BB1850945400AE2DD1 /* NUXEntityCache.h */,
+				51B2B7BC1850945400AE2DD1 /* NUXEntityCache.m */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -277,6 +284,7 @@
 				51C75E821846269100EE0DCC /* NUXAbstractTestCase.h */,
 				51C75E841847895800EE0DCC /* NUXDatabaseTests.m */,
 				51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */,
+				51B2B7BF1850E10B00AE2DD1 /* NUXEntityCacheTests.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -463,6 +471,7 @@
 				AC000B62D7FEF9198EA59EEB /* NUXHierarchy.m in Sources */,
 				AC000CE8D4A58A05FB777DCA /* NUXSQLiteDatabase.m in Sources */,
 				51B2B7B4184E269A00AE2DD1 /* NUXHierarchyDB.m in Sources */,
+				51B2B7BD1850945400AE2DD1 /* NUXEntityCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,6 +486,7 @@
 				AC000B77A341A810EE6DACC4 /* NUXSessionTests.m in Sources */,
 				51C75E851847895800EE0DCC /* NUXDatabaseTests.m in Sources */,
 				51C75E7E1846071100EE0DCC /* NUXHierarchyTest.m in Sources */,
+				51B2B7C01850E10B00AE2DD1 /* NUXEntityCacheTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

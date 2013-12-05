@@ -41,4 +41,12 @@
 {
     return [NSString stringWithFormat:@"%@ %@ path=%@ type=%@", [self class], _uid, _path, _type];
 }
+
+#pragma mark -
+#pragma mark NUXEntityPersistable protocol
+
+-(NSString *)entityId {
+    return self.uid;
+}
+
 @end

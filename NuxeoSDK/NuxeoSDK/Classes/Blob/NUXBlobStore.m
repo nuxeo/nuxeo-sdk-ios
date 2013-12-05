@@ -9,7 +9,7 @@
 #import "NUXBlobStore.h"
 #import "NUXConstants.h"
 
-#define kStoreFolderName @"org.nuxeo.blobstore"
+#define kStoreFolderName @"org.nuxeo.cache.blob"
 
 @implementation NUXBlobStore {
     NSMutableArray *_blobsAccess;
