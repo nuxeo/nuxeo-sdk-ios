@@ -9,18 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "NUXEntity.h"
 
-@protocol NUXEntityPersistable <NSObject>
-
-@required
--(NSString *)entityId;
-
-@end
-
 @interface NUXEntityCache : NSObject
 
 +(NUXEntityCache *)instance;
 
--(NUXEntity<NUXEntityPersistable> *)entityWithId:(NSString *)entityId class:(Class)entityClass;
+-(id)entityWithId:(NSString *)entityId class:(Class)entityClass;
 -(BOOL)removeEntityWithId:(NSString *)entityId class:(Class)entityClass;
 
 -(BOOL)saveEntity:(NUXEntity<NUXEntityPersistable> *)entity;

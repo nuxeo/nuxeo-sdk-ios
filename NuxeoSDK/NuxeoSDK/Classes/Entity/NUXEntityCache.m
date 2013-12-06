@@ -14,29 +14,50 @@
 
 @implementation NUXEntityCache
 
--(NUXEntity<NUXEntityPersistable> *)entityWithId:(NSString *)entityId class:(Class)entityClass
+-(id)entityWithId:(NSString *)entityId class:(Class)entityClass
 {
-    return nil;
+    return [self readEntityWithId:entityId andType:[self entityTypeFromClass:entityClass]];
 }
 
 -(BOOL)removeEntityWithId:(NSString *)entityId class:(Class)entityClass
 {
+    NSString *entityType = [self entityTypeFromClass:entityClass];
+    if ([self isEntityExistsWithId:entityId andType:entityType]) {
+        return [[NSFileManager defaultManager] removeItemAtPath:[self entityFilePathWithId:entityId andType:entityType] error:nil];
+    }
     return NO;
 }
 
 -(BOOL)saveEntity:(NUXEntity<NUXEntityPersistable> *)entity
 {
-    [[NUXSQLiteDatabase shared] createTableIfNotExists:entity.entityType withField:@""];
-    
-    return NO;
+    return [self writeEntity:entity];
 }
 
 #pragma mark -
 #pragma mark Internal methods
 
+-(NSString *)entityTypeFromClass:(Class)aClass {
+    if (![aClass isSubclassOfClass:[NUXEntity class]]) {
+        [NSException raise:@"Incompatible class" format:@"Provided class isn't a subclass of %@", [NUXEntity class]];
+    }
+    return ((NUXEntity *)[aClass new]).entityType;
+}
+
 -(NSString *)entityPersistableFields
 {
-    return @"'id' INT, 'entityId' TEXT, 'modified' DATETIME, 'created' DATETIME";
+    return @"'entityId' TEXT, 'modified' DATETIME, PRIMARY KEY(entityId)";
+}
+
+-(NSString *)rowIdForEntityId:(NSString *)entityId andType:(NSString *)entityType {
+    NSString *query = [NSString stringWithFormat:@"select rowid from %@ where entityId = '%@'", entityType, entityId];
+    NSArray *res = [[NUXSQLiteDatabase shared] arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+        return [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
+    }];
+    return res.count > 0 ? [res objectAtIndex:0] : nil;
+}
+
+-(BOOL)isEntityExistsWithId:(NSString *)entityId andType:(NSString *)entityType {
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self entityFilePathWithId:entityId andType:entityType]];
 }
 
 -(BOOL)writeEntity:(NUXEntity<NUXEntityPersistable> *)entity {
@@ -81,7 +102,7 @@
         }
         NUXDebug(@"Entity cache folder created at path %@", entityPath);
     }
-    return path;
+    return entityPath;
 }
 
 + (NUXEntityCache *)instance {

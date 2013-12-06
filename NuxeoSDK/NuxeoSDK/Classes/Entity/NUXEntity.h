@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol NUXEntityPersistable <NSObject>
+
+@required
+-(NSString *)entityId;
+
+@end
+
 @interface NUXEntity : NSObject
 {
     

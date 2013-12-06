@@ -16,6 +16,7 @@
 @interface NUXEntityCache (internal)
 -(BOOL)writeEntity:(NUXEntity<NUXEntityPersistable> *)entity;
 -(id)readEntityWithId:(NSString *)entityId andType:(NSString *)entityType;
+-(NSString *)entityFilePathWithId:(NSString *)entityId andType:(NSString *)entityType;
 @end
 
 @implementation NUXEntityCacheTests {
@@ -39,6 +40,21 @@
     
     XCTAssertNotNil(read);
     XCTAssertEqualObjects(doc.uid, read.uid);
+    
+    NSString *path = [cache entityFilePathWithId:doc.entityId andType:doc.entityType];
+    XCTAssertTrue([path rangeOfString:doc.entityType].location != NSNotFound);
+}
+
+-(void)testPublicMethod {
+    NUXDocument *doc = [self dummyDocument];
+    XCTAssertTrue([cache saveEntity:doc]);
+    
+    NUXDocument *read = [cache entityWithId:doc.uid class:[NUXDocument class]];
+    XCTAssertEqualObjects(read.uid, doc.uid);
+    
+    XCTAssertTrue([cache removeEntityWithId:doc.uid class:[NUXDocument class]]);
+    XCTAssertFalse([cache removeEntityWithId:doc.uid class:[NUXDocument class]]);
+    XCTAssertNil([cache entityWithId:doc.uid class:[NUXDocument class]]);
 }
 
 @end
