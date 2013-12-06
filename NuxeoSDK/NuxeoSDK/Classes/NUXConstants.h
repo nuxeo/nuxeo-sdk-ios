@@ -15,6 +15,7 @@
 typedef void (^NUXBasicBlock)(void);
 typedef void (^NUXResponseBlock)(NUXRequest *request);
 typedef NSArray * (^NUXHierarchyBlock)(NUXEntity *entity, NSUInteger depth);
+typedef BOOL (^NUXInvalidationBlock)(NUXEntity *entity);
 #endif
 
 #ifdef DEBUG

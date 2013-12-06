@@ -11,7 +11,7 @@
 @interface NUXHierarchy : NSObject
 
 @property(strong) NUXHierarchyBlock nodeBlock;
-@property(strong) NUXBasicBlock nodeInvalidationBlock;
+@property(strong) NUXInvalidationBlock nodeInvalidationBlock;
 @property(strong) NUXBasicBlock completionBlock;
 @property NUXRequest *request;
 
@@ -25,6 +25,7 @@
 -(NSArray *)childrenOfRoot;
 
 -(void)load;
+-(void)resetCache;
 -(bool)isLoaded;
 -(void)waitUntilLoadingIsDone;
 

@@ -65,6 +65,10 @@
     [self setup];
 }
 
+-(void)resetCache {
+    [[NUXHierarchyDB shared] deleteNodesFromHierarchy:_name];
+}
+
 -(NSArray *)childrenOfDocument:(NUXDocument *)document
 {
     NSArray *entries = [[NUXHierarchyDB shared] selectNodesFromParent:document.uid hierarchy:_name];

@@ -41,6 +41,10 @@
     [self executeQuery:[NSString stringWithFormat:@"create table if not exists '%@' (%@);", tableName, fields]];
 }
 
+-(void)dropTableIfExists:(NSString *)tableName {
+    [self executeQuery:[NSString stringWithFormat:@"drop table if exists '%@';", tableName]];
+}
+
 -(BOOL)executeQuery:(NSString *)query {
     sqlite3 *db;
     NSString *dbPath = [self databasePath];

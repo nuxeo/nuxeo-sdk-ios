@@ -14,6 +14,8 @@
 
 -(id)initWithName:(NSString *)name;
 
+-(void)dropTableIfExists:(NSString *)tableName;
+
 -(void)createTableIfNotExists:(NSString *)tableName withField:(NSString *)fields;
 
 -(void)deleteDatabase;

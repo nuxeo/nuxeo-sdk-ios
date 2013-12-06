@@ -37,6 +37,15 @@
     [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'content' TEXT, 'order' INTEGER"];
 }
 
+-(void)dropTable {
+    [_db dropTableIfExists:kHierarchyTable];
+}
+
+-(void)deleteNodesFromHierarchy:(NSString *)hierarchyName {
+    NSString *query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kHierarchyTable, hierarchyName];
+    [_db executeQuery:query];
+}
+
 -(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
     NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"content", @"order"]];
     NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kHierarchyTable, columns, @"%@"];

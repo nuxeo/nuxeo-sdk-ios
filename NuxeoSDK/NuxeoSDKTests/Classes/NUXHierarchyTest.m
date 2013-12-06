@@ -49,6 +49,9 @@
         return [doc.path hasSuffix:@"workspaces"];
     }];
     XCTAssertNotNil(workspaces);
+    
+    [hierarchy resetCache];
+    XCTAssertTrue([hierarchy childrenOfDocument:defaultDomain].count == 0, @"Current childs: %@", @([hierarchy childrenOfDocument:defaultDomain].count));
 }
 
 -(void)testOnlyOneDocHierarchy {
