@@ -17,7 +17,6 @@
 @implementation NUXHierarchy {
     bool _isLoaded;
     bool _isFailure;
-    NSMutableDictionary *_contents;
     NSString *_name;
 }
 
@@ -44,14 +43,12 @@
     if (self) {
         _isLoaded = NO;
         _isFailure = NO;
-        _contents = [NSMutableDictionary new];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    _contents = nil;
     _completionBlock= nil;
     _nodeInvalidationBlock = nil;
     _nodeBlock = nil;
@@ -79,19 +76,11 @@
 }
 
 -(NSArray *)contentOfDocument:(NUXDocument *)document {
-    NSArray *entries = [_contents valueForKey:document.uid];
-    if (entries == nil) {
-        return nil;
-    }
-    return [NSArray arrayWithArray:entries];
+    return [[NUXHierarchyDB shared] selectContentFromNode:document.uid hierarchy:_name];
 }
 
 -(NSArray *)contentOfAllDocuments {
-    NSMutableArray *content = [NSMutableArray new];
-    [_contents enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [content addObject:obj];
-    }];
-    return content;
+    return [[NUXHierarchyDB shared] selectAllContentFromHierarchy:_name];
 }
 
 -(NSArray *)childrenOfRoot
@@ -195,13 +184,12 @@
         if (_nodeBlock) {
             NSArray *leaf = _nodeBlock(doc, parents.count);
             if ([leaf count] > 0) {
-                [NUXHierarchy addNodeDocuments:leaf toHierarchy:_contents key:doc.uid];
+                [[NUXHierarchyDB shared] insertcontent:leaf fromHierarchy:_name forNode:doc.uid];
             }
         }
         
         [parents addObject:doc];
     }];
-    NUXDebug(@"%@", _contents);
 }
 
 +(void)addNodeDocument:(NUXDocument *)child toHierarchy:(NSDictionary *)hierarchy key:(NSString *)key {

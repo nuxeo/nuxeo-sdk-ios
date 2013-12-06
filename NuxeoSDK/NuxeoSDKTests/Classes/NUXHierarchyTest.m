@@ -103,8 +103,8 @@
         [leaf addObject:doc];
         
         NSMutableArray *children = [NSMutableArray new];
-        [children addObject:[NUXDocument new]];
-        [children addObject:[NUXDocument new]];
+        [children addObject:[self dummyDocument]];
+        [children addObject:[self dummyDocument]];
         
         return children;
     };
