@@ -7,6 +7,7 @@
 //
 
 #import "NUXAbstractTestCase.h"
+#import "NUXSQLiteDatabase.h"
 
 @implementation NUXAbstractTestCase
 
@@ -39,6 +40,8 @@
     NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
     session = [[NUXSession alloc] initWithServerURL:url username:@"Administrator" password:@"Administrator"];
     [session addDefaultSchemas:@[@"dublincore"]];
+    
+    [[NUXSQLiteDatabase shared] deleteDatabase];
 }
 
 - (void)tearDown

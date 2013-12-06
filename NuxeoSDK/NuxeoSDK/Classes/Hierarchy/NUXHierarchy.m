@@ -4,14 +4,21 @@
 //
 
 #import "NUXHierarchy.h"
+#import "NUXHierarchyDB.h"
 
 #define kRootKey @"0"
+
+@interface NUXHierarchy (private)
+
+-(void)setName:(NSString *)name;
+
+@end
 
 @implementation NUXHierarchy {
     bool _isLoaded;
     bool _isFailure;
-    NSMutableDictionary *_documents;
     NSMutableDictionary *_contents;
+    NSString *_name;
 }
 
 +(NUXHierarchy *)hierarchyWithName:(NSString *)name {
@@ -23,7 +30,10 @@
     });
     
     if (![_hierarchies objectForKey:name]) {
-        [_hierarchies setObject:[NUXHierarchy new] forKey:name];
+        NUXHierarchy *hierarchy = [NUXHierarchy new];
+        [hierarchy setName:name];
+        
+        [_hierarchies setObject:hierarchy forKey:name];
     }
     
     return [_hierarchies objectForKey:name];
@@ -34,7 +44,6 @@
     if (self) {
         _isLoaded = NO;
         _isFailure = NO;
-        _documents = [NSMutableDictionary new];
         _contents = [NSMutableDictionary new];
     }
     return self;
@@ -42,11 +51,14 @@
 
 - (void)dealloc
 {
-    _documents = nil;
     _contents = nil;
     _completionBlock= nil;
     _nodeInvalidationBlock = nil;
     _nodeBlock = nil;
+}
+
+-(void)setName:(NSString *)name {
+    _name = name;
 }
 
 -(void)load {
@@ -55,7 +67,7 @@
 
 -(NSArray *)childrenOfDocument:(NUXDocument *)document
 {
-    NSArray *entries = [_documents valueForKey:document.uid];
+    NSArray *entries = [[NUXHierarchyDB shared] selectNodesFromParent:document.uid hierarchy:_name];
     if (entries == nil) {
         return nil;
     }
@@ -80,7 +92,7 @@
 
 -(NSArray *)childrenOfRoot
 {
-    NSArray *entries = [_documents valueForKey:kRootKey];
+    NSArray *entries = [[NUXHierarchyDB shared] selectNodesFromParent:kRootKey hierarchy:_name];
     if (entries == nil) {
         [NSException raise:@"Not initialized" format:@"Hierarchy not initialized"];
     }
@@ -172,8 +184,9 @@
             NUXDebug(@"  parent: %@", parent);
         } while (!(parent == nil || [doc.path hasPrefix:[NSString stringWithFormat:@"%@/", parent.path]]));
 
-        NSString *hKey = [parents count] == 0 ? kRootKey : parent.uid;
-        [NUXHierarchy addNodeDocument:doc toHierarchy:_documents key:hKey];
+        NSString *hKey = parent == nil ? kRootKey : parent.uid;
+        [[NUXHierarchyDB shared] insertNodes:@[doc] fromHierarchy:_name withParent:hKey];
+        //[NUXHierarchy addNodeDocument:doc toHierarchy:_documents key:hKey];
         
         if (_nodeBlock) {
             NSArray *leaf = _nodeBlock(doc, parents.count);
@@ -184,7 +197,6 @@
         
         [parents addObject:doc];
     }];
-    NUXDebug(@"%@", _documents);
     NUXDebug(@"%@", _contents);
 }
 

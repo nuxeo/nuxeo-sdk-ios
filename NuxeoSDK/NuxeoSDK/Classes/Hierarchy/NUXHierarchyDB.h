@@ -11,6 +11,7 @@
 @interface NUXHierarchyDB : NSObject
 +(NUXHierarchyDB *)shared;
 
+-(void)createTableIfNeeded;
 -(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId;
 -(NSArray *)selectNodesFromParent:(NSString *)parentId hierarchy:(NSString *)hierarchyName;
 

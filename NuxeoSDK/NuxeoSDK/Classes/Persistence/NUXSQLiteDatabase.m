@@ -22,6 +22,7 @@
     NSFileManager *manager = [NSFileManager defaultManager];
     if ([manager isWritableFileAtPath:[self databasePath]]) {
         [manager removeItemAtPath:[self databasePath] error:nil];
+        NUXDebug(@"Database dropped.");
     }
 }
 

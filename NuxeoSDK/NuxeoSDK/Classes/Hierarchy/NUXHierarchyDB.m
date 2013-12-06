@@ -10,6 +10,7 @@
 #import "NUXSQLiteDatabase.h"
 #import "NUXDocument.h"
 #import "NUXHierarchy.h"
+#import "NUXEntityCache.h"
 
 #define kHierarchyTable @"hierarchyNode"
 
@@ -32,14 +33,18 @@
 #pragma mark
 #pragma internal
 
--(void)createTableIdNeeded {
+-(void)createTableIfNeeded {
     [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'content' TEXT, 'order' INTEGER"];
 }
 
 -(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
     NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"content", @"order"]];
     NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kHierarchyTable, columns, @"%@"];
+    
     [docs enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
+        // Save entity in cache
+        [[NUXEntityCache instance] saveEntity:doc];
+        
         NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, doc.uid, parentId, @"", @(idx)]];
         if (![_db executeQuery:[NSString stringWithFormat:bQuery, values]]) {
             // Handle error
@@ -51,10 +56,9 @@
 -(NSArray *)selectNodesFromParent:(NSString *)parentId hierarchy:(NSString *)hierarchyName {
     NSString *query = [NSString stringWithFormat:@"select docId, content from %@ where parentId = '%@' and hierarchyName = '%@' order by 'order'", kHierarchyTable, parentId, hierarchyName];
     NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
-        // Should fetch Document JSON from storage.
-        NUXDocument *doc = [NUXDocument new];
-        doc.uid = [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
-        return doc;
+        NSString *docId = [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
+        // Entities must be in cache.
+        return [[NUXEntityCache instance] entityWithId:docId class:[NUXDocument class]];;
     }];
     return ret;
 }
@@ -85,7 +89,7 @@
     
     dispatch_once(&pred, ^{
         _shared = [NUXHierarchyDB new];
-        [_shared createTableIdNeeded];
+        [_shared createTableIfNeeded];
     });
     
     return _shared;

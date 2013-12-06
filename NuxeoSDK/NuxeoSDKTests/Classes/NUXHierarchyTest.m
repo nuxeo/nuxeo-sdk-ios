@@ -8,15 +8,20 @@
 
 #import "NUXAbstractTestCase.h"
 #import "NUXHierarchy.h"
+#import "NUXHierarchyDB.h"
 
 @interface NUXHierarchyTest : NUXAbstractTestCase
 
 @end
 
-@implementation NUXHierarchyTest
+@implementation NUXHierarchyTest {
+    NUXHierarchy *hierarchy;
+}
 
 - (void)setUp {
     [super setUp];
+    hierarchy = [NUXHierarchy hierarchyWithName:[NSString stringWithFormat:@"hierarchy%d", arc4random()]];
+    [[NUXHierarchyDB shared] createTableIfNeeded];
 }
 
 - (void)tearDown {
@@ -25,7 +30,6 @@
 
 - (void)testDocumentSorter {
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
-    NUXHierarchy *hierarchy = [NUXHierarchy new];
     hierarchy.request = request;
     [hierarchy load];
     [hierarchy waitUntilLoadingIsDone];
@@ -49,7 +53,6 @@
 
 -(void)testOnlyOneDocHierarchy {
     NUXRequest *request = [session requestQuery:@"select * from Domain"];
-    NUXHierarchy *hierarchy = [NUXHierarchy new];
     hierarchy.request = request;
     [hierarchy load];
     [hierarchy waitUntilLoadingIsDone];
@@ -62,14 +65,13 @@
         return [doc.path isEqualToString:@"/default-domain"];
     }];
     
-    XCTAssertNil([hierarchy childrenOfDocument:domain]);
+    XCTAssertTrue([hierarchy childrenOfDocument:domain].count == 0);
 }
 
 -(void)testHierarchyWithMoreResultsThanPageSize {
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
     [request addParameterValue:@"3" forKey:@"pageSize"];
     
-    NUXHierarchy *hierarchy = [NUXHierarchy new];
     hierarchy.request = request;
     [hierarchy load];
     [hierarchy waitUntilLoadingIsDone];
@@ -83,7 +85,6 @@
     NSMutableArray *leaf = [NSMutableArray new];
     BOOL __block workspacesChecked = NO;
     BOOL __block defaultDomainChecked = NO;
-    NUXHierarchy *hierarchy = [NUXHierarchy new];
     hierarchy.request = request;
     hierarchy.nodeBlock = ^NSArray *(NUXEntity *entity, NSUInteger depth) {
         NUXDocument *doc = (NUXDocument *)entity;
