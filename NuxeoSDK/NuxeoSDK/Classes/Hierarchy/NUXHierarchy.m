@@ -59,7 +59,9 @@
 }
 
 -(void)load {
-    [self setup];
+    if ([[self childrenOfRoot] count] <= 0) {
+        [self setup];
+    }
 }
 
 -(void)resetCache {
