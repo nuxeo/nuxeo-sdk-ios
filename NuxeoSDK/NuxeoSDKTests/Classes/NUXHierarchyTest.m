@@ -30,8 +30,7 @@
 
 - (void)testDocumentSorter {
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
-    hierarchy.request = request;
-    [hierarchy load];
+    [hierarchy loadWithRequest:request];
     [hierarchy waitUntilLoadingIsDone];
     
     XCTAssertTrue(hierarchy.isLoaded);
@@ -56,8 +55,7 @@
 
 -(void)testOnlyOneDocHierarchy {
     NUXRequest *request = [session requestQuery:@"select * from Domain"];
-    hierarchy.request = request;
-    [hierarchy load];
+    [hierarchy loadWithRequest:request];
     [hierarchy waitUntilLoadingIsDone];
 
     XCTAssertTrue(hierarchy.isLoaded);
@@ -75,8 +73,7 @@
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
     [request addParameterValue:@"3" forKey:@"pageSize"];
     
-    hierarchy.request = request;
-    [hierarchy load];
+    [hierarchy loadWithRequest:request];
     [hierarchy waitUntilLoadingIsDone];
     
     XCTAssertTrue(hierarchy.isLoaded);
@@ -88,7 +85,6 @@
     NSMutableArray *leaf = [NSMutableArray new];
     BOOL __block workspacesChecked = NO;
     BOOL __block defaultDomainChecked = NO;
-    hierarchy.request = request;
     hierarchy.nodeBlock = ^NSArray *(NUXEntity *entity, NSUInteger depth) {
         NUXDocument *doc = (NUXDocument *)entity;
         if ([doc.path isEqualToString:@"/default-domain"]) {
@@ -108,7 +104,7 @@
         
         return children;
     };
-    [hierarchy load];
+    [hierarchy loadWithRequest:request];
     [hierarchy waitUntilLoadingIsDone];
     
     XCTAssertTrue([leaf count] > 0);

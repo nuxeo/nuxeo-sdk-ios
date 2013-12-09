@@ -10,10 +10,10 @@
 
 @interface NUXHierarchy : NSObject
 
-@property(strong) NUXHierarchyBlock nodeBlock;
-@property(strong) NUXInvalidationBlock nodeInvalidationBlock;
-@property(strong) NUXBasicBlock completionBlock;
-@property NUXRequest *request;
+@property (strong) NUXHierarchyBlock nodeBlock;
+@property (strong) NUXInvalidationBlock nodeInvalidationBlock;
+@property (strong) NUXBasicBlock completionBlock;
+@property (readonly) NUXRequest *request;
 
 // Returns an array of NUXEntity corresponding to the document children.
 -(NSArray *)childrenOfDocument:(NUXDocument *)document;
@@ -24,7 +24,7 @@
 // Returns a lightweight NUXDocuments object form the root entry point.
 -(NSArray *)childrenOfRoot;
 
--(void)load;
+-(void)loadWithRequest:(NUXRequest *)request;
 -(void)resetCache;
 -(bool)isLoaded;
 -(void)waitUntilLoadingIsDone;

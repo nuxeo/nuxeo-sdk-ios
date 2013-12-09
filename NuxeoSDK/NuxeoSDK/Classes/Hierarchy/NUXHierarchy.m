@@ -58,7 +58,8 @@
     _name = name;
 }
 
--(void)load {
+-(void)loadWithRequest:(NUXRequest *)request {
+    _request = request;
     if ([[self childrenOfRoot] count] <= 0) {
         [self setup];
     }
