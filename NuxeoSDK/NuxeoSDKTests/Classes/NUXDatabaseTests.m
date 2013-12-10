@@ -57,13 +57,13 @@
     NUXDocument *childParent = [root objectAtIndex:0];
     NSArray *child = @[[self dummyDocument], [self dummyDocument]];
     
-    [hDb insertNodes:root fromHierarchy:hName withParent:@"/"];
+    [hDb insertNodes:root fromHierarchy:hName withParent:@"/" andDepth:0];
     NSArray *docs = [hDb selectNodesFromParent:@"/" hierarchy:hName];
     XCTAssertTrue(3 == docs.count);
     
     
     
-    [hDb insertNodes:child fromHierarchy:hName withParent:childParent.uid];
+    [hDb insertNodes:child fromHierarchy:hName withParent:childParent.uid andDepth:0];
     docs = [hDb selectNodesFromParent:childParent.uid hierarchy:hName];
     XCTAssertTrue(2 == docs.count);
 }

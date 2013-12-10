@@ -35,7 +35,7 @@
 #pragma internal
 
 -(void)createTableIfNeeded {
-    [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'order' INTEGER"];
+    [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'depth' INTEGER, 'order' INTEGER"];
     [_db createTableIfNotExists:kContentTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'order' INTEGER"];
 }
 
@@ -47,12 +47,17 @@
 -(void)deleteNodesFromHierarchy:(NSString *)hierarchyName {
     NSString *query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kHierarchyTable, hierarchyName];
     [_db executeQuery:query];
-    
+
     query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kContentTable, hierarchyName];
     [_db executeQuery:query];
 }
 
--(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
+-(void)deleteContentForDocument:(NUXDocument *)document fromHierarchy:(NSString *)hierarchyName {
+    NSString *query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\" and docId = \"%@\"", kContentTable, hierarchyName, document.uid];
+    [_db executeQuery:query];
+}
+
+-(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId andDepth:(NSUInteger *)depth {
     return [self insertInTable:kHierarchyTable nodes:docs fromHierarchy:hierarchyName withParent:parentId];
 }
 

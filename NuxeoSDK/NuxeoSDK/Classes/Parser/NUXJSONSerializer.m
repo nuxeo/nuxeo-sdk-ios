@@ -47,7 +47,7 @@
                                         property_getName(properties[propertyNumber])];
             
             NSString * typeOfProperty = [self getPropertyType:properties[propertyNumber]];
-            NUXDebug(@"Property : %@ , Type : %@", nameOfProperty, typeOfProperty);
+            //NUXDebug(@"Property : %@ , Type : %@", nameOfProperty, typeOfProperty);
             
             // add the property type to the dictionary
             [result
@@ -145,7 +145,7 @@
             value = values;
         }
 
-        NUXDebug(@"Value '%@' for field %@", value, name);
+        //NUXDebug(@"Value '%@' for field %@", value, name);
         [entity setValue:value forKeyPath:name];
     }];
     return entity;

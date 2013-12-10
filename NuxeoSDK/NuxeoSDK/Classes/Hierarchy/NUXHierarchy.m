@@ -79,6 +79,9 @@
 }
 
 -(NSArray *)contentOfDocument:(NUXDocument *)document {
+    if (_nodeBlock && _nodeInvalidationBlock && _nodeInvalidationBlock(document)) {
+        _nodeBlock(document, -1);
+    }
     return [[NUXHierarchyDB shared] selectContentFromNode:document.uid hierarchy:_name];
 }
 
@@ -125,7 +128,7 @@
             [request addParameterValue:[NSString stringWithFormat:@"%@", @(res.currentPageIndex + 1)] forKey:@"currentPageIndex"];
             [request start];
         } else {
-            [self startBuildingHierarchyWithDocuments:docs];
+            [self performSelectorInBackground:@selector(startBuildingHierarchyWithDocuments:) withObject:docs];
         }
     };
     
@@ -156,7 +159,8 @@
     }];
     
     [self buildHierarchy:documents];
-    [self setupCompleted];
+    [self performSelectorOnMainThread:@selector(setupCompleted) withObject:nil waitUntilDone:[NSThread isMainThread]];
+//    [self setupCompleted];
 }
 
 -(void)buildHierarchy:(NSArray *)pDocuments {
@@ -181,18 +185,22 @@
         } while (!(parent == nil || [doc.path hasPrefix:[NSString stringWithFormat:@"%@/", parent.path]]));
 
         NSString *hKey = parent == nil ? kRootKey : parent.uid;
-        [[NUXHierarchyDB shared] insertNodes:@[doc] fromHierarchy:_name withParent:hKey];
+        [[NUXHierarchyDB shared] insertNodes:@[doc] fromHierarchy:_name withParent:hKey andDepth:parents.count];
         //[NUXHierarchy addNodeDocument:doc toHierarchy:_documents key:hKey];
         
-        if (_nodeBlock) {
-            NSArray *leaf = _nodeBlock(doc, parents.count);
-            if ([leaf count] > 0) {
-                [[NUXHierarchyDB shared] insertcontent:leaf fromHierarchy:_name forNode:doc.uid];
-            }
-        }
+        [self updateLeafContentForDocument:doc andDepth:parents.count];
         
         [parents addObject:doc];
     }];
+}
+
+-(void)updateLeafContentForDocument:(NUXDocument *)document andDepth:(NSUInteger)depth {
+    if (_nodeBlock) {
+        NSArray *leaf = _nodeBlock(document, depth);
+        if ([leaf count] > 0) {
+            [[NUXHierarchyDB shared] insertcontent:leaf fromHierarchy:_name forNode:document.uid];
+        }
+    }
 }
 
 +(void)addNodeDocument:(NUXDocument *)child toHierarchy:(NSDictionary *)hierarchy key:(NSString *)key {
