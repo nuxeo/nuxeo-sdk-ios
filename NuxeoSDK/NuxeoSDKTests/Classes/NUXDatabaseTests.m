@@ -52,18 +52,19 @@
 {
     NUXHierarchyDB *hDb = [NUXHierarchyDB shared];
     NSString *hName = @"test";
+    NUXDocument *parent = [self dummyDocument];
     NSArray *root = @[[self dummyDocument], [self dummyDocument], [self dummyDocument]];
     
     NUXDocument *childParent = [root objectAtIndex:0];
     NSArray *child = @[[self dummyDocument], [self dummyDocument]];
     
-    [hDb insertNodes:root fromHierarchy:hName withParent:@"/" andDepth:0];
-    NSArray *docs = [hDb selectNodesFromParent:@"/" hierarchy:hName];
+    [hDb insertNodes:root fromHierarchy:hName withParent:parent andDepth:0];
+    NSArray *docs = [hDb selectNodesFromParent:parent.path hierarchy:hName];
     XCTAssertTrue(3 == docs.count);
     
     
     
-    [hDb insertNodes:child fromHierarchy:hName withParent:childParent.uid andDepth:0];
+    [hDb insertNodes:child fromHierarchy:hName withParent:childParent andDepth:0];
     docs = [hDb selectNodesFromParent:childParent.uid hierarchy:hName];
     XCTAssertTrue(2 == docs.count);
 }

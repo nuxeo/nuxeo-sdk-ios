@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "NUXDocument.h"
 
+#define kRootKey @"0"
+
 @interface NUXHierarchyDB : NSObject
 +(NUXHierarchyDB *)shared;
 
@@ -17,12 +19,12 @@
 -(void)deleteNodesFromHierarchy:(NSString *)hierarchyName;
 -(void)deleteContentForDocument:(NUXDocument *)document fromHierarchy:(NSString *)hierarchyName;
 
--(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId andDepth:(NSInteger)depth;
+-(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NUXDocument *)parent andDepth:(NSInteger)depth;
 -(void)insertcontent:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName forNode:(NSString *)nodeId;
 
--(NSArray *)selectNodesFromParent:(NSString *)parentId hierarchy:(NSString *)hierarchyName;
+-(NSArray *)selectNodesFromParent:(NSString *)parentRef hierarchy:(NSString *)hierarchyName;
 -(NSArray *)selectContentFromNode:(NSString *)nodeId hierarchy:(NSString *)hierarchyName;
 -(NSArray *)selectAllContentFromHierarchy:(NSString *)hierarchyName;
--(NSInteger)selectDepthForDocument:(NUXDocument *)document hierarchy:(NSString *)hierarchyName;
+-(NSInteger)selectDepthForDocument:(NSString *)documentId hierarchy:(NSString *)hierarchyName;
 
 @end

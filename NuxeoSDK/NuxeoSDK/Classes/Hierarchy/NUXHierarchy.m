@@ -6,8 +6,6 @@
 #import "NUXHierarchy.h"
 #import "NUXHierarchyDB.h"
 
-#define kRootKey @"0"
-
 @interface NUXHierarchy (private)
 
 -(void)setName:(NSString *)name;
@@ -80,7 +78,7 @@
 
 -(NSArray *)contentOfDocument:(NUXDocument *)document {
     if ((_nodeInvalidationBlock && _nodeInvalidationBlock(document)) || [NUXSession isNetworkReachable]) {
-        NSInteger depth = [[NUXHierarchyDB shared] selectDepthForDocument:document hierarchy:_name];
+        NSInteger depth = [[NUXHierarchyDB shared] selectDepthForDocument:document.uid hierarchy:_name];
         return [self updateLeafContentForDocument:document andDepth:depth];
     }
     return [[NUXHierarchyDB shared] selectContentFromNode:document.uid hierarchy:_name];
@@ -185,8 +183,8 @@
             NUXDebug(@"  parent: %@", parent);
         } while (!(parent == nil || [doc.path hasPrefix:[NSString stringWithFormat:@"%@/", parent.path]]));
 
-        NSString *hKey = parent == nil ? kRootKey : parent.uid;
-        [[NUXHierarchyDB shared] insertNodes:@[doc] fromHierarchy:_name withParent:hKey andDepth:parents.count];
+//        NSString *hKey = parent == nil ? kRootKey : parent.uid;
+        [[NUXHierarchyDB shared] insertNodes:@[doc] fromHierarchy:_name withParent:parent andDepth:parents.count];
         //[NUXHierarchy addNodeDocument:doc toHierarchy:_documents key:hKey];
         
         [self updateLeafContentForDocument:doc andDepth:parents.count];

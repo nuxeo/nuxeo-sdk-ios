@@ -34,7 +34,7 @@
 #pragma internal
 
 -(void)createTableIfNeeded {
-    [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'depth' INTEGER, 'order' INTEGER"];
+    [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'parentPath' TEXT, 'depth' INTEGER, 'order' INTEGER"];
     [_db createTableIfNotExists:kContentTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'order' INTEGER"];
 }
 
@@ -56,16 +56,16 @@
     [_db executeQuery:query];
 }
 
--(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId andDepth:(NSInteger)depth {
-    return [self insertInHierarchyNodes:docs fromHierarchy:hierarchyName withParent:parentId andDepth:depth];
+-(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NUXDocument *)parent andDepth:(NSInteger)depth {
+    return [self insertInHierarchyNodes:docs fromHierarchy:hierarchyName withParent:parent andDepth:depth];
 }
 
 -(void)insertcontent:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName forNode:(NSString *)nodeId {
-    return [self insertInConentNodes:docs fromHierarchy:hierarchyName withParent:nodeId];
+    return [self insertInContentNodes:docs fromHierarchy:hierarchyName withParent:nodeId];
 }
 
--(NSArray *)selectNodesFromParent:(NSString *)parentId hierarchy:(NSString *)hierarchyName {
-    return [self selectFromTable:kHierarchyTable parent:parentId hierarchy:hierarchyName];
+-(NSArray *)selectNodesFromParent:(NSString *)parentRef hierarchy:(NSString *)hierarchyName {
+    return [self selectFromTable:kHierarchyTable parent:parentRef hierarchy:hierarchyName];
 }
 
 -(NSArray *)selectContentFromNode:(NSString *)nodeId hierarchy:(NSString *)hierarchyName {
@@ -76,9 +76,22 @@
     return [self selectFromTable:kContentTable parent:nil hierarchy:hierarchyName];
 }
 
+
+-(NSInteger)selectDepthForDocument:(NSString *)documentId hierarchy:(NSString *)hierarchyName {
+    NSString *query = [NSString stringWithFormat:@"Select depth from %@ where docId = \"%@\" and hierarchyName = \"%@\"", kHierarchyTable, documentId, hierarchyName];
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+        return @(sqlite3_column_int(stmt, 0));
+    }];
+    if ([ret count] > 0) {
+        return [[ret objectAtIndex:0] integerValue];
+    } else {
+        return -1;
+    }
+}
+
 #pragma mark -
 
--(void)insertInConentNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
+-(void)insertInContentNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
     NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"order"]];
     NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kContentTable, columns, @"%@"];
     
@@ -94,15 +107,18 @@
     }];
 }
 
--(void)insertInHierarchyNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId andDepth:(NSInteger)depth {
-    NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"order", @"depth"]];
+-(void)insertInHierarchyNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NUXDocument *)parent andDepth:(NSInteger)depth {
+    NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"parentPath", @"order", @"depth"]];
     NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kHierarchyTable, columns, @"%@"];
     
     [docs enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
         // Save entity in cache
         [[NUXEntityCache instance] saveEntity:doc];
         
-        NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, doc.uid, parentId, @(idx), @(depth)]];
+        NSString *parentUid = parent == nil ? kRootKey : parent.uid;
+        NSString *parentPath = parent == nil ? @"" : parent.path;
+        
+        NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, doc.uid, parentUid, parentPath, @(idx), @(depth)]];
         if (![_db executeQuery:[NSString stringWithFormat:bQuery, values]]) {
             // Handle error
             NUXDebug(@"%@", [_db sqlInformatiomFromCode:[_db lastReturnCode]]);
@@ -115,7 +131,8 @@
     if (!parentId) {
         query = [NSString stringWithFormat:@"select docId from %@ where hierarchyName = '%@' order by 'order'", table, hierarchyName];
     } else {
-        query = [NSString stringWithFormat:@"select docId from %@ where parentId = '%@' and hierarchyName = '%@' order by 'order'", table, parentId, hierarchyName];
+        NSString *field = [self fieldForDocumentRef:parentId];
+        query = [NSString stringWithFormat:@"select docId from %@ where %@ = '%@' and hierarchyName = '%@' order by 'order'", table, field, parentId, hierarchyName];
     }
     
     NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
@@ -126,20 +143,12 @@
     return ret;
 }
 
--(NSInteger)selectDepthForDocument:(NUXDocument *)document hierarchy:(NSString *)hierarchyName {
-    NSString *query = [NSString stringWithFormat:@"Select depth from %@ where docId = \"%@\" and hierarchyName = \"%@\"", kHierarchyTable, document.uid, hierarchyName];
-    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
-        return @(sqlite3_column_int(stmt, 0));
-    }];
-    if ([ret count] > 0) {
-        return [[ret objectAtIndex:0] integerValue];
-    } else {
-        return -1;
-    }
-}
-
 #pragma mark
 #pragma shared accessor
+
+-(NSString *)fieldForDocumentRef:(NSString *)docRef {
+    return [docRef characterAtIndex:0] == '/' ? @"parentPath" : @"parentId";
+}
 
 +(NSString *)sqlitize:(NSArray *)values {
     NSMutableString *ret = [NSMutableString new];
