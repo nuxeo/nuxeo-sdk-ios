@@ -9,6 +9,8 @@
 #import "NUXAbstractTestCase.h"
 #import "NUXSQLiteDatabase.h"
 
+#define NUX_XCTEST 1
+
 @implementation NUXAbstractTestCase
 
 -(id)init

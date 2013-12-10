@@ -20,7 +20,6 @@
 @property NSString *password;
 @property NSString *repository;
 
-
 // Convenience init function to create a NUXSession object with url, username and password.
 // url must contains application name like: http://localhost:8080/nuxeo
 - (id)initWithServerURL:(NSURL *)url username:(NSString *)username password:(NSString *)password;
@@ -43,5 +42,6 @@
 - (void)startRequestSynchronous:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure;
 
 + (NUXSession *)sharedSession;
++(BOOL)isNetworkReachable;
 
 @end

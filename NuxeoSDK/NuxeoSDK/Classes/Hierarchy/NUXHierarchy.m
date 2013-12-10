@@ -79,8 +79,9 @@
 }
 
 -(NSArray *)contentOfDocument:(NUXDocument *)document {
-    if (_nodeBlock && _nodeInvalidationBlock && _nodeInvalidationBlock(document)) {
-        _nodeBlock(document, -1);
+    if ((_nodeInvalidationBlock && _nodeInvalidationBlock(document)) || [NUXSession isNetworkReachable]) {
+        NSInteger depth = [[NUXHierarchyDB shared] selectDepthForDocument:document hierarchy:_name];
+        return [self updateLeafContentForDocument:document andDepth:depth];
     }
     return [[NUXHierarchyDB shared] selectContentFromNode:document.uid hierarchy:_name];
 }
@@ -194,13 +195,16 @@
     }];
 }
 
--(void)updateLeafContentForDocument:(NUXDocument *)document andDepth:(NSUInteger)depth {
+-(NSArray *)updateLeafContentForDocument:(NUXDocument *)document andDepth:(NSUInteger)depth {
+    NSArray *content;
     if (_nodeBlock) {
-        NSArray *leaf = _nodeBlock(document, depth);
-        if ([leaf count] > 0) {
-            [[NUXHierarchyDB shared] insertcontent:leaf fromHierarchy:_name forNode:document.uid];
+        [[NUXHierarchyDB shared] deleteContentForDocument:document fromHierarchy:_name];
+        content = _nodeBlock(document, depth);
+        if ([content count] > 0) {
+            [[NUXHierarchyDB shared] insertcontent:content fromHierarchy:_name forNode:document.uid];
         }
     }
+    return content;
 }
 
 +(void)addNodeDocument:(NUXDocument *)child toHierarchy:(NSDictionary *)hierarchy key:(NSString *)key {

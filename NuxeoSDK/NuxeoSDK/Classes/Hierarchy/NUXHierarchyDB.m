@@ -8,7 +8,6 @@
 
 #import "NUXHierarchyDB.h"
 #import "NUXSQLiteDatabase.h"
-#import "NUXDocument.h"
 #import "NUXHierarchy.h"
 #import "NUXEntityCache.h"
 
@@ -53,16 +52,16 @@
 }
 
 -(void)deleteContentForDocument:(NUXDocument *)document fromHierarchy:(NSString *)hierarchyName {
-    NSString *query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\" and docId = \"%@\"", kContentTable, hierarchyName, document.uid];
+    NSString *query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\" and parentId = \"%@\"", kContentTable, hierarchyName, document.uid];
     [_db executeQuery:query];
 }
 
--(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId andDepth:(NSUInteger *)depth {
-    return [self insertInTable:kHierarchyTable nodes:docs fromHierarchy:hierarchyName withParent:parentId];
+-(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId andDepth:(NSInteger)depth {
+    return [self insertInHierarchyNodes:docs fromHierarchy:hierarchyName withParent:parentId andDepth:depth];
 }
 
 -(void)insertcontent:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName forNode:(NSString *)nodeId {
-    return [self insertInTable:kContentTable nodes:docs fromHierarchy:hierarchyName withParent:nodeId];
+    return [self insertInConentNodes:docs fromHierarchy:hierarchyName withParent:nodeId];
 }
 
 -(NSArray *)selectNodesFromParent:(NSString *)parentId hierarchy:(NSString *)hierarchyName {
@@ -79,15 +78,31 @@
 
 #pragma mark -
 
--(void)insertInTable:(NSString *)tableName nodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
+-(void)insertInConentNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
     NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"order"]];
-    NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", tableName, columns, @"%@"];
+    NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kContentTable, columns, @"%@"];
     
     [docs enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
         // Save entity in cache
         [[NUXEntityCache instance] saveEntity:doc];
         
         NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, doc.uid, parentId, @(idx)]];
+        if (![_db executeQuery:[NSString stringWithFormat:bQuery, values]]) {
+            // Handle error
+            NUXDebug(@"%@", [_db sqlInformatiomFromCode:[_db lastReturnCode]]);
+        }
+    }];
+}
+
+-(void)insertInHierarchyNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId andDepth:(NSInteger)depth {
+    NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"order", @"depth"]];
+    NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kHierarchyTable, columns, @"%@"];
+    
+    [docs enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
+        // Save entity in cache
+        [[NUXEntityCache instance] saveEntity:doc];
+        
+        NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, doc.uid, parentId, @(idx), @(depth)]];
         if (![_db executeQuery:[NSString stringWithFormat:bQuery, values]]) {
             // Handle error
             NUXDebug(@"%@", [_db sqlInformatiomFromCode:[_db lastReturnCode]]);
@@ -109,6 +124,18 @@
         return [[NUXEntityCache instance] entityWithId:docId class:[NUXDocument class]];;
     }];
     return ret;
+}
+
+-(NSInteger)selectDepthForDocument:(NUXDocument *)document hierarchy:(NSString *)hierarchyName {
+    NSString *query = [NSString stringWithFormat:@"Select depth from %@ where docId = \"%@\" and hierarchyName = \"%@\"", kHierarchyTable, document.uid, hierarchyName];
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+        return @(sqlite3_column_int(stmt, 0));
+    }];
+    if ([ret count] > 0) {
+        return [[ret objectAtIndex:0] integerValue];
+    } else {
+        return -1;
+    }
 }
 
 #pragma mark

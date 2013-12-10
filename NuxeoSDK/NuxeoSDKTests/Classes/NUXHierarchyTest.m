@@ -82,7 +82,7 @@
 
 -(void)testLeafBlock {
     NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'Folderish'"];
-    NSMutableArray *leaf = [NSMutableArray new];
+    NSMutableArray *__strong leaf = [NSMutableArray new];
     BOOL __block workspacesChecked = NO;
     BOOL __block defaultDomainChecked = NO;
     hierarchy.nodeBlock = ^NSArray *(NUXEntity *entity, NSUInteger depth) {
@@ -96,7 +96,9 @@
             workspacesChecked = YES;
         }
         
-        [leaf addObject:doc];
+        if (![hierarchy isLoaded]) {
+            [leaf addObject:doc];
+        }
         
         NSMutableArray *children = [NSMutableArray new];
         [children addObject:[self dummyDocument]];
@@ -109,7 +111,7 @@
     
     XCTAssertTrue([leaf count] > 0);
     [leaf enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
-        NUXDebug(@"\nLeaf: %@\n%lu", doc.uid, (unsigned long)[hierarchy contentOfDocument:doc].count);
+        //NUXDebug(@"\nLeaf: %@\n%lu", doc.uid, (unsigned long)[hierarchy contentOfDocument:doc].count);
         XCTAssertEqualObjects(@2, @([hierarchy contentOfDocument:doc].count));
     }];
     XCTAssertTrue(workspacesChecked && defaultDomainChecked);

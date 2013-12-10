@@ -8,6 +8,7 @@
 
 #import <ASIHTTPRequest.h>
 #import <ASIFormDataRequest.h>
+#import <Reachability.h>
 #import "NUXSession.h"
 #import "NUXAutomationRequest.h"
 
@@ -176,6 +177,10 @@ NSString *const kApiPrefix = @"ApiPrefix";
     });
 
     return _shared;
+}
+
++(BOOL)isNetworkReachable {
+    return [[Reachability reachabilityForInternetConnection] isReachable];
 }
 
 @end
