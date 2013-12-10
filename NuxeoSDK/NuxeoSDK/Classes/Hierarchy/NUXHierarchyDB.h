@@ -22,6 +22,7 @@
 -(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NUXDocument *)parent andDepth:(NSInteger)depth;
 -(void)insertcontent:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName forNode:(NSString *)nodeId;
 
+-(NUXDocument *)selectNode:(NSString *)nodeRef hierarchy:(NSString *)hierarchyName;
 -(NSArray *)selectNodesFromParent:(NSString *)parentRef hierarchy:(NSString *)hierarchyName;
 -(NSArray *)selectContentFromNode:(NSString *)nodeId hierarchy:(NSString *)hierarchyName;
 -(NSArray *)selectAllContentFromHierarchy:(NSString *)hierarchyName;

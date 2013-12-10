@@ -97,6 +97,10 @@
     return [NSArray arrayWithArray:entries];
 }
 
+-(NUXDocument *)nodeWithRef:(NSString *)nodeRef {
+    return [[NUXHierarchyDB shared] selectNode:nodeRef hierarchy:_name];
+}
+
 -(bool)isLoaded
 {
     return _isLoaded;

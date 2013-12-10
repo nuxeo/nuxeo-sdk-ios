@@ -115,6 +115,10 @@
         XCTAssertEqualObjects(@2, @([hierarchy contentOfDocument:doc].count));
     }];
     XCTAssertTrue(workspacesChecked && defaultDomainChecked);
+    
+    NUXDocument *dDomain = [hierarchy nodeWithRef:@"/default-domain"];
+    XCTAssertNotNil(dDomain);
+    XCTAssertEqualObjects(@"/default-domain", dDomain.path);
 }
 
 -(void)testMultipleHierarchies {

@@ -15,6 +15,7 @@
 @property (strong) NUXBasicBlock completionBlock;
 @property (readonly) NUXRequest *request;
 
+-(NUXDocument *)nodeWithRef:(NSString *)nodeRef;
 // Returns an array of NUXEntity corresponding to the document children.
 -(NSArray *)childrenOfDocument:(NSString *)documentRef;
 // Returns an array of NUXEntity corresponding to content of the document node.
