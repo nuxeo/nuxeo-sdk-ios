@@ -16,7 +16,7 @@
 @property (readonly) NUXRequest *request;
 
 // Returns an array of NUXEntity corresponding to the document children.
--(NSArray *)childrenOfDocument:(NUXDocument *)document;
+-(NSArray *)childrenOfDocument:(NSString *)documentRef;
 // Returns an array of NUXEntity corresponding to content of the document node.
 -(NSArray *)contentOfDocument:(NUXDocument *)document;
 // Returns an array of NUXEntity corresponding to the whole hierarchy nodes content

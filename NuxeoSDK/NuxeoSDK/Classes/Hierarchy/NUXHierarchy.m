@@ -67,9 +67,9 @@
     [[NUXHierarchyDB shared] deleteNodesFromHierarchy:_name];
 }
 
--(NSArray *)childrenOfDocument:(NUXDocument *)document
+-(NSArray *)childrenOfDocument:(NSString *)documentRef
 {
-    NSArray *entries = [[NUXHierarchyDB shared] selectNodesFromParent:document.uid hierarchy:_name];
+    NSArray *entries = [[NUXHierarchyDB shared] selectNodesFromParent:documentRef hierarchy:_name];
     if (entries == nil) {
         return nil;
     }

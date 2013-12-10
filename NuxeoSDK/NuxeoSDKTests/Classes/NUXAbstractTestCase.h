@@ -12,6 +12,7 @@
 #import "NUXSession+requests.h"
 #import "NUXDocument.h"
 #import "NUXDocuments.h"
+#import "NUXBlobStore.h"
 
 @interface NUXAbstractTestCase : XCTestCase {
     NUXSession *session;

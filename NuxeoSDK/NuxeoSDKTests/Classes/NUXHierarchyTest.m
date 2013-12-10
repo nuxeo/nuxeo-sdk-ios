@@ -43,14 +43,14 @@
     }];
     XCTAssertNotNil(defaultDomain);
     
-    entries = [hierarchy childrenOfDocument:defaultDomain];
+    entries = [hierarchy childrenOfDocument:defaultDomain.path];
     NUXDocument *workspaces = [NUXHierarchyTest findDocumentInEntries:entries withCompareBlock:^bool(NUXDocument *doc) {
         return [doc.path hasSuffix:@"workspaces"];
     }];
     XCTAssertNotNil(workspaces);
     
     [hierarchy resetCache];
-    XCTAssertTrue([hierarchy childrenOfDocument:defaultDomain].count == 0, @"Current childs: %@", @([hierarchy childrenOfDocument:defaultDomain].count));
+    XCTAssertTrue([hierarchy childrenOfDocument:defaultDomain.uid].count == 0, @"Current childs: %@", @([hierarchy childrenOfDocument:defaultDomain.path].count));
 }
 
 -(void)testOnlyOneDocHierarchy {
@@ -66,7 +66,7 @@
         return [doc.path isEqualToString:@"/default-domain"];
     }];
     
-    XCTAssertTrue([hierarchy childrenOfDocument:domain].count == 0);
+    XCTAssertTrue([hierarchy childrenOfDocument:domain.path].count == 0);
 }
 
 -(void)testHierarchyWithMoreResultsThanPageSize {
