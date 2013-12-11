@@ -14,6 +14,7 @@
 @interface NUXHierarchyDB : NSObject
 +(NUXHierarchyDB *)shared;
 
+-(bool)rootExistForHierarchy:(NSString *)hierarchyName;
 -(void)createTableIfNeeded;
 -(void)dropTable;
 -(void)deleteNodesFromHierarchy:(NSString *)hierarchyName;

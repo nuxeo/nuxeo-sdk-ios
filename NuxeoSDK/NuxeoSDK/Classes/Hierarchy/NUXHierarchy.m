@@ -60,6 +60,8 @@
     _request = request;
     if ([[self childrenOfRoot] count] <= 0) {
         [self setup];
+    } else {
+        [self setupCompleted];
     }
 }
 

@@ -33,6 +33,10 @@
 #pragma mark
 #pragma internal
 
+-(bool)rootExistForHierarchy:(NSString *)hierarchyName {
+    return [[self selectNodesFromParent:kRootKey hierarchy:hierarchyName] count] > 0;
+}
+
 -(void)createTableIfNeeded {
     [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'docPath' TEXT, 'parentId' TEXT, 'parentPath' TEXT, 'depth' INTEGER, 'order' INTEGER"];
     [_db createTableIfNotExists:kContentTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'order' INTEGER"];
@@ -142,10 +146,10 @@
 -(NSArray *)selectFromTable:(NSString *)table parent:(NSString *)parentId hierarchy:(NSString *)hierarchyName {
     NSString *query;
     if (!parentId) {
-        query = [NSString stringWithFormat:@"select docId from %@ where hierarchyName = '%@' order by 'order'", table, hierarchyName];
+        query = [NSString stringWithFormat:@"select docId from %@ where hierarchyName = \"%@\" order by 'order'", table, hierarchyName];
     } else {
         NSString *field = [self fieldForDocumentRef:parentId];
-        query = [NSString stringWithFormat:@"select docId from %@ where %@ = '%@' and hierarchyName = '%@' order by 'order'", table, field, parentId, hierarchyName];
+        query = [NSString stringWithFormat:@"select docId from %@ where %@ = \"%@\" and hierarchyName = \"%@\" order by 'order'", table, field, parentId, hierarchyName];
     }
     
     NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
