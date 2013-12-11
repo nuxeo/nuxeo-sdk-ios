@@ -24,6 +24,7 @@
 -(NSArray *)contentOfAllDocuments;
 // Returns a lightweight NUXDocuments object form the root entry point.
 -(NSArray *)childrenOfRoot;
+-(BOOL)hasContentUnderNode:(NSString *)nodeRef;
 
 -(void)loadWithRequest:(NUXRequest *)request;
 -(void)resetCache;

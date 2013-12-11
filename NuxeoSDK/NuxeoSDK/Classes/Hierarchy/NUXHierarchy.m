@@ -103,6 +103,32 @@
     return [[NUXHierarchyDB shared] selectNode:nodeRef hierarchy:_name];
 }
 
+-(BOOL)hasContentUnderNode:(NSString *)nodeRef {
+    // Fetch whole document to ensure to have his ids.
+    NUXDocument *root = [[NUXHierarchyDB shared] selectNode:nodeRef hierarchy:_name];
+    if (!root) {
+        return NO;
+    }
+    
+    NSMutableArray *childs = [NSMutableArray new];
+    [childs addObject:root.uid];
+    [childs addObjectsFromArray:[[NUXHierarchyDB shared] selectIdsFromParent:nodeRef hierarchy:_name]];
+    
+    BOOL __block hasContent = NO;
+    
+    [childs enumerateObjectsUsingBlock:^(NSString *docRef, NSUInteger idx, BOOL *stop) {
+        if ([[NUXHierarchyDB shared] hasContentForNode:docRef hierarchy:_name]) {
+            hasContent = YES;
+            *stop = YES;
+            return;
+        }
+        
+        [childs addObjectsFromArray:[[NUXHierarchyDB shared] selectIdsFromParent:docRef hierarchy:_name]];
+    }];
+    
+    return hasContent;
+}
+
 -(bool)isLoaded
 {
     return _isLoaded;

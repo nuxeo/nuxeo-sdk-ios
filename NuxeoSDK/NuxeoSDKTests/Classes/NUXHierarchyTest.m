@@ -141,4 +141,30 @@
     return result;
 }
 
+-(void)testHasContent {
+    NUXRequest *request = [session requestQuery:@"select * from Document where ecm:mixinType = 'SuperSpace'"];
+    id __weak wSelf = self;
+    hierarchy.nodeBlock = ^NSArray *(NUXEntity *entity, NSUInteger depth) {
+        NUXDocument *doc = (NUXDocument *)entity;
+        if ([doc.path isEqualToString:@"/default-domain/workspaces"]) {
+            return @[[wSelf dummyDocument], [wSelf dummyDocument]];
+        }
+        return nil;
+    };
+    
+    [hierarchy loadWithRequest:request];
+    [hierarchy waitUntilLoadingIsDone];
+    
+    XCTAssertTrue([hierarchy hasContentUnderNode:@"/default-domain"]);
+    XCTAssertTrue([hierarchy hasContentUnderNode:@"/default-domain/workspaces"]);
+    
+    [hierarchy resetCache];
+    hierarchy.nodeBlock = nil;
+    [hierarchy loadWithRequest:request];
+    [hierarchy waitUntilLoadingIsDone];
+    
+    XCTAssertFalse([hierarchy hasContentUnderNode:@"/default-domain"]);
+    XCTAssertFalse([hierarchy hasContentUnderNode:@"/default-domain/workspaces"]);
+}
+
 @end

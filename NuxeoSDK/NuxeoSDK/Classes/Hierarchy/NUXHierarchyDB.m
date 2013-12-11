@@ -81,6 +81,24 @@
     return [ret count] > 0 ? [ret objectAtIndex:0] : nil;
 }
 
+-(BOOL)hasContentForNode:(NSString *)nodeId hierarchy:(NSString *)hierarchyName {
+    NSString *query = [NSString stringWithFormat:@"Select count(docId) from %@ where hierarchyName = \"%@\" and parentId = \"%@\"", kContentTable, hierarchyName, nodeId];
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+        return @(sqlite3_column_int(stmt, 0));
+    }];
+    return [ret count] > 0 ? [[ret objectAtIndex:0] integerValue] > 0 : NO;
+}
+
+-(NSArray *)selectIdsFromParent:(NSString *)parentRef hierarchy:(NSString *)hierarchyName {
+    NSString *field = [self fieldForDocumentRef:parentRef];
+    NSString *query = [NSString stringWithFormat:@"select docId from %@ where %@ = \"%@\" and hierarchyName = \"%@\" order by 'order'", kHierarchyTable, field, parentRef, hierarchyName];
+    
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+        return [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
+    }];
+    return ret;
+}
+
 -(NSArray *)selectNodesFromParent:(NSString *)parentRef hierarchy:(NSString *)hierarchyName {
     return [self selectFromTable:kHierarchyTable parent:parentRef hierarchy:hierarchyName];
 }

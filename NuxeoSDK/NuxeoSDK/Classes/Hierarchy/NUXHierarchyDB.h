@@ -29,4 +29,8 @@
 -(NSArray *)selectAllContentFromHierarchy:(NSString *)hierarchyName;
 -(NSInteger)selectDepthForDocument:(NSString *)documentId hierarchy:(NSString *)hierarchyName;
 
+-(BOOL)hasContentForNode:(NSString *)nodeId hierarchy:(NSString *)hierarchyName;
+-(NSArray *)selectIdsFromParent:(NSString *)parentRef hierarchy:(NSString *)hierarchyName;
+
+
 @end
