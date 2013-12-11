@@ -16,6 +16,8 @@
     bool _isLoaded;
     bool _isFailure;
     NSString *_name;
+    
+    NSMutableDictionary *_nodeHasDepperContent;
 }
 
 +(NUXHierarchy *)hierarchyWithName:(NSString *)name {
@@ -41,6 +43,7 @@
     if (self) {
         _isLoaded = NO;
         _isFailure = NO;
+        _nodeHasDepperContent = [NSMutableDictionary new];
     }
     return self;
 }
@@ -50,6 +53,7 @@
     _completionBlock= nil;
     _nodeInvalidationBlock = nil;
     _nodeBlock = nil;
+    _nodeHasDepperContent = nil;
 }
 
 -(void)setName:(NSString *)name {
@@ -67,6 +71,7 @@
 
 -(void)resetCache {
     [[NUXHierarchyDB shared] deleteNodesFromHierarchy:_name];
+    _nodeHasDepperContent = [NSMutableDictionary new];
 }
 
 -(NSArray *)childrenOfDocument:(NSString *)documentRef
@@ -114,18 +119,31 @@
     [childs addObject:root.uid];
     [childs addObjectsFromArray:[[NUXHierarchyDB shared] selectIdsFromParent:nodeRef hierarchy:_name]];
     
+    return [self hasContentForDocIds:childs];
+}
+
+-(bool)hasContentForDocIds:(NSArray *)docIds {
     BOOL __block hasContent = NO;
-    
-    [childs enumerateObjectsUsingBlock:^(NSString *docRef, NSUInteger idx, BOOL *stop) {
-        if ([[NUXHierarchyDB shared] hasContentForNode:docRef hierarchy:_name]) {
-            hasContent = YES;
+    [docIds enumerateObjectsUsingBlock:^(NSString *docRef, NSUInteger idx, BOOL *stop) {
+        if ([_nodeHasDepperContent valueForKey:docRef] != nil) {
             *stop = YES;
-            return;
+            hasContent = [[_nodeHasDepperContent valueForKey:docRef] boolValue];
         }
         
-        [childs addObjectsFromArray:[[NUXHierarchyDB shared] selectIdsFromParent:docRef hierarchy:_name]];
+        BOOL iHasContent = [[NUXHierarchyDB shared] hasContentForNode:docRef hierarchy:_name];
+        if (!iHasContent) {
+            NSArray *iChilds = [[NUXHierarchyDB shared] selectIdsFromParent:docRef hierarchy:_name];
+            iHasContent = [self hasContentForDocIds:iChilds];
+        }
+        
+        if (iHasContent) {
+            hasContent = YES;
+            *stop = YES;
+            [_nodeHasDepperContent setValue:@(YES) forKey:docRef];
+        } else {
+            [_nodeHasDepperContent setValue:@(NO) forKey:docRef];
+        }
     }];
-    
     return hasContent;
 }
 
@@ -191,7 +209,7 @@
     
     [self buildHierarchy:documents];
     [self performSelectorOnMainThread:@selector(setupCompleted) withObject:nil waitUntilDone:[NSThread isMainThread]];
-//    [self setupCompleted];
+    //    [self setupCompleted];
 }
 
 -(void)buildHierarchy:(NSArray *)pDocuments {
@@ -214,8 +232,8 @@
             parent = [parents lastObject];
             NUXDebug(@"  parent: %@", parent);
         } while (!(parent == nil || [doc.path hasPrefix:[NSString stringWithFormat:@"%@/", parent.path]]));
-
-//        NSString *hKey = parent == nil ? kRootKey : parent.uid;
+        
+        //        NSString *hKey = parent == nil ? kRootKey : parent.uid;
         [[NUXHierarchyDB shared] insertNodes:@[doc] fromHierarchy:_name withParent:parent andDepth:parents.count];
         //[NUXHierarchy addNodeDocument:doc toHierarchy:_documents key:hKey];
         
