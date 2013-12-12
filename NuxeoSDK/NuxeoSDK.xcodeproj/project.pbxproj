@@ -14,7 +14,6 @@
 		51B2B7BA184F651B00AE2DD1 /* NUXBlobStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */; };
 		51B2B7BD1850945400AE2DD1 /* NUXEntityCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7BC1850945400AE2DD1 /* NUXEntityCache.m */; };
 		51B2B7C01850E10B00AE2DD1 /* NUXEntityCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7BF1850E10B00AE2DD1 /* NUXEntityCacheTests.m */; };
-		51B2B7C71856098700AE2DD1 /* NUXCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7C61856098700AE2DD1 /* NUXCache.m */; };
 		51C75E71183E0CF000EE0DCC /* NUXDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E67183E0CF000EE0DCC /* NUXDocument.m */; };
 		51C75E72183E0CF000EE0DCC /* NUXDocuments.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E69183E0CF000EE0DCC /* NUXDocuments.m */; };
 		51C75E73183E0CF000EE0DCC /* NUXEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C75E6B183E0CF000EE0DCC /* NUXEntity.m */; };
@@ -74,8 +73,6 @@
 		51B2B7BB1850945400AE2DD1 /* NUXEntityCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXEntityCache.h; sourceTree = "<group>"; };
 		51B2B7BC1850945400AE2DD1 /* NUXEntityCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXEntityCache.m; sourceTree = "<group>"; };
 		51B2B7BF1850E10B00AE2DD1 /* NUXEntityCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXEntityCacheTests.m; sourceTree = "<group>"; };
-		51B2B7C51856098700AE2DD1 /* NUXCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXCache.h; sourceTree = "<group>"; };
-		51B2B7C61856098700AE2DD1 /* NUXCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXCache.m; sourceTree = "<group>"; };
 		51C75E66183E0CF000EE0DCC /* NUXDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXDocument.h; sourceTree = "<group>"; };
 		51C75E67183E0CF000EE0DCC /* NUXDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXDocument.m; sourceTree = "<group>"; };
 		51C75E68183E0CF000EE0DCC /* NUXDocuments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXDocuments.h; sourceTree = "<group>"; };
@@ -272,8 +269,6 @@
 				AC00017BEBFA87418A7DA04F /* NUXRequest.m */,
 				AC0003ABCA754BCD0180F66B /* NUXAutomationRequest.h */,
 				AC00024765DFE4A961C3058E /* NUXAutomationRequest.m */,
-				51B2B7C51856098700AE2DD1 /* NUXCache.h */,
-				51B2B7C61856098700AE2DD1 /* NUXCache.m */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -470,7 +465,6 @@
 				51B2B7B7184F31FA00AE2DD1 /* NUXBlobStore.m in Sources */,
 				51C75E74183E0CF000EE0DCC /* NUXJSONMapper.m in Sources */,
 				51C75E72183E0CF000EE0DCC /* NUXDocuments.m in Sources */,
-				51B2B7C71856098700AE2DD1 /* NUXCache.m in Sources */,
 				51C75E73183E0CF000EE0DCC /* NUXEntity.m in Sources */,
 				AC00070B2CE31ABACE21E867 /* NUXAutomationRequest.m in Sources */,
 				51C75E75183E0CF000EE0DCC /* NUXJSONSerializer.m in Sources */,
