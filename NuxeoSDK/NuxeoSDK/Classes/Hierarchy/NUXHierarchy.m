@@ -32,6 +32,7 @@
     if (![_hierarchies objectForKey:name]) {
         NUXHierarchy *hierarchy = [NUXHierarchy new];
         [hierarchy setName:name];
+        [hierarchy invalidateIfNotComplete];
         
         [_hierarchies setObject:hierarchy forKey:name];
     }
@@ -56,6 +57,12 @@
     _nodeInvalidationBlock = nil;
     _nodeBlock = nil;
     _nodeHasDepperContent = nil;
+}
+
+-(void)invalidateIfNotComplete {
+    if (![[NUXHierarchyDB shared] isHierarchyLoaded:_name]) {
+        [[NUXHierarchyDB shared] deleteNodesFromHierarchy:_name];
+    }
 }
 
 -(void)setName:(NSString *)name {
@@ -173,6 +180,7 @@
         [self failed];
     } else {
         _isLoaded = YES;
+        [[NUXHierarchyDB shared] saveHierarchyLoaded:_name];
         if (self.completionBlock != nil) {
             self.completionBlock();
         }

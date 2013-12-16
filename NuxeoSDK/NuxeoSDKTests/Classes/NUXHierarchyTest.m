@@ -167,4 +167,19 @@
     XCTAssertFalse([hierarchy hasContentUnderNode:@"/default-domain/workspaces"]);
 }
 
+-(void)testHierarchyLoadedFlag
+{
+    NSString *name = [NSString stringWithFormat:@"hierar-%@", @(arc4random())];
+    NUXHierarchyDB *db = [NUXHierarchyDB shared];
+    XCTAssertFalse([db isHierarchyLoaded:name]);
+    [db saveHierarchyLoaded:name];
+    XCTAssertTrue([db isHierarchyLoaded:name]);
+    // Override new loaded
+    [db saveHierarchyLoaded:name];
+    XCTAssertTrue([db isHierarchyLoaded:name]);
+    
+    [db deleteNodesFromHierarchy:name];
+    XCTAssertFalse([db isHierarchyLoaded:name]);
+}
+
 @end

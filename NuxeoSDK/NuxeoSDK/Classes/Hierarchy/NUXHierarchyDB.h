@@ -15,6 +15,9 @@
 +(NUXHierarchyDB *)shared;
 
 -(bool)rootExistForHierarchy:(NSString *)hierarchyName;
+-(BOOL)isHierarchyLoaded:(NSString *)hierarchyName;
+-(void)saveHierarchyLoaded:(NSString *)hierarchyName;
+
 -(void)createTableIfNeeded;
 -(void)dropTable;
 -(void)deleteNodesFromHierarchy:(NSString *)hierarchyName;

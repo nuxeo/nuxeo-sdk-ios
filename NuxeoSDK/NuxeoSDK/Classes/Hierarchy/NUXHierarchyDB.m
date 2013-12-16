@@ -12,6 +12,7 @@
 #import "NUXEntityCache.h"
 
 #define kHierarchyTable @"hierarchyNode"
+#define kHierarchyLoadedTable @"hierarchyLoaded"
 #define kContentTable @"hierarchyContent"
 
 @implementation NUXHierarchyDB {
@@ -40,15 +41,37 @@
 -(void)createTableIfNeeded {
     [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'docPath' TEXT, 'parentId' TEXT, 'parentPath' TEXT, 'depth' INTEGER, 'order' INTEGER"];
     [_db createTableIfNotExists:kContentTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'order' INTEGER"];
+    [_db createTableIfNotExists:kHierarchyLoadedTable withField:@"'hierarchyName' TEXT PRIMARY KEY, 'loaded' INTEGER"];
+}
+
+-(void)saveHierarchyLoaded:(NSString *)hierarchyName {
+    NSString *query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kHierarchyLoadedTable, hierarchyName];
+    [_db executeQuery:query];
+    
+    NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"loaded"]];
+    NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, @(1)]];
+    query = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kHierarchyLoadedTable, columns, values];
+    [_db executeQuery:query];
+}
+
+-(BOOL)isHierarchyLoaded:(NSString *)hierarchyName {
+    NSString *query = [NSString stringWithFormat:@"select hierarchyName from %@ where hierarchyName = \"%@\"", kHierarchyLoadedTable, hierarchyName];
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+        return [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
+    }];
+    return [ret count] > 0;
 }
 
 -(void)dropTable {
     [_db dropTableIfExists:kHierarchyTable];
     [_db dropTableIfExists:kContentTable];
+    [_db dropTableIfExists:kHierarchyLoadedTable];
 }
 
 -(void)deleteNodesFromHierarchy:(NSString *)hierarchyName {
     NSString *query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kHierarchyTable, hierarchyName];
+    [_db executeQuery:query];
+    query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kHierarchyLoadedTable, hierarchyName];
     [_db executeQuery:query];
 
     query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kContentTable, hierarchyName];
