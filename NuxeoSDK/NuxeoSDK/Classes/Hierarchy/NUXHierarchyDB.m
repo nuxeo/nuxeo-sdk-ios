@@ -34,10 +34,6 @@
 #pragma mark
 #pragma internal
 
--(bool)rootExistForHierarchy:(NSString *)hierarchyName {
-    return [[self selectNodesFromParent:kRootKey hierarchy:hierarchyName] count] > 0;
-}
-
 -(void)createTableIfNeeded {
     [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'docPath' TEXT, 'parentId' TEXT, 'parentPath' TEXT, 'depth' INTEGER, 'order' INTEGER"];
     [_db createTableIfNotExists:kContentTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'order' INTEGER"];

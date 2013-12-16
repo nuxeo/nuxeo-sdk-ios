@@ -14,7 +14,6 @@
 @interface NUXHierarchyDB : NSObject
 +(NUXHierarchyDB *)shared;
 
--(bool)rootExistForHierarchy:(NSString *)hierarchyName;
 -(BOOL)isHierarchyLoaded:(NSString *)hierarchyName;
 -(void)saveHierarchyLoaded:(NSString *)hierarchyName;
 
