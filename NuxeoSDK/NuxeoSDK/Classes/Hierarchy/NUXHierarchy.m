@@ -260,8 +260,9 @@
 -(NSArray *)updateLeafContentForDocument:(NUXDocument *)document andDepth:(NSUInteger)depth {
     NSArray *content;
     if (_nodeBlock) {
-        [[NUXHierarchyDB shared] deleteContentForDocument:document fromHierarchy:_name];
         content = _nodeBlock(document, depth);
+        
+        [[NUXHierarchyDB shared] deleteContentForDocument:document fromHierarchy:_name];
         if ([content count] > 0) {
             [[NUXHierarchyDB shared] insertcontent:content fromHierarchy:_name forNode:document.uid];
         }
