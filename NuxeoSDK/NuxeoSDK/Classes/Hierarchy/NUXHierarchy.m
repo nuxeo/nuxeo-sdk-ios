@@ -15,6 +15,7 @@
 @implementation NUXHierarchy {
     bool _isLoaded;
     bool _isFailure;
+    bool _isLoading;
     NSString *_name;
     
     NSMutableDictionary *_nodeHasDepperContent;
@@ -43,6 +44,7 @@
     if (self) {
         _isLoaded = NO;
         _isFailure = NO;
+        _isLoading = NO;
         _nodeHasDepperContent = [NSMutableDictionary new];
     }
     return self;
@@ -154,12 +156,21 @@
 }
 
 
+-(void)failed
+{
+    _isLoading = NO;
+    _isFailure = YES;
+    
+    if (self.failureBlock != nil) {
+        self.failureBlock();
+    }
+}
+
 -(void)setupCompleted
 {
+    _isLoading = NO;
     if (_isFailure) {
-        if (self.failureBlock != nil) {
-            self.failureBlock();
-        }
+        [self failed];
     } else {
         _isLoaded = YES;
         if (self.completionBlock != nil) {
@@ -170,6 +181,7 @@
 
 -(void)setup
 {
+    _isLoading = YES;
     NSMutableArray *docs = [NSMutableArray new];
     
     // Block passed to request filled with all expected documents
@@ -185,7 +197,7 @@
     };
     
     void (^failureBlock)(NUXRequest *) = ^(NUXRequest *request) {
-        _isFailure = YES;
+        [self failed];
     };
     
     [self.request setCompletionBlock:appendDocs];
@@ -199,28 +211,18 @@
         return [doc1.path compare:doc2.path];
     }];
     
-    NSMutableDictionary *hierarchicalDocs = [NSMutableDictionary new];
-    [documents enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
-        NSString *parent = [doc.path stringByDeletingLastPathComponent];
-        NSMutableArray *children = [hierarchicalDocs objectForKey:parent];
-        if (children == nil) {
-            children = [NSMutableArray new];
-            [hierarchicalDocs setObject:children forKey:parent];
-        }
-        [children addObject:doc];
-    }];
-    
-    [self buildHierarchy:documents];
-    [self performSelectorOnMainThread:@selector(setupCompleted) withObject:nil waitUntilDone:[NSThread isMainThread]];
-    //    [self setupCompleted];
+    SEL finishSelector = @selector(failed);
+    if ([documents count] > 0) {
+        [self buildHierarchy:documents];
+        finishSelector = @selector(setupCompleted);
+    }
+    else {
+        NSLog(@"Load failed because request do not returns any documents.");
+    }
+    [self performSelectorOnMainThread:finishSelector withObject:nil waitUntilDone:[NSThread isMainThread]];
 }
 
 -(void)buildHierarchy:(NSArray *)pDocuments {
-    if (pDocuments.count == 0) {
-        _isFailure = YES;
-        return;
-    }
-    
     NSMutableArray *documents = [NSMutableArray arrayWithArray:pDocuments];
     NSMutableArray *__block parents = [NSMutableArray new];
     [documents enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
