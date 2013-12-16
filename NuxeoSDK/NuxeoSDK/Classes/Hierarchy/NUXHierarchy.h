@@ -13,6 +13,7 @@
 @property (strong) NUXHierarchyBlock nodeBlock;
 @property (strong) NUXInvalidationBlock nodeInvalidationBlock;
 @property (strong) NUXBasicBlock completionBlock;
+@property (strong) NUXBasicBlock failureBlock;
 @property (readonly) NUXRequest *request;
 
 -(NUXDocument *)nodeWithRef:(NSString *)nodeRef;

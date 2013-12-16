@@ -98,10 +98,7 @@
 -(NSArray *)childrenOfRoot
 {
     NSArray *entries = [[NUXHierarchyDB shared] selectNodesFromParent:kRootKey hierarchy:_name];
-    if (entries == nil) {
-        [NSException raise:@"Not initialized" format:@"Hierarchy not initialized"];
-    }
-    return [NSArray arrayWithArray:entries];
+    return entries == nil ? nil : [NSArray arrayWithArray:entries];
 }
 
 -(NUXDocument *)nodeWithRef:(NSString *)nodeRef {
@@ -159,9 +156,15 @@
 
 -(void)setupCompleted
 {
-    _isLoaded = YES;
-    if (self.completionBlock != nil) {
-        self.completionBlock();
+    if (_isFailure) {
+        if (self.failureBlock != nil) {
+            self.failureBlock();
+        }
+    } else {
+        _isLoaded = YES;
+        if (self.completionBlock != nil) {
+            self.completionBlock();
+        }
     }
 }
 
@@ -214,7 +217,8 @@
 
 -(void)buildHierarchy:(NSArray *)pDocuments {
     if (pDocuments.count == 0) {
-        [NSException raise:@"Empty array" format:@"Hierarchy initialized with an empty array."];
+        _isFailure = YES;
+        return;
     }
     
     NSMutableArray *documents = [NSMutableArray arrayWithArray:pDocuments];
