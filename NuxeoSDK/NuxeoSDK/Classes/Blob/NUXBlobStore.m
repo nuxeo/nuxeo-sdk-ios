@@ -45,7 +45,7 @@
     NSError *error;
     NSString *blobStorePath = [self blobStorePath];
     if (![manager removeItemAtPath:blobStorePath error:&error]) {
-        [NSException raise:@"Unable to reset blob store" format:@"Can't delete blob store folder at path %@. %@", blobStorePath, error];
+        [NUXException raise:@"Unable to reset blob store" format:@"Can't delete blob store folder at path %@. %@", blobStorePath, error];
     }
     [_blobsAccess removeAllObjects];
     _currentSize = @(0);
@@ -160,7 +160,7 @@
     NSError *error;
     NSArray *blobs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self blobStorePath] error:&error];
     if (!blobs) {
-        [NSException raise:@"Can't read dir content" format:@"Unable to read blob store files content. %@", error];
+        [NUXException raise:@"Can't read dir content" format:@"Unable to read blob store files content. %@", error];
     }
     [blobs enumerateObjectsUsingBlock:^(NSString *blobPath, NSUInteger idx, BOOL *stop) {
         NUXDebug(@"Load file from existing folder: %@", blobPath);
@@ -186,7 +186,7 @@
     if (![manager isReadableFileAtPath:path]) {
         NSError *error;
         if (![manager createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:&error]) {
-            [NSException raise:@"Can't create blob store folder" format:@"Unable to create blob store folder at path: %@. %@", path, error];
+            [NUXException raise:@"Can't create blob store folder" format:@"Unable to create blob store folder at path: %@. %@", path, error];
         }
         NUXDebug(@"Blob store folder create at path %@", path);
     }

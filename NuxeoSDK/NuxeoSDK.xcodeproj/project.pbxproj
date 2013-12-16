@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0330425B4DD5438799AE0594 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		510266C6185F0DF30017FB36 /* NUXException.m in Sources */ = {isa = PBXBuildFile; fileRef = 510266C5185F0DF30017FB36 /* NUXException.m */; };
 		5104E9A0183A80E100F1EB5D /* NUXSession-info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5104E99F183A80E100F1EB5D /* NUXSession-info.plist */; };
 		51B2B7B4184E269A00AE2DD1 /* NUXHierarchyDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */; };
 		51B2B7B7184F31FA00AE2DD1 /* NUXBlobStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B6184F31FA00AE2DD1 /* NUXBlobStore.m */; };
@@ -64,6 +65,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		510266C4185F0DF30017FB36 /* NUXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXException.h; sourceTree = "<group>"; };
+		510266C5185F0DF30017FB36 /* NUXException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXException.m; sourceTree = "<group>"; };
 		5104E99F183A80E100F1EB5D /* NUXSession-info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NUXSession-info.plist"; sourceTree = "<group>"; };
 		51B2B7B2184E269A00AE2DD1 /* NUXHierarchyDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXHierarchyDB.h; sourceTree = "<group>"; };
 		51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXHierarchyDB.m; sourceTree = "<group>"; };
@@ -258,6 +261,8 @@
 				AC0000295749D5BB4EC27292 /* NUXSession.h */,
 				AC0002BBFCFD456D7E66DAC0 /* NUXSession.m */,
 				51C75E76183E4F6700EE0DCC /* NUXConstants.h */,
+				510266C4185F0DF30017FB36 /* NUXException.h */,
+				510266C5185F0DF30017FB36 /* NUXException.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -460,6 +465,7 @@
 			files = (
 				AC00067C9BC7671E5ACF632E /* NUXSession+requests.m in Sources */,
 				AC0008BBE6F5D7709B958244 /* NUXSession.m in Sources */,
+				510266C6185F0DF30017FB36 /* NUXException.m in Sources */,
 				AC0007560E2BEEB56D1B23EF /* NUXRequest.m in Sources */,
 				51C75E71183E0CF000EE0DCC /* NUXDocument.m in Sources */,
 				51B2B7B7184F31FA00AE2DD1 /* NUXBlobStore.m in Sources */,

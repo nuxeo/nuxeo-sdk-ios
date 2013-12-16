@@ -38,7 +38,7 @@
 
 -(NSString *)entityTypeFromClass:(Class)aClass {
     if (![aClass isSubclassOfClass:[NUXEntity class]]) {
-        [NSException raise:@"Incompatible class" format:@"Provided class isn't a subclass of %@", [NUXEntity class]];
+        [NUXException raise:@"Incompatible class" format:@"Provided class isn't a subclass of %@", [NUXEntity class]];
     }
     return ((NUXEntity *)[aClass new]).entityType;
 }
@@ -98,7 +98,7 @@
     if (![manager isWritableFileAtPath:entityPath]) {
         NSError *error;
         if (![manager createDirectoryAtPath:entityPath withIntermediateDirectories:YES attributes:nil error:&error]) {
-            [NSException raise:@"Can't create entity folder" format:@"Unable to create entity cache folder at path: %@. %@", entityPath, error];
+            [NUXException raise:@"Can't create entity folder" format:@"Unable to create entity cache folder at path: %@. %@", entityPath, error];
         }
         NUXDebug(@"Entity cache folder created at path %@", entityPath);
     }

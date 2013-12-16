@@ -57,4 +57,9 @@
     XCTAssertNil([cache entityWithId:doc.uid class:[NUXDocument class]]);
 }
 
+-(void)testCustomExceptionRaising {
+    XCTAssertThrowsSpecific([NUXException raise:@"Pouet" format:@"Error: dasdsad"], NUXException, @"should thow a NUXException");
+    XCTAssertNoThrowSpecific([NSException raise:@"Pouet" format:@"Error: dasdsad"], NUXException, @"should thow a NUXException");
+}
+
 @end
