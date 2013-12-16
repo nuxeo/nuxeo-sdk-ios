@@ -15,6 +15,7 @@
 @property (strong) NUXBasicBlock completionBlock;
 @property (strong) NUXBasicBlock failureBlock;
 @property (readonly) NUXRequest *request;
+@property BOOL *disableAutomaticContentRefresh;
 
 -(NUXDocument *)nodeWithRef:(NSString *)nodeRef;
 // Returns an array of NUXEntity corresponding to the document children.

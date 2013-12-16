@@ -46,6 +46,7 @@
         _isLoaded = NO;
         _isFailure = NO;
         _isLoading = NO;
+        _disableAutomaticContentRefresh = NO;
         _nodeHasDepperContent = [NSMutableDictionary new];
     }
     return self;
@@ -53,6 +54,7 @@
 
 - (void)dealloc
 {
+    _disableAutomaticContentRefresh = nil;
     _completionBlock= nil;
     _nodeInvalidationBlock = nil;
     _nodeBlock = nil;
@@ -93,7 +95,7 @@
 }
 
 -(NSArray *)contentOfDocument:(NUXDocument *)document {
-    if ((_nodeInvalidationBlock && _nodeInvalidationBlock(document)) || [NUXSession isNetworkReachable]) {
+    if ((_nodeInvalidationBlock && _nodeInvalidationBlock(document)) || ([NUXSession isNetworkReachable] && !self.disableAutomaticContentRefresh)) {
         NSInteger depth = [[NUXHierarchyDB shared] selectDepthForDocument:document.uid hierarchy:_name];
         return [self updateLeafContentForDocument:document andDepth:depth];
     }
