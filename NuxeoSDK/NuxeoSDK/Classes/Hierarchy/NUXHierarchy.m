@@ -218,7 +218,7 @@
 -(void)startBuildingHierarchyWithDocuments:(NSArray *)documents
 {
     documents = [documents sortedArrayUsingComparator:^NSComparisonResult(NUXDocument *doc1, NUXDocument *doc2) {
-        return [doc1.path compare:doc2.path];
+        return [[doc1.path stringByAppendingString:@"/"] compare:[doc2.path stringByAppendingString:@"/"]];
     }];
     
     SEL finishSelector = @selector(failed);
