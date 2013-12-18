@@ -46,7 +46,8 @@
         _isLoaded = NO;
         _isFailure = NO;
         _isLoading = NO;
-        _disableAutomaticContentRefresh = NO;
+        _automaticContentRefresh = YES;
+        _fetchContentWhileLoading = YES;
         _nodeHasDepperContent = [NSMutableDictionary new];
     }
     return self;
@@ -54,7 +55,8 @@
 
 - (void)dealloc
 {
-    _disableAutomaticContentRefresh = nil;
+    _automaticContentRefresh = nil;
+    _fetchContentWhileLoading = nil;
     _completionBlock= nil;
     _nodeInvalidationBlock = nil;
     _nodeBlock = nil;
@@ -95,7 +97,7 @@
 }
 
 -(NSArray *)contentOfDocument:(NUXDocument *)document {
-    if ((_nodeInvalidationBlock && _nodeInvalidationBlock(document)) || ([NUXSession isNetworkReachable] && !self.disableAutomaticContentRefresh)) {
+    if ((_nodeInvalidationBlock && _nodeInvalidationBlock(document)) || ([NUXSession isNetworkReachable] && self.automaticContentRefresh)) {
         NSInteger depth = [[NUXHierarchyDB shared] selectDepthForDocument:document.uid hierarchy:_name];
         return [self updateLeafContentForDocument:document andDepth:depth];
     }
@@ -251,9 +253,10 @@
         
         //        NSString *hKey = parent == nil ? kRootKey : parent.uid;
         [[NUXHierarchyDB shared] insertNodes:@[doc] fromHierarchy:_name withParent:parent andDepth:parents.count];
-        //[NUXHierarchy addNodeDocument:doc toHierarchy:_documents key:hKey];
-        
-        [self updateLeafContentForDocument:doc andDepth:parents.count];
+
+        if (self.fetchContentWhileLoading) {
+            [self updateLeafContentForDocument:doc andDepth:parents.count];
+        }
         
         [parents addObject:doc];
     }];
