@@ -27,6 +27,8 @@
 -(id)init {
     self = [super init];
     if (self) {
+        _shouldContinueWhenAppEntersBackground = NO;
+        
         self.method = @"GET";
         self.contentType = @"application/json";
         

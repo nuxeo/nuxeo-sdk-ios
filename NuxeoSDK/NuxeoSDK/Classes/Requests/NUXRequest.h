@@ -14,6 +14,7 @@
 
 @interface NUXRequest : NSObject
 
+@property BOOL shouldContinueWhenAppEntersBackground;
 @property NSString *method;
 @property NSString *contentType;
 @property NSString *repository;

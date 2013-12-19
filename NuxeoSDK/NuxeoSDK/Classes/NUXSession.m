@@ -101,6 +101,7 @@ NSString *const kApiPrefix = @"ApiPrefix";
 
 - (ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
     ASIHTTPRequest *request = [nRequest requestASI];
+    request.shouldContinueWhenAppEntersBackground = nRequest.shouldContinueWhenAppEntersBackground;
 
     [request setRequestMethod:nRequest.method];
 
