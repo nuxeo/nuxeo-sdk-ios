@@ -77,6 +77,14 @@ NSString *const kApiPrefix = @"ApiPrefix";
     [self.downloadQueue cancelAllOperations];
 }
 
+-(void)setDownloadQueueMaxConcurrentOperationCount:(NSInteger)count {
+    self.downloadQueue.maxConcurrentOperationCount = count;
+}
+
+-(void)setRequestQueueMaxConcurrentOperationCount:(NSInteger)count {
+    self.queue.maxConcurrentOperationCount = count;
+}
+
 - (void)addDefaultSchemas:(NSArray *)schemas {
     [self.schemas addObjectsFromArray:schemas];
 }

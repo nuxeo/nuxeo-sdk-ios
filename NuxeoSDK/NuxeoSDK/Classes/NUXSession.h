@@ -32,8 +32,10 @@
 
 // Cancel current requests
 - (void)cancelAllRequests;
+- (void)setRequestQueueMaxConcurrentOperationCount:(NSInteger)count;
 // Cancel only requests that look like to download a blob
 - (void)cancelDownloadsRequests;
+- (void)setDownloadQueueMaxConcurrentOperationCount:(NSInteger)count;
 
 // Execute a NUXRequest asynchronously using this session and authentication challenge.
 - (void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure;
