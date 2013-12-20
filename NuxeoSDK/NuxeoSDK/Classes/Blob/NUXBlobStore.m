@@ -25,7 +25,6 @@
         self.countLimit = @(100);
         self.sizeLimit = @(-1);
         
-        
         [self recomputeBlobAccess];
     }
     return self;
@@ -94,7 +93,7 @@
     NSError *error;
     [self removeBlob:digest];
     NSString *blobPath = [self blobPath:digest];
-
+    
     BOOL ret = [fileManager copyItemAtPath:path toPath:blobPath error:&error];
     if (!ret) {
         NUXDebug(@"Can't save file localy. %@", error);
@@ -138,6 +137,7 @@
     BOOL countOverLimit = [self.countLimit intValue] > 0 && [self.countLimit compare:@([self count])] == NSOrderedAscending;
     BOOL sizeOverLimit = [self.sizeLimit longLongValue] > 0 && [self.sizeLimit compare:_currentSize] == NSOrderedAscending;
     
+    NUXDebug(@"count: %ld/%@, size: %lld/%@", [self count], self.countLimit, [_currentSize longLongValue], self.sizeLimit);
     if (countOverLimit || sizeOverLimit) {
         while (countOverLimit || sizeOverLimit) {
             NSString *digest = [_blobsAccess lastObject];
@@ -163,17 +163,17 @@
     if (!blobs) {
         [NUXException raise:@"Can't read dir content" format:@"Unable to read blob store files content. %@", error];
     }
-    [blobs enumerateObjectsUsingBlock:^(NSString *blobPath, NSUInteger idx, BOOL *stop) {
-        NUXDebug(@"Load file from existing folder: %@", blobPath);
+    [blobs enumerateObjectsUsingBlock:^(NSString *blob, NSUInteger idx, BOOL *stop) {
+        NSString *blobPath = [[self blobStorePath] stringByAppendingPathComponent:blob];
         [self adjustFileSize:blobPath factor:1];
-        [_blobsAccess addObject:[blobPath lastPathComponent]];
+        [_blobsAccess addObject:[blob lastPathComponent]];
     }];
+    NUXDebug(@"Initiate blob store: %lld", [_currentSize longLongValue]);
 }
 
 -(void)adjustFileSize:(NSString *)filePath factor:(int)factor {
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
     _currentSize = [NSNumber numberWithLongLong:[_currentSize longLongValue] + ([attributes fileSize] * factor)];
-    NUXDebug(@"Blob store size: %lld", [_currentSize longLongValue]);
 }
 
 -(NSString *)blobPath:(NSString *)digest {
@@ -203,8 +203,10 @@
 }
 
 -(void)removeBlobFileWithDigest:(NSString *)digest {
-    [self adjustFileSize:[self blobPath:digest] factor:-1];
-    [[NSFileManager defaultManager] removeItemAtPath:[self blobPath:digest] error:nil];
+    if ([self hasBlob:digest]) {
+        [self adjustFileSize:[self blobPath:digest] factor:-1];
+        [[NSFileManager defaultManager] removeItemAtPath:[self blobPath:digest] error:nil];
+    }
 }
 
 #pragma mark -
