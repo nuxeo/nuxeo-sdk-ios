@@ -23,8 +23,7 @@
 -(BOOL)removeBlob:(NSString *)digest;
 -(BOOL)removeBlobFromDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath;
 
--(NSString *)saveBlobFromPath:(NSString *)path withDigest:(NSString *)digest;
--(NSString *)saveBlobFromPath:(NSString *)path withDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath;
+-(NSString *)saveBlobFromPath:(NSString *)path withDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath error:(NSError **)error;
 
 -(void)reset;
 -(NSInteger)count;

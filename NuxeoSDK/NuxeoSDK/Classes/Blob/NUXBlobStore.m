@@ -83,29 +83,6 @@
     return YES;
 }
 
--(NSString *)saveBlobFromPath:(NSString *)path withDigest:(NSString *)digest
-{
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager isReadableFileAtPath:path]) {
-        return NULL;
-    }
-    
-    NSError *error;
-    [self removeBlob:digest];
-    NSString *blobPath = [self blobPath:digest];
-    
-    BOOL ret = [fileManager copyItemAtPath:path toPath:blobPath error:&error];
-    if (!ret) {
-        NUXDebug(@"Can't save file localy. %@", error);
-        return NULL;
-    }
-    
-    [_blobsAccess insertObject:digest atIndex:0];
-    [self adjustFileSize:blobPath factor:1];
-    [self cleanStore];
-    return blobPath;
-}
-
 #pragma mark -
 
 -(NSString *)blobFromDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath
@@ -125,13 +102,36 @@
 }
 
 
--(NSString *)saveBlobFromPath:(NSString *)path withDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath
+-(NSString *)saveBlobFromPath:(NSString *)path withDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath error:(NSError **)error
 {
-    return [self saveBlobFromPath:path withDigest:[self digestFromDocument:document metadataXPath:xpath]];
+    return [self saveBlobFromPath:path withDigest:[self digestFromDocument:document metadataXPath:xpath] error:error];
 }
 
 #pragma mark -
 #pragma mark Internal methods
+
+-(NSString *)saveBlobFromPath:(NSString *)path withDigest:(NSString *)digest error:(NSError **)error
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager isReadableFileAtPath:path]) {
+        return NULL;
+    }
+    
+    [self removeBlob:digest];
+    NSString *blobPath = [self blobPath:digest];
+    
+    BOOL ret = [fileManager copyItemAtPath:path toPath:blobPath error:error];
+    
+    if (!ret) {
+        NUXDebug(@"Can't save file localy. %@", *error);
+        return NULL;
+    }
+    
+    [_blobsAccess insertObject:digest atIndex:0];
+    [self adjustFileSize:blobPath factor:1];
+    [self cleanStore];
+    return blobPath;
+}
 
 -(void)cleanStore {
     BOOL countOverLimit = [self.countLimit intValue] > 0 && [self.countLimit compare:@([self count])] == NSOrderedAscending;
