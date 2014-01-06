@@ -25,6 +25,9 @@
         self.countLimit = @(100);
         self.sizeLimit = @(-1);
         
+        self.filenameProperty = @"filename";
+        self.digestProperty = @"digest";
+        
         [self recomputeBlobAccess];
     }
     return self;
@@ -36,6 +39,8 @@
     _currentSize = Nil;
     _countLimit = Nil;
     _sizeLimit = Nil;
+    _filenameProperty = Nil;
+    _digestProperty = Nil;
 }
 
 -(void)reset
@@ -199,7 +204,7 @@
     if (!property) {
         return NULL;
     }
-    return [property valueForKey:@"digest"];
+    return [property valueForKey:self.digestProperty];
 }
 
 -(void)removeBlobFileWithDigest:(NSString *)digest {

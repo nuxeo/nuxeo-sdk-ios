@@ -14,6 +14,9 @@
 @property NSNumber *countLimit;
 @property NSNumber *sizeLimit;
 
+@property NSString *filenameProperty;
+@property NSString *digestProperty;
+
 -(NSString *)blob:(NSString *)digest;
 -(NSString *)blobFromDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath;
 
