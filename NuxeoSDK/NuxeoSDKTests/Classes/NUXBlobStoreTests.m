@@ -10,7 +10,7 @@
 #import "NUXBlobStore.h"
 
 @interface NUXBlobStore (private)
-    -(NSString *)saveBlobFromPath:(NSString *)path withDigest:(NSString *)digest error:(NSError **)error;
+-(NSString *)saveBlobFromPath:(NSString *)path withDigest:(NSString *)digest filename:(NSString *)filename error:(NSError **)error;
 @end
 
 @interface NUXBlobStoreTests : NUXAbstractTestCase
@@ -79,32 +79,36 @@
         NSString *digest = [self randomDigest];
         
         [digests addObject:digest];
-        [bs saveBlobFromPath:filePath withDigest:digest error:nil];
+        [bs saveBlobFromPath:filePath withDigest:digest filename:@"file1" error:nil];
     }
     
     XCTAssertTrue(5 == [bs count], @"Count should be 5 but is %@", @([bs count]));
     
-    [bs saveBlobFromPath:filePath withDigest:[digests objectAtIndex:0] error:nil];
-    [bs saveBlobFromPath:filePath withDigest:[digests objectAtIndex:1] error:nil];
-    [bs saveBlobFromPath:filePath withDigest:[digests objectAtIndex:2] error:nil];
+    NSString *filename = @"MyFileName";
+    [bs saveBlobFromPath:filePath withDigest:[digests objectAtIndex:0] filename:filename error:nil];
+    [bs saveBlobFromPath:filePath withDigest:[digests objectAtIndex:1] filename:@"file2" error:nil];
+    [bs saveBlobFromPath:filePath withDigest:[digests objectAtIndex:2] filename:@"file3" error:nil];
     XCTAssertTrue(5 == [bs count], @"Count should be 5 but is %@", @([bs count]));
+    
+    XCTAssertEqualObjects(filename, [[bs blob:[digests objectAtIndex:0]] lastPathComponent]);
+    XCTAssertNotEqualObjects(filename, [[bs blob:[digests objectAtIndex:1]] lastPathComponent]);
 }
 
 -(void)testThatLatestItemIsRemoved {
     NSInteger nbFiles = 6;
     NSString *digest = [self randomDigest];
-    [bs saveBlobFromPath:filePath withDigest:digest error:nil];
+    [bs saveBlobFromPath:filePath withDigest:digest filename:@"file1" error:nil];
     
     NSString *ndDigest = [self randomDigest];
-    [bs saveBlobFromPath:filePath withDigest:ndDigest error:nil];
+    [bs saveBlobFromPath:filePath withDigest:ndDigest filename:@"file1" error:nil];
     
     // Loop 2 times, to change access order of the second inserted file to still have it in the cache
     for (int i = 0; i < nbFiles; i++) {
-        [bs saveBlobFromPath:filePath withDigest:[self randomDigest] error:nil];
+        [bs saveBlobFromPath:filePath withDigest:[self randomDigest] filename:@"file1" error:nil];
     }
     [bs blob:ndDigest];
     for (int i = 0; i < nbFiles; i++) {
-        [bs saveBlobFromPath:filePath withDigest:[self randomDigest] error:nil];
+        [bs saveBlobFromPath:filePath withDigest:[self randomDigest] filename:@"file1" error:nil];
     }
     
     XCTAssertTrue(10 == [bs count], @"Count should be 10 but is %@", @([bs count]));
@@ -118,7 +122,7 @@
     bs.sizeLimit = @(fileSize * 5.5);
 
     for (int i = 0; i < 7; i++) {
-        [bs saveBlobFromPath:filePath withDigest:[self randomDigest] error:nil];
+        [bs saveBlobFromPath:filePath withDigest:[self randomDigest] filename:@"file1" error:nil];
     }
     
     XCTAssertTrue(5 == [bs count], @"Size limit count should be 6 but is %@", @([bs count]));

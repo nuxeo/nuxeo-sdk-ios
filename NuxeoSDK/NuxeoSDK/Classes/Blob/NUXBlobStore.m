@@ -10,6 +10,7 @@
 #import "NUXConstants.h"
 
 #define kStoreFolderName @"org.nuxeo.cache.blob"
+#define kErrorDomain @"org.nuxeo.error.blobstore"
 
 @implementation NUXBlobStore {
     NSMutableArray *_blobsAccess;
@@ -68,12 +69,12 @@
         return NULL;
     }
     [self updateAccessForDigest:digest];
-    return [self blobPath:digest];
+    return [self blobPathWithDigest:digest];
 }
 
 -(BOOL)hasBlob:(NSString *)digest
 {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self blobPath:digest]];
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self digestDirectoryPath:digest]];
 }
 
 -(BOOL)removeBlob:(NSString *)digest
@@ -109,22 +110,27 @@
 
 -(NSString *)saveBlobFromPath:(NSString *)path withDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath error:(NSError **)error
 {
-    return [self saveBlobFromPath:path withDigest:[self digestFromDocument:document metadataXPath:xpath] error:error];
+    return [self saveBlobFromPath:path withDigest:[self digestFromDocument:document metadataXPath:xpath] filename:[self filenameFromDocument:document metadataXPath:xpath] error:error];
 }
 
 #pragma mark -
 #pragma mark Internal methods
 
--(NSString *)saveBlobFromPath:(NSString *)path withDigest:(NSString *)digest error:(NSError **)error
+-(NSString *)saveBlobFromPath:(NSString *)path withDigest:(NSString *)digest filename:(NSString *)filename error:(NSError **)error
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager isReadableFileAtPath:path]) {
+        *error = [NSError errorWithDomain:kErrorDomain code:1 userInfo:nil];
         return NULL;
     }
     
     [self removeBlob:digest];
-    NSString *blobPath = [self blobPath:digest];
+    NSString *digestDirectory = [self digestDirectoryPath:digest];
+    if (![fileManager createDirectoryAtPath:digestDirectory withIntermediateDirectories:YES attributes:nil error:error]) {
+        return NULL;
+    }
     
+    NSString *blobPath = [digestDirectory stringByAppendingPathComponent:filename];
     BOOL ret = [fileManager copyItemAtPath:path toPath:blobPath error:error];
     
     if (!ret) {
@@ -164,13 +170,21 @@
 -(void)recomputeBlobAccess {
     [_blobsAccess removeAllObjects];
     NSError *error;
-    NSArray *blobs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self blobStorePath] error:&error];
+    NSArray *blobs = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[self blobStorePath] error:&error];
     if (!blobs) {
         [NUXException raise:@"Can't read dir content" format:@"Unable to read blob store files content. %@", error];
     }
     [blobs enumerateObjectsUsingBlock:^(NSString *blob, NSUInteger idx, BOOL *stop) {
         NSString *blobPath = [[self blobStorePath] stringByAppendingPathComponent:blob];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:blobPath isDirectory:NO]) {
+            // Ignore folder
+            return;
+        }
+        
         [self adjustFileSize:blobPath factor:1];
+        NSLog(@"Blob: %@", blob);
+        blob = [blob stringByDeletingLastPathComponent];
+        NSLog(@"Blob2: %@", blob);
         [_blobsAccess addObject:[blob lastPathComponent]];
     }];
     NUXDebug(@"Initiate blob store: %lld", [_currentSize longLongValue]);
@@ -181,8 +195,22 @@
     _currentSize = [NSNumber numberWithLongLong:[_currentSize longLongValue] + ([attributes fileSize] * factor)];
 }
 
--(NSString *)blobPath:(NSString *)digest {
+-(NSString *)digestDirectoryPath:(NSString *)digest {
     return [[self blobStorePath] stringByAppendingPathComponent:digest];
+}
+
+-(NSString *)blobPathWithDigest:(NSString *)digest {
+    NSString *digestDir = [self digestDirectoryPath:digest];
+    NSArray *content = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:digestDir error:nil];
+    
+    return [content count] > 0 ? [digestDir stringByAppendingPathComponent:[content objectAtIndex:0]] : nil;
+}
+
+-(NSString *)blobPathWithDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath {
+    NSString *digest = [self digestFromDocument:document metadataXPath:xpath];
+    NSString *filename = [self filenameFromDocument:document metadataXPath:xpath];
+    
+    return [[self blobPathWithDigest:digest] stringByAppendingPathComponent:filename];
 }
 
 -(NSString *)blobStorePath {
@@ -199,6 +227,14 @@
     return path;
 }
 
+-(NSString *)filenameFromDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath {
+    NSDictionary *property = [document.properties valueForKey:xpath];
+    if (!property) {
+        return NULL;
+    }
+    return [property valueForKey:self.filenameProperty];
+}
+
 -(NSString *)digestFromDocument:(NUXDocument *)document metadataXPath:(NSString *)xpath {
     NSDictionary *property = [document.properties valueForKey:xpath];
     if (!property) {
@@ -209,8 +245,8 @@
 
 -(void)removeBlobFileWithDigest:(NSString *)digest {
     if ([self hasBlob:digest]) {
-        [self adjustFileSize:[self blobPath:digest] factor:-1];
-        [[NSFileManager defaultManager] removeItemAtPath:[self blobPath:digest] error:nil];
+        [self adjustFileSize:[self blobPathWithDigest:digest] factor:-1];
+        [[NSFileManager defaultManager] removeItemAtPath:[self digestDirectoryPath:digest] error:nil];
     }
 }
 
