@@ -134,7 +134,7 @@
     BOOL ret = [fileManager copyItemAtPath:path toPath:blobPath error:error];
     
     if (!ret) {
-        NUXDebug(@"Can't save file localy. %@", *error);
+//        NUXDebug(@"Can't save file localy. %@", *error);
         return NULL;
     }
     
