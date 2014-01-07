@@ -29,6 +29,7 @@
         self.filenameProperty = @"filename";
         self.digestProperty = @"digest";
         
+        [self deleteOld];
         [self recomputeBlobAccess];
     }
     return self;
@@ -165,6 +166,18 @@
 -(void)updateAccessForDigest:(NSString *)digest {
     [_blobsAccess removeObject:digest];
     [_blobsAccess insertObject:digest atIndex:0];
+}
+
+-(void)deleteOld {
+    NSError *error;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *blobs = [fileManager contentsOfDirectoryAtPath:[self blobStorePath] error:&error];
+    [blobs enumerateObjectsUsingBlock:^(NSString *blob, NSUInteger idx, BOOL *stop) {
+        NSString *blobPath = [[self blobStorePath] stringByAppendingPathComponent:blob];
+        if ([fileManager fileExistsAtPath:blobPath isDirectory:NO]) {
+            [fileManager removeItemAtPath:blobPath error:nil];
+        }
+    }];
 }
 
 -(void)recomputeBlobAccess {

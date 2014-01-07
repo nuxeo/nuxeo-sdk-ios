@@ -82,12 +82,14 @@
         [bs saveBlobFromPath:filePath withDigest:digest filename:@"file1" error:nil];
     }
     
+    NSLog(@"Count1: %ld", (long)[bs count]);
     XCTAssertTrue(5 == [bs count], @"Count should be 5 but is %@", @([bs count]));
     
     NSString *filename = @"MyFileName";
     [bs saveBlobFromPath:filePath withDigest:[digests objectAtIndex:0] filename:filename error:nil];
     [bs saveBlobFromPath:filePath withDigest:[digests objectAtIndex:1] filename:@"file2" error:nil];
     [bs saveBlobFromPath:filePath withDigest:[digests objectAtIndex:2] filename:@"file3" error:nil];
+    NSLog(@"Count2: %ld", (long)[bs count]);
     XCTAssertTrue(5 == [bs count], @"Count should be 5 but is %@", @([bs count]));
     
     XCTAssertEqualObjects(filename, [[bs blob:[digests objectAtIndex:0]] lastPathComponent]);
