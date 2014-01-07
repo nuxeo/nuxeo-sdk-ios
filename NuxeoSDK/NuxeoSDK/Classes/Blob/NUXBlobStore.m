@@ -26,7 +26,7 @@
         self.countLimit = @(100);
         self.sizeLimit = @(-1);
         
-        self.filenameProperty = @"filename";
+        self.filenameProperty = @"name";
         self.digestProperty = @"digest";
         
         [self deleteOld];
@@ -119,6 +119,11 @@
 
 -(NSString *)saveBlobFromPath:(NSString *)path withDigest:(NSString *)digest filename:(NSString *)filename error:(NSError **)error
 {
+    if (digest == nil || filename == nil) {
+        *error = [NSError errorWithDomain:kErrorDomain code:2 userInfo:nil];
+        return NULL;
+    }
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager isReadableFileAtPath:path]) {
         *error = [NSError errorWithDomain:kErrorDomain code:1 userInfo:nil];
@@ -174,7 +179,8 @@
     NSArray *blobs = [fileManager contentsOfDirectoryAtPath:[self blobStorePath] error:&error];
     [blobs enumerateObjectsUsingBlock:^(NSString *blob, NSUInteger idx, BOOL *stop) {
         NSString *blobPath = [[self blobStorePath] stringByAppendingPathComponent:blob];
-        if ([fileManager fileExistsAtPath:blobPath isDirectory:NO]) {
+        BOOL isDirectory = NO;
+        if ([fileManager fileExistsAtPath:blobPath isDirectory:&isDirectory] && !isDirectory) {
             [fileManager removeItemAtPath:blobPath error:nil];
         }
     }];
@@ -189,7 +195,8 @@
     }
     [blobs enumerateObjectsUsingBlock:^(NSString *blob, NSUInteger idx, BOOL *stop) {
         NSString *blobPath = [[self blobStorePath] stringByAppendingPathComponent:blob];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:blobPath isDirectory:NO]) {
+        BOOL isDirectory = NO;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:blobPath isDirectory:&isDirectory] && isDirectory) {
             // Ignore folder
             return;
         }
