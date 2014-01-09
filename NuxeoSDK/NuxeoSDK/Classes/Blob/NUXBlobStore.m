@@ -82,8 +82,11 @@
     if (!(digest && [self hasBlob:digest])) {
         return NULL;
     }
-    [self updateAccessForDigest:digest];
-    return [self blobPathWithDigest:digest];
+    NSString *blobPath = [self blobPathWithDigest:digest];
+    if (blobPath != nil) {
+        [self updateAccessForDigest:digest file:blobPath];
+    }
+    return blobPath;
 }
 
 -(BOOL)hasBlob:(NSString *)digest
@@ -153,7 +156,6 @@
     BOOL ret = [fileManager copyItemAtPath:path toPath:blobPath error:error];
     
     if (!ret) {
-//        NUXDebug(@"Can't save file localy. %@", *error);
         return NULL;
     }
     
@@ -181,9 +183,12 @@
     }
 }
 
--(void)updateAccessForDigest:(NSString *)digest {
+-(void)updateAccessForDigest:(NSString *)digest file:(NSString *)filePath {
     [_blobsAccess removeObject:digest];
     [_blobsAccess insertObject:digest atIndex:0];
+    
+    // Update manually NSURLContentModificationDateKey while accessing a blob to ensure to delete oldest file first
+    [[NSURL fileURLWithPath:filePath] setResourceValue:[NSDate new] forKey:NSURLContentModificationDateKey error:nil];
 }
 
 -(void)deleteOld {
@@ -215,17 +220,31 @@
         }
         
         [self adjustFileSize:blobPath factor:1];
-        NSLog(@"Blob: %@", blob);
         blob = [blob stringByDeletingLastPathComponent];
-        NSLog(@"Blob2: %@", blob);
         [_blobsAccess addObject:[blob lastPathComponent]];
     }];
+    
+    // After testing; NSURLContentAccess is never updated. To ensure to delete oldest file first,
+    // we sort using modificationDate (updated while accessing the blob)
+    [_blobsAccess sortUsingComparator:^NSComparisonResult(NSString *blob1, NSString *blob2) {
+        NSString *blobPath1 = [self blobPathWithDigest:blob1];
+        NSString *blobPath2 = [self blobPathWithDigest:blob2];
+        
+        NSDate *blobDate1;
+        [[NSURL fileURLWithPath:blobPath1] getResourceValue:&blobDate1 forKey:NSURLContentModificationDateKey error:nil];
+        NSDate *blobDate2;
+        [[NSURL fileURLWithPath:blobPath2] getResourceValue:&blobDate2 forKey:NSURLContentModificationDateKey error:nil];
+        
+        return [blobDate2 compare:blobDate1];
+    }];
+    
     NUXDebug(@"Initiate blob store: %lld", [_currentSize longLongValue]);
 }
 
 -(void)adjustFileSize:(NSString *)filePath factor:(int)factor {
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
     _currentSize = [NSNumber numberWithLongLong:[_currentSize longLongValue] + ([attributes fileSize] * factor)];
+    NUXDebug(@"CurrentSize: %@", _currentSize);
 }
 
 -(NSString *)digestDirectoryPath:(NSString *)digest {
