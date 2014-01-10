@@ -226,19 +226,31 @@
     
     // After testing; NSURLContentAccess is never updated. To ensure to delete oldest file first,
     // we sort using modificationDate (updated while accessing the blob)
+    NSMutableDictionary *blobDates = [NSMutableDictionary new];
     [_blobsAccess sortUsingComparator:^NSComparisonResult(NSString *blob1, NSString *blob2) {
-        NSString *blobPath1 = [self blobPathWithDigest:blob1];
-        NSString *blobPath2 = [self blobPathWithDigest:blob2];
+        NSDate *blobDate1 = [blobDates objectForKey:blob1];
+        if (blobDate1 == nil) {
+            blobDate1 = [self contentModificationDateForDigest:blob1];
+            [blobDates setObject:blobDate1 forKey:blob1];
+        }
         
-        NSDate *blobDate1;
-        [[NSURL fileURLWithPath:blobPath1] getResourceValue:&blobDate1 forKey:NSURLContentModificationDateKey error:nil];
-        NSDate *blobDate2;
-        [[NSURL fileURLWithPath:blobPath2] getResourceValue:&blobDate2 forKey:NSURLContentModificationDateKey error:nil];
+        NSDate *blobDate2 = [blobDates objectForKey:blob2];
+        if (blobDate2 == nil) {
+            blobDate2 = [self contentModificationDateForDigest:blob2];
+            [blobDates setObject:blobDate2 forKey:blob2];
+        }
         
         return [blobDate2 compare:blobDate1];
     }];
     
     NUXDebug(@"Initiate blob store: %lld", [_currentSize longLongValue]);
+}
+
+-(NSDate *)contentModificationDateForDigest:(NSString *)digest {
+    NSString *blobPath = [self blobPathWithDigest:digest];
+    NSDate *blobDate;
+    [[NSURL fileURLWithPath:blobPath] getResourceValue:&blobDate forKey:NSURLContentModificationDateKey error:nil];
+    return blobDate;
 }
 
 -(void)adjustFileSize:(NSString *)filePath factor:(int)factor {
