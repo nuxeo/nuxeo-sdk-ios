@@ -169,7 +169,7 @@
     BOOL countOverLimit = [self.countLimit intValue] > 0 && [self.countLimit compare:@([self count])] == NSOrderedAscending;
     BOOL sizeOverLimit = [self.sizeLimit longLongValue] > 0 && [self.sizeLimit compare:_currentSize] == NSOrderedAscending;
     
-    NUXDebug(@"count: %ld/%@, size: %lld/%@", [self count], self.countLimit, [_currentSize longLongValue], self.sizeLimit);
+    NUXDebug(@"count: %ld/%@, size: %lld/%@", (long)[self count], self.countLimit, [_currentSize longLongValue], self.sizeLimit);
     if (countOverLimit || sizeOverLimit) {
         while (countOverLimit || sizeOverLimit) {
             NSString *digest = [_blobsAccess lastObject];
