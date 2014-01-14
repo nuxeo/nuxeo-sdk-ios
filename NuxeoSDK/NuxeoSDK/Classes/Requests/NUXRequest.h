@@ -31,6 +31,8 @@
 @property NSString *method;
 @property NSString *contentType;
 @property NSString *repository;
+@property NSString *username;
+@property NSString *password;
 @property NSString *downloadDestinationPath;
 @property NSMutableData *postData;
 @property(readonly) NSArray *schemas;

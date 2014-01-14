@@ -78,6 +78,8 @@
     self.postData = Nil;
     self.mutableHeaders = nil;
     self.mutableParameters = nil;
+    self.username = nil;
+    self.password = nil;
 }
 
 - (NUXRequest *)addURLSegment:(NSString *)aSegment {

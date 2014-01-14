@@ -120,6 +120,8 @@ NSString *const kApiPrefix = @"ApiPrefix";
     request.shouldContinueWhenAppEntersBackground = nRequest.shouldContinueWhenAppEntersBackground;
 
     [request setRequestMethod:nRequest.method];
+    request.username = nRequest.username;
+    request.password = nRequest.password;
 
     ASIHTTPRequest *__weak wRequest = request;
     [request setCompletionBlock:^{
