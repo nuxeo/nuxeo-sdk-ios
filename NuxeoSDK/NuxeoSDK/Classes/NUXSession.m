@@ -40,10 +40,7 @@
 
 @implementation NUXSession
 
-NSString *const kPropertyFileName = @"NUXSession-info";
 NSString *const kURLKey = @"URL";
-NSString *const kUsernameKey = @"Username";
-NSString *const kPasswordKey = @"Password";
 NSString *const kRepositoryKey = @"Repository";
 NSString *const kApiPrefix = @"ApiPrefix";
 
@@ -65,18 +62,16 @@ NSString *const kApiPrefix = @"ApiPrefix";
     [self setQueue:Nil];
     [self setDownloadQueue:nil];
     [self setSchemas:Nil];
-    [self setUsername:Nil];
     [self setUrl:Nil];
-    [self setPassword:Nil];
     [self setRepository:Nil];
+    [self setAuthenticator:nil];
 }
 
-- (id)initWithServerURL:(NSURL *)url username:(NSString *)username password:(NSString *)password {
+- (id)initWithServerURL:(NSURL *)url authenticator:(id<NUXAuthenticator>)authenticator {
     self = [[NUXSession alloc] init];
     if (self) {
         [self setUrl:url];
-        [self setUsername:username];
-        [self setPassword:password];
+        [self setAuthenticator:authenticator];
     }
     return self;
 }
@@ -155,24 +150,17 @@ NSString *const kApiPrefix = @"ApiPrefix";
         [request addRequestHeader:key value:obj];
     }];
     [request addRequestHeader:@"Content-Type" value:nRequest.contentType];
-
-    request.username = self.username;
-    request.password = self.password;
+    
+    if (self.authenticator != nil) {
+        [self.authenticator prepareRequest:request];
+    }
 
     return request;
 }
 
 - (void)setupWithFile:(NSString *)filePath {
     NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:filePath];
-    NSString *value = [plist valueForKey:kUsernameKey];
-    if (value != nil) {
-        self.username = value;
-    }
-    value = [plist valueForKey:kPasswordKey];
-    if (value != nil) {
-        self.password = value;
-    }
-    value = [plist valueForKey:kRepositoryKey];
+    NSString *value = [plist valueForKey:kRepositoryKey];
     if (value != nil) {
         self.repository = value;
     }

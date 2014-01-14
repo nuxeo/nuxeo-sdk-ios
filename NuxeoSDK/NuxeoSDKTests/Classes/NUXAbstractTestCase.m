@@ -21,6 +21,7 @@
 
 #import "NUXAbstractTestCase.h"
 #import "NUXSQLiteDatabase.h"
+#import "NUXBasicAuthenticator.h"
 
 #define NUX_XCTEST 1
 
@@ -53,7 +54,9 @@
     [super setUp];
     
     NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
-    session = [[NUXSession alloc] initWithServerURL:url username:@"Administrator" password:@"Administrator"];
+    NUXBasicAuthenticator *authenticator = [[NUXBasicAuthenticator alloc] initWithUsername:@"Administrator" password:@"Administrator"];
+    
+    session = [[NUXSession alloc] initWithServerURL:url authenticator:authenticator];
     [session addDefaultSchemas:@[@"dublincore"]];
     
     [[NUXSQLiteDatabase shared] deleteDatabase];

@@ -10,6 +10,7 @@
 		0330425B4DD5438799AE0594 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5280D3516EB8463E996F4F5A /* libPods.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		510266C6185F0DF30017FB36 /* NUXException.m in Sources */ = {isa = PBXBuildFile; fileRef = 510266C5185F0DF30017FB36 /* NUXException.m */; };
 		5104E9A0183A80E100F1EB5D /* NUXSession-info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5104E99F183A80E100F1EB5D /* NUXSession-info.plist */; };
+		512486EF18845DBC00F086EF /* NUXBasicAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 512486EE18845DBC00F086EF /* NUXBasicAuthenticator.m */; };
 		51B2B7B4184E269A00AE2DD1 /* NUXHierarchyDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */; };
 		51B2B7B7184F31FA00AE2DD1 /* NUXBlobStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B6184F31FA00AE2DD1 /* NUXBlobStore.m */; };
 		51B2B7BA184F651B00AE2DD1 /* NUXBlobStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */; };
@@ -68,6 +69,9 @@
 		510266C4185F0DF30017FB36 /* NUXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXException.h; sourceTree = "<group>"; };
 		510266C5185F0DF30017FB36 /* NUXException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXException.m; sourceTree = "<group>"; };
 		5104E99F183A80E100F1EB5D /* NUXSession-info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NUXSession-info.plist"; sourceTree = "<group>"; };
+		512486EC18845C9C00F086EF /* NUXAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXAuthenticator.h; sourceTree = "<group>"; };
+		512486ED18845DBC00F086EF /* NUXBasicAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXBasicAuthenticator.h; sourceTree = "<group>"; };
+		512486EE18845DBC00F086EF /* NUXBasicAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXBasicAuthenticator.m; sourceTree = "<group>"; };
 		51B2B7B2184E269A00AE2DD1 /* NUXHierarchyDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXHierarchyDB.h; sourceTree = "<group>"; };
 		51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXHierarchyDB.m; sourceTree = "<group>"; };
 		51B2B7B5184F31FA00AE2DD1 /* NUXBlobStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXBlobStore.h; sourceTree = "<group>"; };
@@ -247,9 +251,20 @@
 			path = Persistence;
 			sourceTree = "<group>";
 		};
+		AC0000CB9EED9FAD9A0914E5 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				512486EC18845C9C00F086EF /* NUXAuthenticator.h */,
+				512486ED18845DBC00F086EF /* NUXBasicAuthenticator.h */,
+				512486EE18845DBC00F086EF /* NUXBasicAuthenticator.m */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
 		AC0003DEE7C4FC5F7F4E26C7 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				AC0000CB9EED9FAD9A0914E5 /* Authentication */,
 				AC000CD3B7BE6543923E151E /* Blob */,
 				51C75E65183E0CF000EE0DCC /* Entity */,
 				AC000701894D032D9193C612 /* Hierarchy */,
@@ -463,6 +478,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				512486EF18845DBC00F086EF /* NUXBasicAuthenticator.m in Sources */,
 				AC00067C9BC7671E5ACF632E /* NUXSession+requests.m in Sources */,
 				AC0008BBE6F5D7709B958244 /* NUXSession.m in Sources */,
 				510266C6185F0DF30017FB36 /* NUXException.m in Sources */,

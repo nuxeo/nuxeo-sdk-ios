@@ -22,6 +22,7 @@
 #import <XCTest/XCTest.h>
 #include <stdlib.h>
 
+#import "NUXConstants.h"
 #import "NUXSession+requests.h"
 #import "NUXDocument.h"
 #import "NUXDocuments.h"

@@ -1,7 +1,6 @@
 //
-//  NUXConstants.h
+//  NUXBasicAuthentication.h
 //  NuxeoSDK
-//  Created by Arnaud Kervern on 2013-11-21.
 //
 /* (C) Copyright 2013-2014 Nuxeo SA (http://nuxeo.com/) and contributors.
  *
@@ -19,23 +18,9 @@
  *     Arnaud Kervern
  */
 
-#import <Foundation/Foundation.h>
-#import "NUXException.h"
+#import "NUXAuthenticator.h"
 
-@class NUXRequest;
-@class NUXEntity;
-
-#if NS_BLOCKS_AVAILABLE
-typedef void (^NUXBasicBlock)(void);
-typedef void (^NUXResponseBlock)(NUXRequest *request);
-typedef NSArray * (^NUXHierarchyBlock)(NUXEntity *entity, NSUInteger depth);
-typedef BOOL (^NUXInvalidationBlock)(NUXEntity *entity);
-#endif
-
-#ifdef DEBUG
-    #define NUXDebug(x, ...) NSLog(@"%s %d: " x, __FUNCTION__, __LINE__, ##__VA_ARGS__)
-#else
-    #define NUXDebug(x, ...)
-#endif
-
-#define kPropertyFileName @"NUXSession-info"
+@interface NUXBasicAuthenticator : NSObject <NUXAuthenticator>
+-(id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword;
+-(id)initWithPropertyFile;
+@end

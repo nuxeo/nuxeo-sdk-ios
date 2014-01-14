@@ -22,6 +22,7 @@
 #import <Foundation/Foundation.h>
 #import "NUXConstants.h"
 #import "NUXRequest.h"
+#import "NUXAuthenticator.h"
 
 @class NUXRequest;
 
@@ -29,13 +30,12 @@
 
 @property NSURL *url;
 @property NSString *apiPrefix;
-@property NSString *username;
-@property NSString *password;
 @property NSString *repository;
+@property id<NUXAuthenticator> authenticator;
 
 // Convenience init function to create a NUXSession object with url, username and password.
 // url must contains application name like: http://localhost:8080/nuxeo
-- (id)initWithServerURL:(NSURL *)url username:(NSString *)username password:(NSString *)password;
+- (id)initWithServerURL:(NSURL *)url authenticator:(id<NUXAuthenticator>)authenticator;
 
 // Register some schemas that will be added to all requests
 - (void)addDefaultSchemas:(NSArray *)schemas;
