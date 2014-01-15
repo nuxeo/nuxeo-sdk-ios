@@ -48,6 +48,7 @@
     // Ensure that document is not fetchable
     NUXRequest *request = [session requestDocument:@"/default-domain"];
     [request setCompletionBlock:^(NUXRequest *request) {
+        NSLog(@"URL: %@", request.url);
         XCTFail(@"Should fail with 401: %d", request.responseStatusCode);
     }];
     [request setFailureBlock:^(NUXRequest *request) {

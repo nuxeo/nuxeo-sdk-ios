@@ -52,6 +52,7 @@
 - (void)setUp
 {
     [super setUp];
+    [ASIHTTPRequest clearSession];
     
     NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
     NUXBasicAuthenticator *authenticator = [[NUXBasicAuthenticator alloc] initWithUsername:@"Administrator" password:@"Administrator"];

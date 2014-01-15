@@ -129,6 +129,8 @@
     ASIFormDataRequest *iRequest = [[ASIFormDataRequest alloc] initWithURL:url];
     [iRequest setRequestMethod:@"post"];
     [iRequest addRequestHeader:@"Content-type" value:@"application/json+nxrequest"];
+    iRequest.username = @"Administrator";
+    iRequest.password = @"Administrator";
 
     NSString *file = [[NSBundle bundleForClass:[NUXSession class]] pathForResource:@"NUXSession-info" ofType:@"plist"];
     id json = [NSJSONSerialization dataWithJSONObject:@{@"context" : @{@"currentDocument" : @"/management"}} options:0 error:nil];
@@ -141,6 +143,7 @@
         XCTAssertEqual(200, wReq.responseStatusCode);
     }];
     [iRequest setFailedBlock:^{
+        NSLog(@"status: %d", wReq.responseStatusCode);
         XCTFail(@"Fail.");
     }];
     [iRequest startSynchronous];
