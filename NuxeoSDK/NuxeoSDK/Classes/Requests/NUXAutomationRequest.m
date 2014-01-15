@@ -69,7 +69,7 @@
 }
 
 -(ASIHTTPRequest *)requestASI {
-    ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:self.URL];
+    ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:self.url];
     
     NSDictionary *params = @{@"context" : self.context, @"params" : self.parameters};
     [request addData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil] forKey:@"params"];

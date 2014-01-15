@@ -21,6 +21,7 @@
 
 #import "NUXAbstractTestCase.h"
 #import "ASIFormDataRequest.h"
+#import "NUXTokenAuthenticator.h"
 
 @interface NUXRequestTests : NUXAbstractTestCase
 
@@ -37,16 +38,16 @@
 }
 
 - (void)testRequestURLBuilder {
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1", request.URL.absoluteString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1", request.url.absoluteString);
 
     [[request addURLSegment:@"path/"] addURLSegment:@"default-domain"];
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain", request.URL.absoluteString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain", request.url.absoluteString);
 
     [request addAdaptor:@"child"];
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@child", request.URL.absoluteString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@child", request.url.absoluteString);
 
     [request addAdaptor:@"blob" withValue:@"file:content"];
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@child/@blob/file:content", request.URL.absoluteString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@child/@blob/file:content", request.url.absoluteString);
 }
 
 - (void)testRequestPropertiesRegistration {

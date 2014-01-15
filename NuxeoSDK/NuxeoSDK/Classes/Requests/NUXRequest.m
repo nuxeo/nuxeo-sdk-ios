@@ -24,7 +24,6 @@
 #import <ASIHTTPRequest.h>
 
 @interface NUXRequest ()
-@property NSURL *url;
 @property NUXSession *session;
 @property NSMutableDictionary *mutableHeaders;
 @property NSMutableDictionary *mutableParameters;
@@ -130,10 +129,6 @@
     return self;
 }
 
-- (NSURL *)URL {
-    return self.url;
-}
-
 - (NSDictionary *)headers {
     return [NSDictionary dictionaryWithDictionary:self.mutableHeaders];
 }
@@ -208,7 +203,7 @@
 }
 
 -(ASIHTTPRequest *)requestASI {
-    ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:self.URL];
+    ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:self.url];
     [request appendPostData:self.postData];
     
     if (self.parameters.count > 0) {

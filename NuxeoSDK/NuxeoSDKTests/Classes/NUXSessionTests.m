@@ -78,11 +78,11 @@
 
 - (void)testHelperMethods {
     NUXRequest *req = [session requestDocument:@"76c69a54-0230-457a-b42c-e819d5ace862"];
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/id/76c69a54-0230-457a-b42c-e819d5ace862", req.URL.absoluteString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/id/76c69a54-0230-457a-b42c-e819d5ace862", req.url.absoluteString);
     XCTAssertEqualObjects(@"GET", req.method);
 
     req = [session requestChildren:@"/default-domain"];
-    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@children", req.URL.absoluteString);
+    XCTAssertEqualObjects(@"http://localhost:8080/nuxeo/api/v1/path/default-domain/@children", req.url.absoluteString);
     XCTAssertEqualObjects(@"GET", req.method);
 
     [req setCompletionBlock:^(NUXRequest *rRequest) {
@@ -99,7 +99,7 @@
 - (void)testQueryRequestMethod {
     NUXRequest *request = [session requestQuery:@"Select * from Document"];
     XCTAssertEqualObjects(@"application/json", request.contentType);
-    NSLog(@"%@", request.URL.absoluteString);
+    NSLog(@"%@", request.url.absoluteString);
     [session startRequestSynchronous:request withCompletionBlock:^{
         XCTAssertEqual(200, request.responseStatusCode);
         NSDictionary *response = [request responseJSONWithError:nil];
@@ -179,7 +179,7 @@
     XCTAssertEqualObjects(@"another", sessionNd.repository);
     
     NUXRequest *request = [iSession requestChildren:@"/default-domain/test"];
-    XCTAssertEqualObjects(@"http://localhost:8080/test/api/v2/path/default-domain/test/@children", request.URL.absoluteString);
+    XCTAssertEqualObjects(@"http://localhost:8080/test/api/v2/path/default-domain/test/@children", request.url.absoluteString);
 }
 
 -(void)testDeleteDocumentRequest {

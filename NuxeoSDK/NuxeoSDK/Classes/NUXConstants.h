@@ -27,6 +27,7 @@
 
 #if NS_BLOCKS_AVAILABLE
 typedef void (^NUXBasicBlock)(void);
+typedef void (^NUXBooleanBlock)(BOOL);
 typedef void (^NUXResponseBlock)(NUXRequest *request);
 typedef NSArray * (^NUXHierarchyBlock)(NUXEntity *entity, NSUInteger depth);
 typedef BOOL (^NUXInvalidationBlock)(NUXEntity *entity);

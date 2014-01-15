@@ -122,6 +122,9 @@ NSString *const kApiPrefix = @"ApiPrefix";
     [request setRequestMethod:nRequest.method];
     request.username = nRequest.username;
     request.password = nRequest.password;
+    if (request.username && request.password) {
+        request.authenticationScheme = (NSString *)kCFHTTPAuthenticationSchemeBasic; // Force basic auth if credentials setted in NUXRequest
+    }
 
     ASIHTTPRequest *__weak wRequest = request;
     [request setCompletionBlock:^{
@@ -156,7 +159,7 @@ NSString *const kApiPrefix = @"ApiPrefix";
     if (self.authenticator != nil) {
         [self.authenticator prepareRequest:request];
     }
-
+    
     return request;
 }
 

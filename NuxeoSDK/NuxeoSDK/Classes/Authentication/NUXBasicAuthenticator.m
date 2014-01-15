@@ -65,5 +65,6 @@ NSString *const kPasswordKey = @"Password";
 -(void)prepareRequest:(ASIHTTPRequest *)request {
     request.username = _username;
     request.password = _password;
+    request.authenticationScheme = (NSString *)kCFHTTPAuthenticationSchemeBasic;
 }
 @end

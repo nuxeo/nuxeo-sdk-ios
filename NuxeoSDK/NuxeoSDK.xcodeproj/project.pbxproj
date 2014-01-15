@@ -11,6 +11,8 @@
 		510266C6185F0DF30017FB36 /* NUXException.m in Sources */ = {isa = PBXBuildFile; fileRef = 510266C5185F0DF30017FB36 /* NUXException.m */; };
 		5104E9A0183A80E100F1EB5D /* NUXSession-info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5104E99F183A80E100F1EB5D /* NUXSession-info.plist */; };
 		512486EF18845DBC00F086EF /* NUXBasicAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 512486EE18845DBC00F086EF /* NUXBasicAuthenticator.m */; };
+		512486F218854DF600F086EF /* NUXTokenAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 512486F118854DF600F086EF /* NUXTokenAuthenticator.m */; };
+		512486F418858D2A00F086EF /* NUXTokenAuthenticatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 512486F318858D2A00F086EF /* NUXTokenAuthenticatorTests.m */; };
 		51B2B7B4184E269A00AE2DD1 /* NUXHierarchyDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */; };
 		51B2B7B7184F31FA00AE2DD1 /* NUXBlobStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B6184F31FA00AE2DD1 /* NUXBlobStore.m */; };
 		51B2B7BA184F651B00AE2DD1 /* NUXBlobStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */; };
@@ -72,6 +74,9 @@
 		512486EC18845C9C00F086EF /* NUXAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXAuthenticator.h; sourceTree = "<group>"; };
 		512486ED18845DBC00F086EF /* NUXBasicAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXBasicAuthenticator.h; sourceTree = "<group>"; };
 		512486EE18845DBC00F086EF /* NUXBasicAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXBasicAuthenticator.m; sourceTree = "<group>"; };
+		512486F018854DF600F086EF /* NUXTokenAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXTokenAuthenticator.h; sourceTree = "<group>"; };
+		512486F118854DF600F086EF /* NUXTokenAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXTokenAuthenticator.m; sourceTree = "<group>"; };
+		512486F318858D2A00F086EF /* NUXTokenAuthenticatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXTokenAuthenticatorTests.m; sourceTree = "<group>"; };
 		51B2B7B2184E269A00AE2DD1 /* NUXHierarchyDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXHierarchyDB.h; sourceTree = "<group>"; };
 		51B2B7B3184E269A00AE2DD1 /* NUXHierarchyDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXHierarchyDB.m; sourceTree = "<group>"; };
 		51B2B7B5184F31FA00AE2DD1 /* NUXBlobStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXBlobStore.h; sourceTree = "<group>"; };
@@ -257,6 +262,8 @@
 				512486EC18845C9C00F086EF /* NUXAuthenticator.h */,
 				512486ED18845DBC00F086EF /* NUXBasicAuthenticator.h */,
 				512486EE18845DBC00F086EF /* NUXBasicAuthenticator.m */,
+				512486F018854DF600F086EF /* NUXTokenAuthenticator.h */,
+				512486F118854DF600F086EF /* NUXTokenAuthenticator.m */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -305,6 +312,7 @@
 				51C75E841847895800EE0DCC /* NUXDatabaseTests.m */,
 				51B2B7B9184F651B00AE2DD1 /* NUXBlobStoreTests.m */,
 				51B2B7BF1850E10B00AE2DD1 /* NUXEntityCacheTests.m */,
+				512486F318858D2A00F086EF /* NUXTokenAuthenticatorTests.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -483,6 +491,7 @@
 				AC0008BBE6F5D7709B958244 /* NUXSession.m in Sources */,
 				510266C6185F0DF30017FB36 /* NUXException.m in Sources */,
 				AC0007560E2BEEB56D1B23EF /* NUXRequest.m in Sources */,
+				512486F218854DF600F086EF /* NUXTokenAuthenticator.m in Sources */,
 				51C75E71183E0CF000EE0DCC /* NUXDocument.m in Sources */,
 				51B2B7B7184F31FA00AE2DD1 /* NUXBlobStore.m in Sources */,
 				51C75E74183E0CF000EE0DCC /* NUXJSONMapper.m in Sources */,
@@ -508,6 +517,7 @@
 				AC000B77A341A810EE6DACC4 /* NUXSessionTests.m in Sources */,
 				51C75E851847895800EE0DCC /* NUXDatabaseTests.m in Sources */,
 				51C75E7E1846071100EE0DCC /* NUXHierarchyTest.m in Sources */,
+				512486F418858D2A00F086EF /* NUXTokenAuthenticatorTests.m in Sources */,
 				51B2B7C01850E10B00AE2DD1 /* NUXEntityCacheTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

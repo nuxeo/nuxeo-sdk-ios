@@ -28,6 +28,7 @@
 @interface NUXRequest : NSObject
 
 @property BOOL shouldContinueWhenAppEntersBackground;
+@property NSURL *url;
 @property NSString *method;
 @property NSString *contentType;
 @property NSString *repository;
@@ -68,9 +69,6 @@
 
 // Add parameters to the request
 - (NUXRequest *)addParameterValue:(NSString *)value forKey:(NSString *)key;
-
-// Read access to the complete URL
-- (NSURL *)URL;
 
 // Read access to registered headers
 - (NSDictionary *)headers;
