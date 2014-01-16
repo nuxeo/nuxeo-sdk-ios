@@ -22,10 +22,6 @@
 #import <Foundation/Foundation.h>
 #import "NUXAbstractTestCase.h"
 
-@interface NUXEntityCache (private)
--(void)createTableIfNotExists;
-@end
-
 @interface NUXEntityCacheTests : NUXAbstractTestCase
 
 @end
@@ -43,7 +39,6 @@
 - (void)setUp {
     [super setUp];
     cache = [NUXEntityCache instance];
-    [cache createTableIfNotExists];
 }
 
 - (void)tearDown {

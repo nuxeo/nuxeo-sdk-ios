@@ -141,7 +141,7 @@
 
 -(NSArray *)readEntitiesFromList:(NSString *)aListName
 {
-    NSString *query = [NSString stringWithFormat:@"select entityPath from %@ where listName = '%@' order by 'order'", kEntitiesListTableName, aListName];
+    NSString *query = [NSString stringWithFormat:@"select entityPath from %@ where listName LIKE '%@' order by 'order'", kEntitiesListTableName, aListName];
     NSArray *res = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
         NSString *entityPath = [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
         return [self readEntityFromPath:entityPath];

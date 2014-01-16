@@ -25,6 +25,10 @@
 
 #define NUX_XCTEST 1
 
+@interface NUXEntityCache (private)
+-(void)createTableIfNotExists;
+@end
+
 @implementation NUXAbstractTestCase
 
 -(id)init
@@ -61,6 +65,7 @@
     [session addDefaultSchemas:@[@"dublincore"]];
     
     [[NUXSQLiteDatabase shared] deleteDatabase];
+    [[NUXEntityCache instance] createTableIfNotExists];
 }
 
 - (void)tearDown

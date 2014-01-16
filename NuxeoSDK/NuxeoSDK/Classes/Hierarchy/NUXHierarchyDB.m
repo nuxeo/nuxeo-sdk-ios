@@ -26,7 +26,6 @@
 
 #define kHierarchyTable @"hierarchyNode"
 #define kHierarchyLoadedTable @"hierarchyLoaded"
-#define kContentTable @"hierarchyContent"
 
 @implementation NUXHierarchyDB {
     NUXSQLiteDatabase* _db;
@@ -49,7 +48,6 @@
 
 -(void)createTableIfNeeded {
     [_db createTableIfNotExists:kHierarchyTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'docPath' TEXT, 'parentId' TEXT, 'parentPath' TEXT, 'depth' INTEGER, 'order' INTEGER"];
-    [_db createTableIfNotExists:kContentTable withField:@"'hierarchyName' TEXT, 'docId' TEXT, 'parentId' TEXT, 'order' INTEGER"];
     [_db createTableIfNotExists:kHierarchyLoadedTable withField:@"'hierarchyName' TEXT PRIMARY KEY, 'loaded' INTEGER"];
 }
 
@@ -73,7 +71,6 @@
 
 -(void)dropTable {
     [_db dropTableIfExists:kHierarchyTable];
-    [_db dropTableIfExists:kContentTable];
     [_db dropTableIfExists:kHierarchyLoadedTable];
 }
 
@@ -82,14 +79,10 @@
     [_db executeQuery:query];
     query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kHierarchyLoadedTable, hierarchyName];
     [_db executeQuery:query];
-
-    query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kContentTable, hierarchyName];
-    [_db executeQuery:query];
 }
 
 -(void)deleteContentForDocument:(NUXDocument *)document fromHierarchy:(NSString *)hierarchyName {
-    NSString *query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\" and parentId = \"%@\"", kContentTable, hierarchyName, document.uid];
-    [_db executeQuery:query];
+    [[NUXEntityCache instance] removeEntitiesList:[self contentListNameWithHierarchy:hierarchyName parentId:document.uid]];
 }
 
 -(void)insertNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NUXDocument *)parent andDepth:(NSInteger)depth {
@@ -114,11 +107,7 @@
 }
 
 -(BOOL)hasContentForNode:(NSString *)nodeId hierarchy:(NSString *)hierarchyName {
-    NSString *query = [NSString stringWithFormat:@"Select count(docId) from %@ where hierarchyName = \"%@\" and parentId = \"%@\"", kContentTable, hierarchyName, nodeId];
-    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
-        return @(sqlite3_column_int(stmt, 0));
-    }];
-    return [ret count] > 0 ? [[ret objectAtIndex:0] integerValue] > 0 : NO;
+    return [[NUXEntityCache instance] hasEntityList:[self contentListNameWithHierarchy:hierarchyName parentId:nodeId]];
 }
 
 -(NSArray *)selectIdsFromParent:(NSString *)parentRef hierarchy:(NSString *)hierarchyName {
@@ -136,11 +125,11 @@
 }
 
 -(NSArray *)selectContentFromNode:(NSString *)nodeId hierarchy:(NSString *)hierarchyName {
-    return [self selectFromTable:kContentTable parent:nodeId hierarchy:hierarchyName];
+    return [[NUXEntityCache instance] entitiesFromList:[self contentListNameWithHierarchy:hierarchyName parentId:nodeId]];
 }
 
 -(NSArray *)selectAllContentFromHierarchy:(NSString *)hierarchyName {
-    return [self selectFromTable:kContentTable parent:nil hierarchy:hierarchyName];
+    return [[NUXEntityCache instance] entitiesFromList:[self contentListNameWithHierarchy:hierarchyName parentId:@"%"]];
 }
 
 
@@ -159,19 +148,7 @@
 #pragma mark -
 
 -(void)insertInContentNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
-    NSString *columns = [NUXSQLiteDatabase sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"order"]];
-    NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kContentTable, columns, @"%@"];
-    
-    [docs enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
-        // Save entity in cache
-        [[NUXEntityCache instance] saveEntity:doc];
-        
-        NSString *values = [NUXSQLiteDatabase sqlitize:@[hierarchyName, doc.uid, parentId, @(idx)]];
-        if (![_db executeQuery:[NSString stringWithFormat:bQuery, values]]) {
-            // Handle error
-            NUXDebug(@"%@", [_db sqlInformatiomFromCode:[_db lastReturnCode]]);
-        }
-    }];
+    [[NUXEntityCache instance] saveEntities:docs withListName:[self contentListNameWithHierarchy:hierarchyName parentId:parentId] error:nil];
 }
 
 -(void)insertInHierarchyNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NUXDocument *)parent andDepth:(NSInteger)depth {
@@ -208,6 +185,11 @@
         return [[NUXEntityCache instance] entityWithId:docId class:[NUXDocument class]];;
     }];
     return ret;
+}
+
+-(NSString *)contentListNameWithHierarchy:(NSString *)hierarchyName parentId:(NSString *)parentId
+{
+    return [NSString stringWithFormat:@"HIERARCHY_%@_%@", hierarchyName, parentId];
 }
 
 #pragma mark
