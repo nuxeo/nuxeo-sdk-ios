@@ -36,7 +36,7 @@
 
 -(void)deleteDatabase;
 
--(BOOL)executeQuery:(NSString *)query;
+-(BOOL)executeQuery:(NSString *)query withParameters:(NSArray *)parameters;
 
 -(NSArray*)arrayOfObjectsFromQuery:(NSString*)query parameters:(NSArray *)parameters block:(id (^)(sqlite3_stmt *))aBlock;
 

@@ -54,14 +54,14 @@
 }
 
 -(void)createTableIfNotExists:(NSString *)tableName withField:(NSString *)fields {
-    [self executeQuery:[NSString stringWithFormat:@"create table if not exists '%@' (%@);", tableName, fields]];
+    [self executeQuery:[NSString stringWithFormat:@"create table if not exists '%@' (%@);", tableName, fields] withParameters:nil];
 }
 
 -(void)dropTableIfExists:(NSString *)tableName {
-    [self executeQuery:[NSString stringWithFormat:@"drop table if exists '%@';", tableName]];
+    [self executeQuery:[NSString stringWithFormat:@"drop table if exists '%@';", tableName] withParameters:nil];
 }
 
--(BOOL)executeQuery:(NSString *)query {
+-(BOOL)executeQuery:(NSString *)query withParameters:(NSArray *)parameters {
     sqlite3 *db;
     NSString *dbPath = [self databasePath];
     
@@ -76,6 +76,9 @@
 			// Preparing a statement compiles the SQL query into a byte-code program in the SQLite library.
 			// The third parameter is either the length of the SQL string or -1 to read up to the first null terminator.
 			BOOL preparation = sqlite3_prepare_v2(db, utf8query, -1, &statement, &pzTail);
+            
+            // Bind parameters
+            [self bindParameters:parameters onStatement:statement];
 			
 			// Step through the statement even if failed to retrieve the error code
 			_ret = sqlite3_step(statement);

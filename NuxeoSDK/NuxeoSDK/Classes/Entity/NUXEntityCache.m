@@ -76,7 +76,7 @@
     [self dropEntitiesListEntries:aListName];
     
     NSString *columns = [NUXSQLiteDatabase sqlitize:@[@"listName", @"entityId", @"entityPath", @"order"]];
-    NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kEntitiesListTableName, columns, @"%@"];
+    NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (?,?,?,?)", kEntitiesListTableName, columns];
     
     NSMutableDictionary *errors = [NSMutableDictionary new];
     [entities enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -92,8 +92,7 @@
         }
         
         NSString *path = [self entityFilePathWithId:entity.entityId andType:entity.entityType];
-        NSString *fields = [NUXSQLiteDatabase sqlitize:@[aListName, entity.entityId, path, [NSNumber numberWithInt:idx]]];
-        if (![_db executeQuery:[NSString stringWithFormat:bQuery, fields]]) {
+        if (![_db executeQuery:bQuery withParameters:@[aListName, entity.entityId, path, @(idx)]]) {
             [errors setObject:kEntitiesInsertQueryError forKey:[obj description]];
             return;
         }
@@ -160,8 +159,8 @@
 
 -(BOOL)dropEntitiesListEntries:(NSString *)aListName
 {
-    NSString *query = [NSString stringWithFormat:@"delete from %@ where listName = \"%@\"", kEntitiesListTableName, aListName];
-    return [_db executeQuery:query];
+    NSString *query = [NSString stringWithFormat:@"delete from %@ where listName = ?", kEntitiesListTableName];
+    return [_db executeQuery:query withParameters:@[aListName]];
 }
 
 -(BOOL)isEntityExistsWithId:(NSString *)entityId andType:(NSString *)entityType {

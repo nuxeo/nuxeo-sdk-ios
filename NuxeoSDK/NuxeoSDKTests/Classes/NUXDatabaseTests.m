@@ -48,16 +48,17 @@
 {
     NSString *tblNAme = @"tmpTable";
     NSString *query = [NSString stringWithFormat:@"drop table if exists '%@';", tblNAme];
-    XCTAssertTrue([db executeQuery:query], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
+    XCTAssertTrue([db executeQuery:query withParameters:nil], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
     
     query = [NSString stringWithFormat:@"create table '%@' ('id' varchar, 'position' integer);", tblNAme];
-    XCTAssertTrue([db executeQuery:query], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
+    XCTAssertTrue([db executeQuery:query withParameters:nil], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
     
-    query = [NSString stringWithFormat:@"insert into '%@' ('wrongField', 'dsadsad') values ('abc', 123);", tblNAme];
-    XCTAssertFalse([db executeQuery:query], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
+    query = [NSString stringWithFormat:@"insert into '%@' ('wrongField', 'dsadsad') values (?,?);", tblNAme];
+    NSArray *params = @[@"abc", @(123)];
+    XCTAssertFalse([db executeQuery:query withParameters:params], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
     
-    query = [NSString stringWithFormat:@"insert into '%@' ('id', 'position') values ('abc', 123);", tblNAme];
-    XCTAssertTrue([db executeQuery:query], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
+    query = [NSString stringWithFormat:@"insert into '%@' ('id', 'position') values (?, ?);", tblNAme];
+    XCTAssertTrue([db executeQuery:query withParameters:params], @"Error: %@ (%@)", [db sqlInformatiomFromCode:[db lastReturnCode]], query);
 }
 
 -(void)testHierarchyQuery
