@@ -141,8 +141,8 @@
 
 -(NSArray *)readEntitiesFromList:(NSString *)aListName
 {
-    NSString *query = [NSString stringWithFormat:@"select entityPath from %@ where listName LIKE '%@' order by 'order'", kEntitiesListTableName, aListName];
-    NSArray *res = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+    NSString *query = [NSString stringWithFormat:@"select entityPath from %@ where listName LIKE ? order by 'order'", kEntitiesListTableName];
+    NSArray *res = [_db arrayOfObjectsFromQuery:query parameters:@[aListName] block:^id(sqlite3_stmt *stmt) {
         NSString *entityPath = [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
         return [self readEntityFromPath:entityPath];
     }];
@@ -151,8 +151,8 @@
 
 -(NSInteger)countListEntries:(NSString *)aListName
 {
-    NSString *query = [NSString stringWithFormat:@"Select count(rowId) from %@ where listName = \"%@\"", kEntitiesListTableName, aListName];
-    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+    NSString *query = [NSString stringWithFormat:@"Select count(rowId) from %@ where listName = ?", kEntitiesListTableName];
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query parameters:@[aListName] block:^id(sqlite3_stmt *stmt) {
         return @(sqlite3_column_int(stmt, 0));
     }];
     return [ret count] > 0 ? [[ret objectAtIndex:0] integerValue] : 0;

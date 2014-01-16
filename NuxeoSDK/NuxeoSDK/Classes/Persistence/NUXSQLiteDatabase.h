@@ -38,7 +38,7 @@
 
 -(BOOL)executeQuery:(NSString *)query;
 
--(NSArray*)arrayOfObjectsFromQuery:(NSString*)query block:(id (^)(sqlite3_stmt *))aBlock;
+-(NSArray*)arrayOfObjectsFromQuery:(NSString*)query parameters:(NSArray *)parameters block:(id (^)(sqlite3_stmt *))aBlock;
 
 -(NSString*)sqlInformatiomFromCode:(NSInteger)iErrorCode;
 

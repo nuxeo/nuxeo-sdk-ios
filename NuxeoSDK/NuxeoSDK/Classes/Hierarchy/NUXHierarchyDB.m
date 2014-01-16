@@ -62,8 +62,8 @@
 }
 
 -(BOOL)isHierarchyLoaded:(NSString *)hierarchyName {
-    NSString *query = [NSString stringWithFormat:@"select hierarchyName from %@ where hierarchyName = \"%@\"", kHierarchyLoadedTable, hierarchyName];
-    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+    NSString *query = [NSString stringWithFormat:@"select hierarchyName from %@ where hierarchyName = ?", kHierarchyLoadedTable];
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query parameters:@[hierarchyName] block:^id(sqlite3_stmt *stmt) {
         return [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
     }];
     return [ret count] > 0;
@@ -95,9 +95,9 @@
 
 -(NUXDocument *)selectNode:(NSString *)nodeRef hierarchy:(NSString *)hierarchyName {
     NSString *field = [nodeRef characterAtIndex:0] == '/' ? @"docPath" : @"docId";
-    NSString *query = [NSString stringWithFormat:@"select docId from %@ where hierarchyName = \"%@\" and %@ = \"%@\"", kHierarchyTable, hierarchyName, field, nodeRef];
+    NSString *query = [NSString stringWithFormat:@"select docId from %@ where hierarchyName = ? and %@ = ?", kHierarchyTable, field];
     
-    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query parameters:@[hierarchyName, nodeRef] block:^id(sqlite3_stmt *stmt) {
         NSString *docId = [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
         // Entities must be in cache.
         return [[NUXEntityCache instance] entityWithId:docId class:[NUXDocument class]];;
@@ -112,9 +112,9 @@
 
 -(NSArray *)selectIdsFromParent:(NSString *)parentRef hierarchy:(NSString *)hierarchyName {
     NSString *field = [self fieldForDocumentRef:parentRef];
-    NSString *query = [NSString stringWithFormat:@"select docId from %@ where %@ = \"%@\" and hierarchyName = \"%@\" order by 'order'", kHierarchyTable, field, parentRef, hierarchyName];
+    NSString *query = [NSString stringWithFormat:@"select docId from %@ where %@ = ? and hierarchyName = ? order by 'order'", kHierarchyTable, field];
     
-    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query parameters:@[parentRef, hierarchyName] block:^id(sqlite3_stmt *stmt) {
         return [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
     }];
     return ret;
@@ -134,8 +134,8 @@
 
 
 -(NSInteger)selectDepthForDocument:(NSString *)documentId hierarchy:(NSString *)hierarchyName {
-    NSString *query = [NSString stringWithFormat:@"Select depth from %@ where docId = \"%@\" and hierarchyName = \"%@\"", kHierarchyTable, documentId, hierarchyName];
-    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+    NSString *query = [NSString stringWithFormat:@"Select depth from %@ where docId = ? and hierarchyName = ?", kHierarchyTable];
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query parameters:@[documentId, hierarchyName] block:^id(sqlite3_stmt *stmt) {
         return @(sqlite3_column_int(stmt, 0));
     }];
     if ([ret count] > 0) {
@@ -172,14 +172,17 @@
 
 -(NSArray *)selectFromTable:(NSString *)table parent:(NSString *)parentId hierarchy:(NSString *)hierarchyName {
     NSString *query;
+    NSArray *params;
     if (!parentId) {
-        query = [NSString stringWithFormat:@"select docId from %@ where hierarchyName = \"%@\" order by 'order'", table, hierarchyName];
+        query = [NSString stringWithFormat:@"select docId from %@ where hierarchyName = ? order by 'order'", table];
+        params = @[hierarchyName];
     } else {
         NSString *field = [self fieldForDocumentRef:parentId];
-        query = [NSString stringWithFormat:@"select docId from %@ where %@ = \"%@\" and hierarchyName = \"%@\" order by 'order'", table, field, parentId, hierarchyName];
+        query = [NSString stringWithFormat:@"select docId from %@ where %@ = ? and hierarchyName = ? order by 'order'", table, field];
+        params = @[parentId, hierarchyName];
     }
     
-    NSArray *ret = [_db arrayOfObjectsFromQuery:query block:^id(sqlite3_stmt *stmt) {
+    NSArray *ret = [_db arrayOfObjectsFromQuery:query parameters:params block:^id(sqlite3_stmt *stmt) {
         NSString *docId = [NSString stringWithCString:(const char*)sqlite3_column_text(stmt, 0) encoding:NSUTF8StringEncoding];
         // Entities must be in cache.
         return [[NUXEntityCache instance] entityWithId:docId class:[NUXDocument class]];;

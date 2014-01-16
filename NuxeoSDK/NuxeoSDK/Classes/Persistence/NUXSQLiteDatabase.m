@@ -104,7 +104,7 @@
 	return (_ret == SQLITE_OK || _ret == SQLITE_DONE || _ret == SQLITE_ROW);
 }
 
-- (NSArray*)arrayOfObjectsFromQuery:(NSString*)query block:(id (^)(sqlite3_stmt *))aBlock
+- (NSArray*)arrayOfObjectsFromQuery:(NSString*)query parameters:(NSArray *)parameters block:(id (^)(sqlite3_stmt *))aBlock
 {
     NSMutableArray* aArray = [NSMutableArray new];
 	NSString* aDBpath = [self databasePath];
@@ -118,20 +118,19 @@
 		
 		// Preparing a statement compiles the SQL query into a byte-code program in the SQLite library.
 		// The third parameter is either the length of the SQL string or -1 to read up to the first null terminator.
-		_ret = sqlite3_prepare_v2(aDatabase, [query cStringUsingEncoding:NSUTF8StringEncoding], -1, &statement, NULL);
+		_ret = sqlite3_prepare_v2(aDatabase, [query UTF8String], -1, &statement, NULL);
+        
 		if (_ret == SQLITE_OK)
 		{
-			NSInteger aNbFetchedObject = 0;
+            [self bindParameters:parameters onStatement:statement];
+            
 			// We "step" through the results - once for each row.
             int step;
 			while ((step = sqlite3_step(statement)) == SQLITE_ROW)
 			{
                 [aArray addObject:aBlock(statement)];
-				
-				// Increase number of fetched objects
-				++aNbFetchedObject;
 			}
-            NUXDebug(@"pouet: %@", [self sqlInformatiomFromCode:step]);
+            NUXDebug(@"Error: %@", [self sqlInformatiomFromCode:step]);
 		}
 		else {
             // handle error
@@ -146,7 +145,22 @@
 	
     NUXDebug(@"Query: '%@', Result: %@", query, [self sqlInformatiomFromCode:_ret]);
 	return aArray;
-	
+}
+
+-(void)bindParameters:(NSArray *)parameters onStatement:(sqlite3_stmt *)statement {
+    // Bind parameters to query
+    [parameters enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSInteger paramIndex = 1 + idx;
+        if (obj == nil) {
+            sqlite3_bind_null(statement, paramIndex);
+        }
+        else if ([obj isKindOfClass:[NSString class]]) {
+            sqlite3_bind_text(statement, paramIndex, [obj UTF8String], -1, SQLITE_TRANSIENT);
+        }
+        else if ([obj isKindOfClass:[NSNumber class]]) {
+            sqlite3_bind_int(statement, paramIndex, [obj integerValue]);
+        }
+    }];
 }
 
 -(NSInteger)lastReturnCode {
