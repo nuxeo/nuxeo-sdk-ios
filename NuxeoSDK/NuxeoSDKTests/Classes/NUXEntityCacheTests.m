@@ -22,6 +22,10 @@
 #import <Foundation/Foundation.h>
 #import "NUXAbstractTestCase.h"
 
+@interface NUXEntityCache (private)
+-(void)createTableIfNotExists;
+@end
+
 @interface NUXEntityCacheTests : NUXAbstractTestCase
 
 @end
@@ -39,6 +43,7 @@
 - (void)setUp {
     [super setUp];
     cache = [NUXEntityCache instance];
+    [cache createTableIfNotExists];
 }
 
 - (void)tearDown {
@@ -73,6 +78,26 @@
 -(void)testCustomExceptionRaising {
     XCTAssertThrowsSpecific([NUXException raise:@"Pouet" format:@"Error: dasdsad"], NUXException, @"should thow a NUXException");
     XCTAssertNoThrowSpecific([NSException raise:@"Pouet" format:@"Error: dasdsad"], NUXException, @"should thow a NUXException");
+}
+
+-(void)testInsertEntitiesList {
+    NSArray *docs = @[[self dummyDocument], [self dummyDocument], [self dummyDocument], [self dummyDocument], [self dummyDocument], [self dummyDocument], [self dummyDocument]];
+    NSString *listName = @"testList";
+    XCTAssertTrue([cache saveEntities:docs withListName:listName error:nil]);
+    
+    XCTAssertTrue([cache hasEntityList:listName]);
+    NSArray *cached = [cache entitiesFromList:listName];
+    
+    XCTAssertEqual([docs count], [cached count]);
+
+    for (NSInteger idx = 0; idx < [docs count]; idx++) {
+        XCTAssertEqualObjects([[docs objectAtIndex:idx] entityId], [[cached objectAtIndex:idx] entityId]);
+    }
+    
+    [cache removeEntitiesList:listName];
+    XCTAssertFalse([cache hasEntityList:listName]);
+    cached = [cache entitiesFromList:listName];
+    XCTAssertEqualObjects([NSNumber numberWithInt:0], [NSNumber numberWithInt:[cached count]]);
 }
 
 @end

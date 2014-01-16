@@ -57,8 +57,8 @@
     NSString *query = [NSString stringWithFormat:@"delete from %@ where hierarchyName = \"%@\"", kHierarchyLoadedTable, hierarchyName];
     [_db executeQuery:query];
     
-    NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"loaded"]];
-    NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, @(1)]];
+    NSString *columns = [NUXSQLiteDatabase sqlitize:@[@"hierarchyName", @"loaded"]];
+    NSString *values = [NUXSQLiteDatabase sqlitize:@[hierarchyName, @(1)]];
     query = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kHierarchyLoadedTable, columns, values];
     [_db executeQuery:query];
 }
@@ -159,14 +159,14 @@
 #pragma mark -
 
 -(void)insertInContentNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NSString *)parentId {
-    NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"order"]];
+    NSString *columns = [NUXSQLiteDatabase sqlitize:@[@"hierarchyName", @"docId", @"parentId", @"order"]];
     NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kContentTable, columns, @"%@"];
     
     [docs enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
         // Save entity in cache
         [[NUXEntityCache instance] saveEntity:doc];
         
-        NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, doc.uid, parentId, @(idx)]];
+        NSString *values = [NUXSQLiteDatabase sqlitize:@[hierarchyName, doc.uid, parentId, @(idx)]];
         if (![_db executeQuery:[NSString stringWithFormat:bQuery, values]]) {
             // Handle error
             NUXDebug(@"%@", [_db sqlInformatiomFromCode:[_db lastReturnCode]]);
@@ -175,7 +175,7 @@
 }
 
 -(void)insertInHierarchyNodes:(NSArray *)docs fromHierarchy:(NSString *)hierarchyName withParent:(NUXDocument *)parent andDepth:(NSInteger)depth {
-    NSString *columns = [NUXHierarchyDB sqlitize:@[@"hierarchyName", @"docId", @"docPath", @"parentId", @"parentPath", @"order", @"depth"]];
+    NSString *columns = [NUXSQLiteDatabase sqlitize:@[@"hierarchyName", @"docId", @"docPath", @"parentId", @"parentPath", @"order", @"depth"]];
     NSString *bQuery = [NSString stringWithFormat:@"insert into %@ (%@) values (%@)", kHierarchyTable, columns, @"%@"];
     
     [docs enumerateObjectsUsingBlock:^(NUXDocument *doc, NSUInteger idx, BOOL *stop) {
@@ -185,7 +185,7 @@
         NSString *parentUid = parent == nil ? kRootKey : parent.uid;
         NSString *parentPath = parent == nil ? @"" : parent.path;
         
-        NSString *values = [NUXHierarchyDB sqlitize:@[hierarchyName, doc.uid, doc.path, parentUid, parentPath, @(idx), @(depth)]];
+        NSString *values = [NUXSQLiteDatabase sqlitize:@[hierarchyName, doc.uid, doc.path, parentUid, parentPath, @(idx), @(depth)]];
         if (![_db executeQuery:[NSString stringWithFormat:bQuery, values]]) {
             // Handle error
             NUXDebug(@"%@", [_db sqlInformatiomFromCode:[_db lastReturnCode]]);
@@ -215,23 +215,6 @@
 
 -(NSString *)fieldForDocumentRef:(NSString *)docRef {
     return [docRef characterAtIndex:0] == '/' ? @"parentPath" : @"parentId";
-}
-
-+(NSString *)sqlitize:(NSArray *)values {
-    NSMutableString *ret = [NSMutableString new];
-    [values enumerateObjectsUsingBlock:^(id value, NSUInteger idx, BOOL *stop) {
-        if (idx > 0) {
-            [ret appendString:@", "];
-        }
-        
-        if (![value isKindOfClass:[NSNumber class]]) {
-            [ret appendString:[NSString stringWithFormat:@"\"%@\"", value]];
-        } else {
-            [ret appendString:[NSString stringWithFormat:@"%@", value]];
-        }
-    }];
-    
-    return ret;
 }
 
 + (NUXHierarchyDB *)shared {

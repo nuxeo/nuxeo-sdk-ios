@@ -44,6 +44,8 @@
 
 -(NSInteger)lastReturnCode;
 
++(NSString *)sqlitize:(NSArray *)values;
+
 +(NUXSQLiteDatabase *)shared;
 
 @end

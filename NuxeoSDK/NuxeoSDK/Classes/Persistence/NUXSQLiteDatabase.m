@@ -279,6 +279,26 @@
 }
 
 #pragma mark -
+#pragma mark Helper methods
+
++(NSString *)sqlitize:(NSArray *)values {
+    NSMutableString *ret = [NSMutableString new];
+    [values enumerateObjectsUsingBlock:^(id value, NSUInteger idx, BOOL *stop) {
+        if (idx > 0) {
+            [ret appendString:@", "];
+        }
+        
+        if (![value isKindOfClass:[NSNumber class]]) {
+            [ret appendString:[NSString stringWithFormat:@"\"%@\"", value]];
+        } else {
+            [ret appendString:[NSString stringWithFormat:@"%@", value]];
+        }
+    }];
+    
+    return ret;
+}
+
+#pragma mark -
 #pragma mark Internal
 
 -(NSString *)databasePath {

@@ -27,8 +27,15 @@
 +(NUXEntityCache *)instance;
 
 -(id)entityWithId:(NSString *)entityId class:(Class)entityClass;
--(BOOL)removeEntityWithId:(NSString *)entityId class:(Class)entityClass;
+-(NSArray *)entitiesFromList:(NSString *)aListName;
 
 -(BOOL)saveEntity:(NUXEntity<NUXEntityPersistable> *)entity;
+-(BOOL)saveEntities:(NSArray *)entities withListName:(NSString *)aListName error:(NSError **)error;
+
+-(BOOL)removeEntityWithId:(NSString *)entityId class:(Class)entityClass;
+-(BOOL)removeEntitiesList:(NSString *)aListName;
+
+-(BOOL)hasEntityWithId:(NSString *)entityId class:(Class)entityClass;
+-(BOOL)hasEntityList:(NSString *)aListName;
 
 @end
