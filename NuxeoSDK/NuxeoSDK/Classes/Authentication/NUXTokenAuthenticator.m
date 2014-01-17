@@ -62,6 +62,10 @@
             aBlock(NO);
         }
     }];
+    
+    [self setTokenFromRequest:nil withCompletionBlock:^(BOOL success) {
+        //
+    }];
 }
 
 #pragma mark -

@@ -40,6 +40,43 @@ A simple example how to fetch `default-domain` from your server using REST API:
     }];
     [request start];
 
+### Authenticators
+
+For now we provide two way to authenticate through Nuxeo; you can add your own using `NUXAuthenticator` protocol.
+Authenticator must be set in your session object, and it handles request modification to authenticate on destination server.
+
+* Basic authentication
+
+The default one, you can also set it with a global file.
+
+    NUXBasicAuthenticator *authenticator = [[NUXBasicAuthenticator alloc] initWithUsername:@"Administrator" password:@"Administrator"];
+
+* Token based authentication
+
+When using token authentication, you should check `softAuthentication` to know if you already have a token, or not. If not, you should request server to ask for a new one.
+
+    NUXTokenAuthenticator *auth = [[NUXTokenAuthenticator alloc] init];
+    // Those fields are mandatory
+    auth.applicationName = @"MyOwnAppName";
+    auth.permission = @"rw";
+    
+    session.authenticator = auth;
+    if (![auth softAuthentication]) {
+      NUXRequest *request = [session requestTokenAuthentication];
+      
+      // We use the request built-in basic authentication challenge
+      request.username = @"Administrator";
+      request.password = @"Administrator";
+      
+      // Beware, request execution is asychronously.
+      [auth setTokenFromRequest:nil withCompletionBlock:^(BOOL success) {
+        // if success, token saved !
+      }];
+    } else {
+      // Otherwise; you might be authenticated, but do not forget that a token could be revoked.
+    }
+
+
 ### Entity Mapping
 
 [Documentation about entity mapping](http://doc.nuxeo.com/x/2Ir1#iOSClient-ObjectMapping)
@@ -69,6 +106,25 @@ Blob store do not handles directly blob download, you have to do it with a speci
 And retrieve it with:
   
     NSString* blobPath = [bs blobFromDocument:doc metadataXPath:@"file:content"];
+    
+### Document, Document listing cache
+
+To cache document response based on their entity type, you can use:
+
+    NUXEntityCache *cache = [NUXEntityCache instance];
+    # Write entity in cache
+    [cache writeEntity:doc];
+    
+    # Read entity from the cache
+    [cache hasEntityWithId:@"4242-4242-4342" class:[NUXDocument class]]);
+    NUXDocument *ent = [[cache entityWithId:@"4242-4242-4342" class:[NUXDocument class]]);
+    
+To manipulate document listing, there is the same kind of API:
+
+    # Save
+    [cache saveEntities:entitiesArray withListName:@"myListName" error:nil];
+    NSArray *cached = [cache entitiesFromList:@"myListName"];
+
 
 ## QA Scripts
 
