@@ -316,7 +316,7 @@
 
 #pragma mark -
 
-+(id)instance {
++(NUXBlobStore *)instance {
     static dispatch_once_t pred = 0;
     static NUXBlobStore *__strong _shared = nil;
     
