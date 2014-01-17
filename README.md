@@ -6,6 +6,8 @@ Toolbox to provides a library to start building your iOS application connected t
 
 You need to install [cocoapods](http://cocoapods.org/):
 
+```sh
+
     # Adding our cocoapods specs repository
     $ pod repo add nuxeo https://github.com/nuxeo/cocoapods-specs
     
@@ -13,6 +15,8 @@ You need to install [cocoapods](http://cocoapods.org/):
     $ cd NuxeoSDK
     $ pod
     $ open NuxeoSDK.xcworkspace
+    
+```
     
 ## API Provided
 
@@ -23,6 +27,8 @@ You can find the whole documentation about what you can do with this library and
 [Documentation about REST / Automation API](http://doc.nuxeo.com/x/2Ir1#iOSClient-AccessingREST%2FAutomationAPI)
 
 A simple example how to fetch `default-domain` from your server using REST API:
+
+```objc
 
     NSURL *url = [[NSURL alloc] initWithString:@"http://localhost:8080/nuxeo"];
     
@@ -39,6 +45,8 @@ A simple example how to fetch `default-domain` from your server using REST API:
       [self doSomethingGreatWith:doc]; 
     }];
     [request start];
+    
+```
 
 ### Authenticators
 
@@ -49,11 +57,16 @@ Authenticator must be set in your session object, and it handles request modific
 
 The default one, you can also set it with a global file.
 
+```objc
+
     NUXBasicAuthenticator *authenticator = [[NUXBasicAuthenticator alloc] initWithUsername:@"Administrator" password:@"Administrator"];
+```
 
 * Token based authentication
 
 When using token authentication, you should check `softAuthentication` to know if you already have a token, or not. If not, you should request server to ask for a new one.
+
+```objc
 
     NUXTokenAuthenticator *auth = [[NUXTokenAuthenticator alloc] init];
     // Those fields are mandatory
@@ -75,6 +88,7 @@ When using token authentication, you should check `softAuthentication` to know i
     } else {
       // Otherwise; you might be authenticated, but do not forget that a token could be revoked.
     }
+```
 
 
 ### Entity Mapping
@@ -83,12 +97,19 @@ When using token authentication, you should check `softAuthentication` to know i
 
 We provide a simple way to register entities and map them to query results. To register a new entity type, just do as follow:
 
+```objc
+
     [[NUXJSONMApper sharedMapper] registerEntityClass:[OWNEntity class]];
+
+```
     
 Then to map request response to an existing entity, resoluton is based on response `entity-type` JSON field:
 
+```objc
+
     NSError *error;
     OWNEntity *doc = [request responseEntityWithError:&error];
+```
 
 ### Hiearchical cache
 
@@ -100,31 +121,46 @@ Then to map request response to an existing entity, resoluton is based on respon
 
 Blob store do not handles directly blob download, you have to do it with a specific request. But, as soon as the blob is downloaded you can save it inside the blob store like this:
 
+```objc
+
     NSError* error;
     [bs saveBlobFromPath:filePath withDocument:doc metadataXPath:@"file:content" error:&error];
+
+```
     
 And retrieve it with:
   
+```objc
+  
     NSString* blobPath = [bs blobFromDocument:doc metadataXPath:@"file:content"];
+    
+```
     
 ### Document, Document listing cache
 
 To cache document response based on their entity type, you can use:
 
+```objc
+
     NUXEntityCache *cache = [NUXEntityCache instance];
-    # Write entity in cache
+    // Write entity in cache
     [cache writeEntity:doc];
     
-    # Read entity from the cache
+    // Read entity from the cache
     [cache hasEntityWithId:@"4242-4242-4342" class:[NUXDocument class]]);
     NUXDocument *ent = [[cache entityWithId:@"4242-4242-4342" class:[NUXDocument class]]);
     
+```
+    
 To manipulate document listing, there is the same kind of API:
 
-    # Save
+```objc
+
+    // Save
     [cache saveEntities:entitiesArray withListName:@"myListName" error:nil];
     NSArray *cached = [cache entitiesFromList:@"myListName"];
 
+```
 
 ## QA Scripts
 
