@@ -263,6 +263,21 @@
     [request startSynchronous];
 }
 
+-(void)testCreateDocumentOperation {
+    NUXRequest * nuxRequest = [session requestOperation:@"Document.Create"];
+    [nuxRequest addParameterValue:@"File" forKey:@"type"];
+    
+    [((NUXAutomationRequest *)nuxRequest) setInput:@"doc:/management"];
+    
+    [nuxRequest setCompletionBlock:^(NUXRequest *request) {
+        XCTAssertEqual(200, request.responseStatusCode);
+        NUXDocument *doc = [request responseEntityWithError:nil];
+        XCTAssertEqualObjects(@"File", doc.type);
+    }];
+    
+    [nuxRequest startSynchronous];
+}
+
 -(void)testDownloadToFile {
     NSString *__block uid;
     

@@ -69,14 +69,17 @@
 }
 
 -(ASIHTTPRequest *)requestASI {
-    ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:self.url];
+    ASIHTTPRequest *request;
     
-    NSDictionary *params = @{@"context" : self.context, @"params" : self.parameters};
-    [request addData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil] forKey:@"params"];
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"context" : self.context, @"params" : self.parameters}];
     if (self.fileInput != nil) {
-        [request addFile:self.fileInput forKey:@"input"];
+        request = [[ASIFormDataRequest alloc] initWithURL:self.url];
+        [(ASIFormDataRequest *)request addData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil] forKey:@"params"];
+        [(ASIFormDataRequest *)request addFile:self.fileInput forKey:@"input"];
     } else {
-        [request addData:self.input forKey:@"input"];
+        request = [[ASIHTTPRequest alloc] initWithURL:self.url];
+        [params setObject:self.input forKey:@"input"];
+        [request setPostBody:[NSMutableData dataWithData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil]]];
     }
     return request;
 }
