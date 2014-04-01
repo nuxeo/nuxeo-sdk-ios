@@ -78,7 +78,10 @@
         [(ASIFormDataRequest *)request addFile:self.fileInput forKey:@"input"];
     } else {
         request = [[ASIHTTPRequest alloc] initWithURL:self.url];
-        [params setObject:self.input forKey:@"input"];
+        if (self.input != nil)
+        {
+            [params setObject:self.input forKey:@"input"];
+        }
         [request setPostBody:[NSMutableData dataWithData:[NSJSONSerialization dataWithJSONObject:params options:0 error:nil]]];
     }
     return request;
