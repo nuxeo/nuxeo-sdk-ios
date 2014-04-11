@@ -155,13 +155,13 @@
     [parameters enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSInteger paramIndex = 1 + idx;
         if (obj == nil) {
-            sqlite3_bind_null(statement, paramIndex);
+            sqlite3_bind_null(statement, (int)paramIndex);
         }
         else if ([obj isKindOfClass:[NSString class]]) {
-            sqlite3_bind_text(statement, paramIndex, [obj UTF8String], -1, SQLITE_TRANSIENT);
+            sqlite3_bind_text(statement, (int)paramIndex, [obj UTF8String], -1, SQLITE_TRANSIENT);
         }
         else if ([obj isKindOfClass:[NSNumber class]]) {
-            sqlite3_bind_int(statement, paramIndex, [obj integerValue]);
+            sqlite3_bind_int(statement, (int)paramIndex, (int)[obj integerValue]);
         }
     }];
 }

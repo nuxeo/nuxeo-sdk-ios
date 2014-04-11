@@ -71,8 +71,8 @@
 
 - (void)dealloc
 {
-    _automaticContentRefresh = nil;
-    _fetchContentWhileLoading = nil;
+    _automaticContentRefresh = NO;
+    _fetchContentWhileLoading = NO;
     _completionBlock= nil;
     _nodeInvalidationBlock = nil;
     _nodeBlock = nil;
