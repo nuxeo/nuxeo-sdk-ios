@@ -66,7 +66,7 @@
     [request setCompletionBlock:^(NUXRequest *request) {
         NSLog(@"Token: %@", request.responseString);
         XCTAssertTrue([request.url.absoluteString rangeOfString:@"token"].location != NSNotFound);
-        XCTAssertEqual(200, request.responseStatusCode);
+        XCTAssertEqual(201, request.responseStatusCode);
         XCTAssertNotNil(request.responseString);
         
         // Simulate user default save
