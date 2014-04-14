@@ -9,6 +9,8 @@
 #import "NUXAuthenticator.h"
 #import "NUXRequest.h"
 
+#import "NUXSession+tokenAuthentication.h"
+
 @interface NUXTokenAuthenticator : NSObject <NUXAuthenticator>
 
 @property NSString *applicationName;
@@ -20,22 +22,6 @@
 
 -(void)setTokenFromRequest:(NUXRequest *)aRequest withCompletionBlock:(NUXBooleanBlock)aBlock;
 
-@end
+-(void)resetSettings;
 
-#pragma mark -
-#pragma mark NUXSession protocol to add token generation request
-
-@interface NUXSession (tokenAuthentication)
--(NUXRequest *)requestTokenAuthentication;
-@end
-
-@implementation NUXSession (tokenAuthentication)
--(NUXRequest *)requestTokenAuthentication {
-    NUXRequest *request = [[NUXRequest alloc] initWithSession:self];
-    
-    request.url = [NSURL URLWithString:self.url.absoluteString];
-    [[request addURLSegment:@"authentication"] addURLSegment:@"token"];
-    
-    return request;
-}
 @end
