@@ -50,6 +50,7 @@
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
         [ud setObject:request.username forKey:[self settingsUsernameKey]];
         [ud setObject:request.responseString forKey:[self settingsTokenKey]];
+        [ud synchronize];
         
         NUXDebug(@"New token (%@) saved for %@", [ud objectForKey:[self settingsTokenKey]], [ud objectForKey:[self settingsUsernameKey]]);
         
@@ -85,6 +86,7 @@
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     [ud removeObjectForKey:[self settingsUsernameKey]];
     [ud removeObjectForKey:[self settingsTokenKey]];
+    [ud synchronize];
 }
 
 -(NSString *)settingsUsernameKey {
