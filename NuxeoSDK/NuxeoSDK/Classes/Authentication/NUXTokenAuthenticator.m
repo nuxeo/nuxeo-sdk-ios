@@ -43,7 +43,7 @@
     return self;
 }
 
--(void)setTokenFromRequest:(NUXRequest *)aRequest withCompletionBlock:(NUXBooleanBlock)aBlock {
+-(void)setTokenFromRequest:(NUXRequest *)aRequest withCompletionBlock:(NUXResponseBlock)aBlock {
     [self fillRequestWithParameters:aRequest];
     
     [aRequest startWithCompletionBlock:^(NUXRequest *request) {
@@ -55,12 +55,12 @@
         NUXDebug(@"New token (%@) saved for %@", [ud objectForKey:[self settingsTokenKey]], [ud objectForKey:[self settingsUsernameKey]]);
         
         if (aBlock != nil) {
-            aBlock(YES);
+            aBlock(request);
         }
     } FailureBlock:^(NUXRequest *request) {
         [self resetSettings];
         if (aBlock != nil) {
-            aBlock(NO);
+            aBlock(request);
         }
     }];
 }
