@@ -82,7 +82,10 @@
 }
 
 - (NUXRequest *)addURLSegment:(NSString *)aSegment {
-    self.url = [self.url URLByAppendingPathComponent:aSegment];
+    if (aSegment != nil)
+    {
+        self.url = [self.url URLByAppendingPathComponent:aSegment];
+    }
     return self;
 }
 
