@@ -131,7 +131,11 @@
             int step;
 			while ((step = sqlite3_step(statement)) == SQLITE_ROW)
 			{
-                [aArray addObject:aBlock(statement)];
+                id returnedEntity = aBlock(statement);
+                if (returnedEntity != nil)
+                {
+                    [aArray addObject:returnedEntity];
+                }
 			}
             NUXDebug(@"Error: %@", [self sqlInformatiomFromCode:step]);
 		}
