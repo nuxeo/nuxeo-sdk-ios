@@ -113,9 +113,16 @@
 }
 
 -(NSArray *)contentOfDocument:(NUXDocument *)document {
-    if ((_nodeInvalidationBlock && _nodeInvalidationBlock(document)) || ([NUXSession isNetworkReachable] && self.automaticContentRefresh)) {
-        NSInteger depth = [[NUXHierarchyDB shared] selectDepthForDocument:document.uid hierarchy:_name];
-        return [self updateLeafContentForDocument:document andDepth:depth];
+    
+    return [self contentOfDocument:document forceOfflineMode:NO];
+}
+
+-(NSArray *)contentOfDocument:(NUXDocument *)document forceOfflineMode:(BOOL) forceOffline{
+    if (forceOffline == NO){
+        if ((_nodeInvalidationBlock && _nodeInvalidationBlock(document)) || ([NUXSession isNetworkReachable] && self.automaticContentRefresh)) {
+            NSInteger depth = [[NUXHierarchyDB shared] selectDepthForDocument:document.uid hierarchy:_name];
+            return [self updateLeafContentForDocument:document andDepth:depth];
+        }
     }
     return [[NUXHierarchyDB shared] selectContentFromNode:document.uid hierarchy:_name];
 }

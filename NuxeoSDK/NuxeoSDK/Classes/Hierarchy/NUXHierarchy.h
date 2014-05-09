@@ -40,6 +40,8 @@
 -(NSArray *)childrenOfDocument:(NSString *)documentRef;
 // Returns an array of NUXEntity corresponding to content of the document node.
 -(NSArray *)contentOfDocument:(NUXDocument *)document;
+// Returns an array of NUXEntity corresponding to content of the document node, forec offline behavior
+-(NSArray *)contentOfDocument:(NUXDocument *)document forceOfflineMode:(BOOL)forceOffline;
 // Returns an array of NUXEntity corresponding to the whole hierarchy nodes content
 -(NSArray *)contentOfAllDocuments;
 // Returns a lightweight NUXDocuments object form the root entry point.
