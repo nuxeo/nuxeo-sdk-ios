@@ -181,10 +181,11 @@
 }
 
 
-- (void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message {
+- (void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message error:(NSError *)error{
     _responseData = data;
     _responseStatusCode = statusCode;
     _responseMessage = message;
+    _error = error;
 }
 
 - (NSData *)responseData {

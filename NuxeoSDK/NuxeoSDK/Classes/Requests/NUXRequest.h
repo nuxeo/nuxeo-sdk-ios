@@ -39,6 +39,7 @@
 @property(readonly) NSArray *schemas;
 @property(readonly) NSArray *categories;
 @property(readonly) NSArray *adaptors;
+@property(strong,nonatomic) NSError *error;
 
 // Create a request object
 - (id)initWithSession:(NUXSession *)session;
@@ -86,7 +87,7 @@
 
 - (void)startWithCompletionBlock:(NUXResponseBlock)completionBlock FailureBlock:(NUXResponseBlock)failureBlock;
 
-- (void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message;
+- (void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message error:(NSError *)error;
 
 @property(readonly) int responseStatusCode;
 @property(readonly) NSString *responseMessage;
