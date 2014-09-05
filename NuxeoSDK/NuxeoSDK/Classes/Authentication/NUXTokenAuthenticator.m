@@ -43,6 +43,36 @@
     return self;
 }
 
+-(void)setTokenFromRequestSynchronous:(NUXRequest *)aRequest withCompletionBlock:(NUXResponseBlock)cBlock andFailureBlock:(NUXResponseBlock)fBlock{
+    [self fillRequestWithParameters:aRequest];
+    [aRequest setCompletionBlock:^(NUXRequest *request) {
+        if (request.responseStatusCode==201) {
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            [ud setObject:request.username forKey:[self settingsUsernameKey]];
+            [ud setObject:request.responseString forKey:[self settingsTokenKey]];
+            [ud synchronize];
+            
+            NUXDebug(@"New token (%@) saved for %@", [ud objectForKey:[self settingsTokenKey]], [ud objectForKey:[self settingsUsernameKey]]);
+            
+            if (cBlock != nil) {
+                cBlock(request);
+            }
+        }else {
+            [self resetSettings];
+            if (fBlock != nil) {
+                fBlock(request);
+            }
+        }
+    }];
+    [aRequest setFailureBlock:^(NUXRequest *request) {
+        [self resetSettings];
+        if (fBlock != nil) {
+            fBlock(request);
+        }
+    }];
+    [aRequest startSynchronous];
+}
+
 -(void)setTokenFromRequest:(NUXRequest *)aRequest withCompletionBlock:(NUXResponseBlock)aBlock {
     [self fillRequestWithParameters:aRequest];
     

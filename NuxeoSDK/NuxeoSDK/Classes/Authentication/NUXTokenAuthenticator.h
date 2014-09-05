@@ -20,6 +20,8 @@
 
 -(id)initWithTokenName:(NSString *)aTokenName;
 
+-(void)setTokenFromRequestSynchronous:(NUXRequest *)aRequest withCompletionBlock:(NUXResponseBlock)cBlock andFailureBlock:(NUXResponseBlock)fBlock;
+
 -(void)setTokenFromRequest:(NUXRequest *)aRequest withCompletionBlock:(NUXResponseBlock)aBlock;
 
 -(void)resetSettings;
