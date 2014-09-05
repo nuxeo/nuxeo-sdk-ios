@@ -128,11 +128,11 @@ NSString *const kApiPrefix = @"ApiPrefix";
 
     ASIHTTPRequest *__weak wRequest = request;
     [request setCompletionBlock:^{
-        [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage];
+        [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage error:wRequest.error];
         completion();
     }];
     [request setFailedBlock:^{
-        [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage];
+        [nRequest setResponseData:wRequest.responseData WithEncoding:wRequest.responseEncoding StatusCode:wRequest.responseStatusCode message:wRequest.responseStatusMessage error:wRequest.error];
         failure();
     }];
     
