@@ -57,4 +57,7 @@
 //Convenience method to create a request to fetch a parent document associated with this session, documentRef could be an id or a path.
 - (NUXAutomationRequest *)requestParent:(NSString *)documentRef;
 
+// Convenience method to create a request to move a document associated with this session, documentSrc and documentDes could be an id or a path.
+- (NUXRequest *)move:(NSString *)documentSrc documentDes:(NSString *)documentDes;
+
 @end
