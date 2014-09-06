@@ -117,11 +117,15 @@
     return nuxRequest;
 }
 
-- (NUXRequest *)move:(NSString *)documentSrc documentDes:(NSString *)documentDes {
+- (NUXAutomationRequest *)move:(NSString *)documentSrc documentDes:(NSString *)documentDes {
     NUXAutomationRequest *nuxRequest = [self requestOperation:@"Document.Move"] ;
     [nuxRequest setInput:documentSrc];
     [nuxRequest addParameterValue:documentDes forKey:@"target"];
     return nuxRequest;
+}
+
+- (NUXRequest *)requestACL:(NSString *)documentRef {
+    return [[self requestDocument:documentRef] addAdaptor:@"acl"];
 }
 
 @end
