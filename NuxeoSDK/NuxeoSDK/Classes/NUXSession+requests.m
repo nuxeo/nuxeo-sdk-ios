@@ -111,4 +111,10 @@
     return request;
 }
 
+- (NUXAutomationRequest *)requestParent:(NSString *)documentRef {
+    NUXAutomationRequest *nuxRequest = [self requestOperation:@"Document.GetParent"] ;
+    [nuxRequest setInput:documentRef];
+    return nuxRequest;
+}
+
 @end
