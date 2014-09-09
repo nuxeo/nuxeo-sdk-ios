@@ -54,4 +54,13 @@
 // Convenience method de import a file
 - (NUXAutomationRequest *)requestImportFile:(NSString *)file withParent:(NSString *)documentRef;
 
+// Convenience method to create a request to fetch a parent document associated with this session, documentRef could be an id or a path.
+- (NUXAutomationRequest *)requestParent:(NSString *)documentRef;
+
+// Convenience method to create a request to move a document associated with this session, documentSrc and targetDocument could be an id or a path.
+- (NUXAutomationRequest *)move:(NSString *)documentSrc toTargetDocument:(NSString *)targetDocument;
+
+// Convenience method to get acls , using to check document permission.
+- (NUXRequest *)requestACL:(NSString *)documentRef ;
+
 @end

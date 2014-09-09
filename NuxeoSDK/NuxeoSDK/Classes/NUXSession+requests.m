@@ -111,4 +111,21 @@
     return request;
 }
 
+- (NUXAutomationRequest *)requestParent:(NSString *)documentRef {
+    NUXAutomationRequest *nuxRequest = [self requestOperation:@"Document.GetParent"] ;
+    [nuxRequest setInput:documentRef];
+    return nuxRequest;
+}
+
+- (NUXAutomationRequest *)move:(NSString *)documentSrc toTargetDocument:(NSString *)targetDocument {
+    NUXAutomationRequest *nuxRequest = [self requestOperation:@"Document.Move"] ;
+    [nuxRequest setInput:documentSrc];
+    [nuxRequest addParameterValue:targetDocument forKey:@"target"];
+    return nuxRequest;
+}
+
+- (NUXRequest *)requestACL:(NSString *)documentRef {
+    return [[self requestDocument:documentRef] addAdaptor:@"acl"];
+}
+
 @end
