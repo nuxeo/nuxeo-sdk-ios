@@ -118,7 +118,7 @@ NSString *const kApiPrefix = @"ApiPrefix";
 - (ASIHTTPRequest *)httpRequestWithRequest:(NUXRequest *)nRequest withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure {
     ASIHTTPRequest *request = [nRequest requestASI];
     request.shouldContinueWhenAppEntersBackground = nRequest.shouldContinueWhenAppEntersBackground;
-
+    [request setUseCookiePersistence:NO];
     [request setRequestMethod:nRequest.method];
     request.username = nRequest.username;
     request.password = nRequest.password;
