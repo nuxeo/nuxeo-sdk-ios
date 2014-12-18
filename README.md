@@ -446,8 +446,8 @@ Follow the project build status on [http://qa.nuxeo.org/jenkins/job/nuxeo-sdk-io
 ### Reporting Issues
 
 You can follow the developments in the Nuxeo Platform project of our JIRA bug tracker, which includes a iOS SDK component: [https://jira.nuxeo.com/browse/NXP/component/13404](https://jira.nuxeo.com/browse/NXP/component/13404).
-You can report issues on [answers.nuxeo.com](http://answers.nuxeo.com/).
 
+You can report issues  directly [from the GitHub project](https://github.com/nuxeo/nuxeo-sdk-ios/issues).
 
 ## About Nuxeo
 
