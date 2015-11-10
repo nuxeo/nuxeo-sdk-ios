@@ -97,7 +97,7 @@
     
     NUXDocument *doc = [NUXJSONSerializer entityWithData:response error:nil];
     XCTAssertEqualObjects(@"/default-domain", doc.path);
-    XCTAssertEqualObjects(@"Default domain", [doc.properties objectForKey:@"dc:title"]);
+    XCTAssertEqualObjects(@"Domain", [doc.properties objectForKey:@"dc:title"]);
     XCTAssertEqualObjects(@"document", doc.entityType);
     NSDate *lastModified = doc.lastModified;
     
