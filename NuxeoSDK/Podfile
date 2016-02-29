@@ -1,4 +1,4 @@
-platform :ios, 7.0
+platform :ios, 9.0
 
 # Include optional Testing and Search components
 pod 'ASIHTTPRequest', '~> 1.8.1'

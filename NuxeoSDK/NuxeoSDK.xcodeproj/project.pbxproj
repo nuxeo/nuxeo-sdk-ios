@@ -112,6 +112,7 @@
 		51E55C9F182D415F009AC87C /* NuxeoSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NuxeoSDKTests-Info.plist"; sourceTree = "<group>"; };
 		51E55CA1182D415F009AC87C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5280D3516EB8463E996F4F5A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		667D0F10FE0CCD3AE0526EDD /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		AC000022E7EC18768D35852D /* NUXSessionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXSessionTests.m; sourceTree = "<group>"; };
 		AC0000295749D5BB4EC27292 /* NUXSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXSession.h; sourceTree = "<group>"; };
 		AC0001638D653A80B59D9554 /* NUXHierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NUXHierarchy.h; sourceTree = "<group>"; };
@@ -128,7 +129,7 @@
 		AC000FF33EB2746781F69B27 /* NUXHierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NUXHierarchy.m; sourceTree = "<group>"; };
 		D09D45E818F7ECB200DA8CC4 /* NUXSession+tokenAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NUXSession+tokenAuthentication.h"; sourceTree = "<group>"; };
 		D09D45E918F7ECB200DA8CC4 /* NUXSession+tokenAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NUXSession+tokenAuthentication.m"; sourceTree = "<group>"; };
-		FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		F1F19E19804FA75BE7CF70F7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,7 +190,7 @@
 				51E55C9D182D415F009AC87C /* NuxeoSDKTests */,
 				51E55C86182D415F009AC87C /* Frameworks */,
 				51E55C85182D415F009AC87C /* Products */,
-				FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */,
+				C4AC3A4AEE22A57828AD52DC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -342,6 +343,15 @@
 			path = Blob;
 			sourceTree = "<group>";
 		};
+		C4AC3A4AEE22A57828AD52DC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F1F19E19804FA75BE7CF70F7 /* Pods.debug.xcconfig */,
+				667D0F10FE0CCD3AE0526EDD /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -390,7 +400,7 @@
 		51E55C7C182D415F009AC87C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Nuxeo;
 			};
 			buildConfigurationList = 51E55C7F182D415F009AC87C /* Build configuration list for PBXProject "NuxeoSDK" */;
@@ -451,7 +461,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"";
 			showEnvVarsInLog = 0;
 		};
 		BB3DA22411FD452A872C5269 /* Copy Pods Resources */ = {
@@ -466,7 +476,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		DA5F22E47ED54DA1A681C9AE /* Check Pods Manifest.lock */ = {
@@ -554,7 +564,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -569,6 +578,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 0.3.0;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -594,7 +604,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -626,7 +635,7 @@
 		};
 		51E55CA8182D415F009AC87C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */;
+			baseConfigurationReference = F1F19E19804FA75BE7CF70F7 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				DSTROOT = /tmp/NuxeoSDK.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -643,7 +652,7 @@
 		};
 		51E55CA9182D415F009AC87C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */;
+			baseConfigurationReference = 667D0F10FE0CCD3AE0526EDD /* Pods.release.xcconfig */;
 			buildSettings = {
 				DSTROOT = /tmp/NuxeoSDK.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -656,9 +665,8 @@
 		};
 		51E55CAB182D415F009AC87C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */;
+			baseConfigurationReference = F1F19E19804FA75BE7CF70F7 /* Pods.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -671,6 +679,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "NuxeoSDKTests/NuxeoSDKTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.nuxeo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -678,9 +687,8 @@
 		};
 		51E55CAC182D415F009AC87C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD7BCE919FC34204AD7130B6 /* Pods.xcconfig */;
+			baseConfigurationReference = 667D0F10FE0CCD3AE0526EDD /* Pods.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -689,6 +697,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NuxeoSDK/NuxeoSDK-Prefix.pch";
 				INFOPLIST_FILE = "NuxeoSDKTests/NuxeoSDKTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.nuxeo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};
