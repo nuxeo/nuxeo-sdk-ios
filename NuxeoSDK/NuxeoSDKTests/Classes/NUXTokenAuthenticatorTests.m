@@ -44,7 +44,6 @@
     XCTAssertNotNil(auth.deviceId);
     
     session.authenticator = auth;
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     // Ensure that document is not fetchable
     NUXRequest *request = [session requestDocument:@"/default-domain"];
     [request setCompletionBlock:^(NUXRequest *request) {
@@ -70,8 +69,9 @@
         XCTAssertNotNil(request.responseString);
         
         // Simulate user default save
-        [ud setObject:request.responseString forKey:[auth settingsTokenKey]];
-        [ud setObject:request.username forKey:[auth settingsUsernameKey]];
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        [ud setObject:request.responseString forKey:[NUXTokenAuthenticator settingsTokenKey]];
+        [ud setObject:request.username forKey:[NUXTokenAuthenticator settingsUsernameKey]];
     }];
     [request setFailureBlock:^(NUXRequest *request) {
         XCTFail(@"Fail with status code: %d", request.responseStatusCode);

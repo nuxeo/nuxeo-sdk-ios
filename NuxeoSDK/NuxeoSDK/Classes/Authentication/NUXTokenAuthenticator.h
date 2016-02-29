@@ -18,12 +18,14 @@
 @property NSString *permission;
 @property NSString *deviceDescription;
 
--(id)initWithTokenName:(NSString *)aTokenName;
-
 -(void)setTokenFromRequestSynchronous:(NUXRequest *)aRequest withCompletionBlock:(NUXResponseBlock)cBlock andFailureBlock:(NUXResponseBlock)fBlock;
 
 -(void)setTokenFromRequest:(NUXRequest *)aRequest withCompletionBlock:(NUXResponseBlock)aBlock;
 
 -(void)resetSettings;
+
++(NSString *)settingsUsernameKey;
+
++(NSString *)settingsTokenKey;
 
 @end

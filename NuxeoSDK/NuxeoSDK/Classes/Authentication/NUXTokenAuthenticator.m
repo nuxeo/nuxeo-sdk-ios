@@ -29,16 +29,7 @@
 -(id)init {
     self = [super init];
     if (self) {
-        _tokenName = kDefaultTokenName;
         _deviceId = [self UUID];
-    }
-    return self;
-}
-
--(id)initWithTokenName:(NSString *)aTokenName {
-    self = [self init];
-    if (self) {
-        _tokenName = aTokenName;
     }
     return self;
 }
@@ -48,11 +39,11 @@
     [aRequest setCompletionBlock:^(NUXRequest *request) {
         if (request.responseStatusCode==201) {
             NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-            [ud setObject:request.username forKey:[self settingsUsernameKey]];
-            [ud setObject:request.responseString forKey:[self settingsTokenKey]];
+            [ud setObject:request.username forKey:[NUXTokenAuthenticator settingsUsernameKey]];
+            [ud setObject:request.responseString forKey:[NUXTokenAuthenticator settingsTokenKey]];
             [ud synchronize];
             
-            NUXDebug(@"New token (%@) saved for %@", [ud objectForKey:[self settingsTokenKey]], [ud objectForKey:[self settingsUsernameKey]]);
+            NUXDebug(@"New token (%@) saved for %@", [ud objectForKey:[NUXTokenAuthenticator settingsTokenKey]], [ud objectForKey:[NUXTokenAuthenticator settingsUsernameKey]]);
             
             if (cBlock != nil) {
                 cBlock(request);
@@ -78,11 +69,11 @@
     
     [aRequest startWithCompletionBlock:^(NUXRequest *request) {
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-        [ud setObject:request.username forKey:[self settingsUsernameKey]];
-        [ud setObject:request.responseString forKey:[self settingsTokenKey]];
+        [ud setObject:request.username forKey:[NUXTokenAuthenticator settingsUsernameKey]];
+        [ud setObject:request.responseString forKey:[NUXTokenAuthenticator settingsTokenKey]];
         [ud synchronize];
         
-        NUXDebug(@"New token (%@) saved for %@", [ud objectForKey:[self settingsTokenKey]], [ud objectForKey:[self settingsUsernameKey]]);
+        NUXDebug(@"New token (%@) saved for %@", [ud objectForKey:[NUXTokenAuthenticator settingsTokenKey]], [ud objectForKey:[NUXTokenAuthenticator settingsUsernameKey]]);
         
         if (aBlock != nil) {
             aBlock(request);
@@ -114,21 +105,21 @@
 
 -(void)resetSettings {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    [ud removeObjectForKey:[self settingsUsernameKey]];
-    [ud removeObjectForKey:[self settingsTokenKey]];
+    [ud removeObjectForKey:[NUXTokenAuthenticator settingsUsernameKey]];
+    [ud removeObjectForKey:[NUXTokenAuthenticator settingsTokenKey]];
     [ud synchronize];
 }
 
--(NSString *)settingsUsernameKey {
++(NSString *)settingsUsernameKey {
     return [NSString stringWithFormat:@"%@%@", [self settingsPrefix], @"username"];
 }
 
--(NSString *)settingsTokenKey {
++(NSString *)settingsTokenKey {
     return [NSString stringWithFormat:@"%@%@", [self settingsPrefix], @"token"];
 }
 
--(NSString *)settingsPrefix {
-    return [NSString stringWithFormat:@"%@.%@.", @"nuxeo", _tokenName];
++(NSString *)settingsPrefix {
+    return [NSString stringWithFormat:@"%@.%@.", @"nuxeo", kDefaultTokenName];
 }
 
 -(NSString *)UUID {
@@ -150,7 +141,7 @@
 
 -(BOOL)softAuthentication {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    return ([ud objectForKey:[self settingsUsernameKey]] && [ud objectForKey:[self settingsTokenKey]]);
+    return ([ud objectForKey:[NUXTokenAuthenticator settingsUsernameKey]] && [ud objectForKey:[NUXTokenAuthenticator settingsTokenKey]]);
 }
 
 -(void)prepareRequest:(ASIHTTPRequest *)request {
@@ -163,8 +154,8 @@
     request.password = nil;
 
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    [request addRequestHeader:kHeaderUsername value:[ud objectForKey:[self settingsUsernameKey]]];
-    [request addRequestHeader:kHeaderToken value:[ud objectForKey:[self settingsTokenKey]]];
+    [request addRequestHeader:kHeaderUsername value:[ud objectForKey:[NUXTokenAuthenticator settingsUsernameKey]]];
+    [request addRequestHeader:kHeaderToken value:[ud objectForKey:[NUXTokenAuthenticator settingsTokenKey]]];
     
     [request addRequestHeader:kHeaderDeviceId value:self.deviceId];
     [request addRequestHeader:kHeaderApplicationName value:self.applicationName];

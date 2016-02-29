@@ -22,6 +22,7 @@
 #import "NUXAbstractTestCase.h"
 #import "NUXSQLiteDatabase.h"
 #import "NUXBasicAuthenticator.h"
+#import "NUXTokenAuthenticator.h"
 
 #define NUX_XCTEST 1
 
@@ -66,6 +67,12 @@
     
     [[NUXSQLiteDatabase shared] deleteDatabase];
     [[NUXEntityCache instance] createTableIfNotExists];
+    
+    // Ensure to cleanup the UserDefaults value
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    [ud removeObjectForKey:[NUXTokenAuthenticator settingsUsernameKey]];
+    [ud removeObjectForKey:[NUXTokenAuthenticator settingsTokenKey]];
+    [NSUserDefaults resetStandardUserDefaults];
 }
 
 - (void)tearDown
