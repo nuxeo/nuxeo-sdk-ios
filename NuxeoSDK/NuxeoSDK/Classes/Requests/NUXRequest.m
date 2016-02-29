@@ -213,8 +213,8 @@
     if (self.parameters.count > 0) {
         NSMutableArray *parameters = [NSMutableArray new];
         [self.parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            NSString *pKey = [key stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            NSString *pValue = [obj stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *pKey = [key stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet];
+            NSString *pValue = [obj stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet];
             
             [parameters addObject:[NSString stringWithFormat:@"%@=%@", pKey, pValue]];
         }];

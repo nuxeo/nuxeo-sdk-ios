@@ -47,12 +47,11 @@
         // ask the runtime to give us a C array of the properties defined
         // for this class (which doesn't include those for the superclass)
         unsigned int numberOfProperties;
-        objc_property_t  *properties =
-        class_copyPropertyList(classOfObject, &numberOfProperties);
+        objc_property_t  *properties = class_copyPropertyList(classOfObject, &numberOfProperties);
+        // NUXDebug(@"Class: %@", classOfObject);
         
         // go through each property in turn...
-        for(
-            int propertyNumber = 0;
+        for(int propertyNumber = 0;
             propertyNumber < numberOfProperties;
             propertyNumber++)
         {
@@ -61,13 +60,16 @@
                                         property_getName(properties[propertyNumber])];
             
             NSString * typeOfProperty = [self getPropertyType:properties[propertyNumber]];
-            //NUXDebug(@"Property : %@ , Type : %@", nameOfProperty, typeOfProperty);
+            // NUXDebug(@"Property : %@ , Type : %@", nameOfProperty, typeOfProperty);
+            
+            if([@[@"hash", @"superclass", @"description", @"debugDescription"] containsObject:nameOfProperty]) {
+                continue;
+            }
             
             // add the property type to the dictionary
             [result
              setObject:typeOfProperty
              forKey:nameOfProperty];
-            
         }
         
         // we took a copy of the property list, so...
@@ -159,7 +161,7 @@
             value = values;
         }
 
-        //NUXDebug(@"Value '%@' for field %@", value, name);
+        NUXDebug(@"Value '%@' for field %@", value, name);
         [entity setValue:value forKeyPath:name];
     }];
     return entity;
