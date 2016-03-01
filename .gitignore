@@ -22,3 +22,9 @@ DerivedData
 
 # CocoaPods
 Pods
+
+# Project specific
+download/
+junit-result.xml
+nuxeo/
+tomcat/

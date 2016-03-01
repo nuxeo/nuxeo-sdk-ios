@@ -1,3 +1,3 @@
 cd NuxeoSDK
 pod setup
-pod
+pod install
