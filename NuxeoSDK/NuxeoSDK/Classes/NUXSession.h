@@ -33,14 +33,22 @@
 @property NSString *repository;
 @property id<NUXAuthenticator> authenticator;
 
-// Convenience init function to create a NUXSession object with url, username and password.
-// url must contains application name like: http://localhost:8080/nuxeo
+/**
+ *  Convenience init function to create a NUXSession object with url, username and password.
+ *  url must contains application name like: http://localhost:8080/nuxeo
+ */
 - (id)initWithServerURL:(NSURL *)url authenticator:(id<NUXAuthenticator>)authenticator;
 
-// Register some schemas that will be added to all requests
+/**
+ *  Register some schemas that will be added to all requests
+ *
+ *  @param schemas use @"*" to get all schemas once
+ */
 - (void)addDefaultSchemas:(NSArray *)schemas;
 
-// Register some categories that will be added to all requests
+/**
+ *  Register some categories that will be added to all requests
+ */
 - (void)addDefaultCategories:(NSArray *)categories;
 
 // Cancel current requests
@@ -50,10 +58,14 @@
 - (void)cancelDownloadsRequests;
 - (void)setDownloadQueueMaxConcurrentOperationCount:(NSInteger)count;
 
-// Execute a NUXRequest asynchronously using this session and authentication challenge.
+/**
+ *  Execute a NUXRequest asynchronously using this session and authentication challenge.
+ */
 - (void)startRequest:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure;
 
-// Execute a NUXRequest synchronously using this session and authentication challenge.
+/**
+ *  Execute a NUXRequest synchronously using this session and authentication challenge.
+ */
 - (void)startRequestSynchronous:(NUXRequest *)request withCompletionBlock:(NUXBasicBlock)completion failureBlock:(NUXBasicBlock)failure;
 
 + (NUXSession *)sharedSession;

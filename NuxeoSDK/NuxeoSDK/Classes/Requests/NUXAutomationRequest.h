@@ -22,11 +22,27 @@
 #import <Foundation/Foundation.h>
 #import "NUXRequest.h"
 
+/**
+ *  Class that represents a request to the Automation API
+ */
 @interface NUXAutomationRequest : NUXRequest
 
+/**
+ *  Add a value in the Automation Execution Context
+ */
 - (void)addContextValue:(id)value forKey:(NSString *)key;
 
+/**
+ *  Set a file as the Operation Input
+ *
+ *  @param filePath to the expected file.
+ */
 - (void)setInputFile:(NSString *)filePath;
+/**
+ *  Set any type of object as the Operation Input
+ *
+ *  @param input
+ */
 - (void)setInput:(id)input;
 
 - (NSDictionary *)context;

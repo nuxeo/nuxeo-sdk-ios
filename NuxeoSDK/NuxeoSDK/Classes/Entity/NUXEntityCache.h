@@ -22,6 +22,9 @@
 #import <Foundation/Foundation.h>
 #import "NUXEntity.h"
 
+/**
+ *  Simple Entity Cache; without any cleanup logic.
+ */
 @interface NUXEntityCache : NSObject
 
 +(NUXEntityCache *)instance;

@@ -25,8 +25,14 @@
 
 @class NUXSession;
 
+/**
+ *  Base class that handle request to a Nuxeo Server
+ */
 @interface NUXRequest : NSObject
 
+/**
+ *  Allow request to try to continue to download while the application is in background
+ */
 @property BOOL shouldContinueWhenAppEntersBackground;
 @property NSURL *url;
 @property NSString *method;
@@ -89,15 +95,41 @@
 
 - (void)setResponseData:(NSData *)data WithEncoding:(NSStringEncoding)encoding StatusCode:(int)statusCode message:(NSString *)message error:(NSError *)error;
 
+/**
+ *  HTTP Response Status Code
+ */
 @property(readonly) int responseStatusCode;
+/**
+ *  HTTP Reponse Message
+ */
 @property(readonly) NSString *responseMessage;
 
+/**
+ *  After completion, read response body as NSString
+ *
+ *  @return returns the response body in a NSString
+ */
 - (NSString *)responseString;
 
+/**
+ *  After completion, read response body as NSData object
+ *
+ *  @return returns the response body in a NSData object
+ */
 - (NSData *)responseData;
 
+/**
+ *  After completion, try to read response as JSON and convert it to the corresponding NUXEntity
+ *
+ *  @return corresponding object, or nil.
+ */
 - (id)responseEntityWithError:(NSError **)error;
 
+/**
+ *  After completion, try to read response as JSON
+ *
+ *  @return a NSDictionnary of the response, or nil.
+ */
 - (id)responseJSONWithError:(NSError **)error;
 
 @end

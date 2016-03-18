@@ -21,8 +21,24 @@
 #import <ASIHTTPRequest.h>
 #import "NUXConstants.h"
 
+/**
+ *  NUXAuthenticator is the base protocol to handle each Nuxeo Authentication Challenge.
+ */
 @protocol NUXAuthenticator <NSObject>
 @required
+
+/**
+ *  This method should return a boolean to know if the current session needs to be authenticate or if everyhting is ok to make authenticated request to the server.
+ *  There is no mecanism to automatically made the first challenge; you need to handle it on your own depending of what you need from the current session.
+ *
+ *  @return return TRUE in case the Authencator is able to call the server, FALSE if he needs to do something.
+ */
 -(BOOL)softAuthentication;
+
+/**
+ *  This method must add his own HTTP Header that need to be pass to the server to authenticate the current user.
+ *
+ *  @param request The request that need to be prepared with new headers or anyhting needed.
+ */
 -(void)prepareRequest:(ASIHTTPRequest *)request;
 @end
