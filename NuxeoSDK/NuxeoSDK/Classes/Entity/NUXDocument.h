@@ -34,6 +34,7 @@
 @property (nonatomic) NSString* type;
 @property (nonatomic) NSString* state;
 @property (nonatomic) NSString* versionLabel;
+@property (nonatomic) NSString* parentRef;
 @property (nonatomic) NSString* title;
 @property (nonatomic) NSString* changeToken;
 @property (nonatomic) NSDate* lastModified;
