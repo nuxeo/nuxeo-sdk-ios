@@ -46,10 +46,11 @@
     _title = nil;
     _changeToken = nil;
     _lastModified = nil;
+    _parentRef = nil;
     
     _properties = nil;
     _facets = nil;
-    _context = nil;
+    _contextParameters = nil;
 }
 
 -(NSString *)description

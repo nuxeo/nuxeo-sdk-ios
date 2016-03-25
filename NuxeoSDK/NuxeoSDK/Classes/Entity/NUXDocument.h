@@ -42,6 +42,6 @@
 
 @property (nonatomic) NSMutableDictionary* properties;
 @property (nonatomic) NSMutableArray* facets;
-@property (nonatomic) NSMutableDictionary* context;
+@property (nonatomic) NSMutableDictionary* contextParameters;
 
 @end
